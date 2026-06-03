@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2026-06-03
+
+### Changed
+
+- Enemy patrol: removed the 2-second timer fallback. Enemies now reverse direction **only** when `body.blocked.left` or `body.blocked.right` is set by a tile or world-bound collision. The timer was interfering with wall-collision detection (enemies reversed before reaching walls in open areas).
+
+## [0.6.0] - 2026-06-03
+
+### Added
+
+- Enemy patrol behaviour in the game runtime. Enemies move horizontally (initial velocity `80px/s`) and reverse direction when colliding with solid tiles or world bounds via `body.blocked.left` / `body.blocked.right` detection.
+- Enemy movement runs before the `if (!this.player) return` guard, so enemies patrol even without a player entity.
+
+### Changed
+
+- Removed `bounceX: 1` from enemies (both group config and individual body). Wall collisions are now handled manually in `update()` to avoid double-reversal bugs with Phaser's automatic bounce.
+
 ## [0.5.0] - 2026-06-03
 
 ### Changed

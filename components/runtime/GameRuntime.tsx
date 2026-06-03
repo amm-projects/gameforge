@@ -50,6 +50,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         declare player?: Physics.Arcade.Sprite;
         declare playerLabel?: GameObjects.Text;
         declare statusText?: GameObjects.Text;
+        declare enemies: Physics.Arcade.Sprite[];
 
         constructor() {
           super({ key: "runtime" });
@@ -96,7 +97,8 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           const spikeLayer = this.physics.add.staticGroup();
           const goalLayer = this.physics.add.staticGroup();
           const coinLayer = this.physics.add.staticGroup();
-          const enemyLayer = this.physics.add.group({ bounceX: 1, collideWorldBounds: true });
+          const enemyLayer = this.physics.add.group({ collideWorldBounds: true });
+          this.enemies = [];
 
           tiles.forEach((tile: Tile) => {
             const x = tile.x * TILE_SIZE + TILE_SIZE / 2;
@@ -159,7 +161,9 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
               const enemyBody = enemy.body as Physics.Arcade.Body;
               enemyBody.setSize(ENTITY_SIZE, ENTITY_SIZE, true);
               enemyBody.setAllowGravity(true);
+              enemyBody.setCollideWorldBounds(true);
               enemyLayer.add(enemy);
+              this.enemies.push(enemy);
             }
           });
 
@@ -199,7 +203,22 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
             .setScrollFactor(0);
         }
 
-        update() {
+        update(_time: number, delta: number) {
+          for (const enemy of this.enemies) {
+            const body = enemy.body as Physics.Arcade.Body;
+            const speed = 80;
+
+            if (body.velocity.x === 0) {
+              enemy.setVelocityX(speed);
+            }
+
+            if (body.blocked.left) {
+              enemy.setVelocityX(speed);
+            } else if (body.blocked.right) {
+              enemy.setVelocityX(-speed);
+            }
+          }
+
           if (!this.player) {
             return;
           }
