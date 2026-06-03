@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.2] - 2026-06-03
+
+### Fixed
+
+- `button` anidado en `ToolPanel.tsx`: el `DraggableItem` renderizaba un `<button>` dentro de otro `<button>` (fila seleccionable), lo cual es HTML inválido y causaba hydration error. Se cambió a `<div>` con `cursor-grab`.
+
+## [0.7.1] - 2026-06-03
+
+### Fixed
+
+- Hydration mismatch en `ToolPanel` causado por `useDraggable` (dnd-kit) generando atributos con IDs distintos entre servidor y cliente. Se cambió la importación directa a `next/dynamic` con `ssr: false` en `EditorShell.tsx`.
+
+## [0.7.0] - 2026-06-03
+
+### Changed
+
+- Rediseñado el `ToolPanel` con previews visuales: cada tile y entidad muestra un cuadrado coloreado (mismos colores que el canvas y runtime), nombre legible en español, tipo técnico y un botón de arrastre con miniatura propia. La selección activa se resalta visualmente.
+
 ## [0.6.1] - 2026-06-03
 
 ### Changed
