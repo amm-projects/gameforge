@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-06-03
+
+### Added
+
+- Entity selection on the canvas: clicking an entity selects it (cyan ring indicator).
+- Entity deletion via the erase tool: clicking a cell with the erase tool now removes both tiles and entities.
+- Entity deletion via keyboard: pressing Delete or Backspace removes the currently selected entity.
+- `selectedEntityId` state in `selectionStore` to track which entity is selected on the canvas.
+
 ## [0.2.2] - 2026-06-03
 
 ### Fixed

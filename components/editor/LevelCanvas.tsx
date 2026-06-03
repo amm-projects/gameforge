@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useCallback } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { useEditorStore } from "@/stores/editorStore";
 import { useSelectionStore } from "@/stores/selectionStore";
@@ -19,12 +19,14 @@ function GridCell({
   y,
   tileType,
   entityType,
+  isSelected,
   onClick,
 }: {
   x: number;
   y: number;
   tileType?: TileType;
   entityType?: EntityType;
+  isSelected: boolean;
   onClick: () => void;
 }) {
   const { setNodeRef } = useDroppable({ id: `cell-${x}-${y}` });
@@ -35,8 +37,12 @@ function GridCell({
       type="button"
       ref={setNodeRef}
       onClick={onClick}
-      className={`relative h-10 w-10 rounded border border-slate-800 bg-slate-950 transition ${
-        tileType ? "border-slate-600" : "border-slate-900/70"
+      className={`relative h-10 w-10 rounded border bg-slate-950 transition ${
+        isSelected
+          ? "border-cyan-400 ring-2 ring-cyan-400/50"
+          : tileType
+            ? "border-slate-600"
+            : "border-slate-900/70"
       }`}
     >
       {tileType && (
@@ -55,8 +61,10 @@ function GridCell({
 }
 
 export function LevelCanvas() {
-  const { width, height, tiles, entities, setTile, removeTile, addEntity } = useEditorStore();
-  const { activeTool, selectedTile, selectedEntity } = useSelectionStore();
+  const { width, height, tiles, entities, setTile, removeTile, addEntity, removeEntity } =
+    useEditorStore();
+  const { activeTool, selectedTile, selectedEntity, selectedEntityId, setSelectedEntityId } =
+    useSelectionStore();
 
   const tileMap = useMemo(
     () => new Map(tiles.map((tile) => [`${tile.x}-${tile.y}`, tile.type])),
@@ -68,21 +76,52 @@ export function LevelCanvas() {
     [entities]
   );
 
-  const handleCellClick = (x: number, y: number) => {
-    if (activeTool === "erase") {
-      removeTile(x, y);
-      return;
-    }
+  const entityLookup = useMemo(
+    () => new Map(entities.map((entity) => [`${entity.x}-${entity.y}`, entity])),
+    [entities]
+  );
 
-    if (activeTool === "tile") {
-      setTile({ x, y, type: selectedTile });
-      return;
-    }
+  const handleCellClick = useCallback(
+    (x: number, y: number) => {
+      const entityAtCell = entityLookup.get(`${x}-${y}`);
 
-    if (activeTool === "entity") {
-      addEntity(selectedEntity, x, y);
-    }
-  };
+      if (activeTool === "erase") {
+        removeTile(x, y);
+        if (entityAtCell) {
+          removeEntity(entityAtCell.id);
+        }
+        setSelectedEntityId(null);
+        return;
+      }
+
+      if (entityAtCell) {
+        setSelectedEntityId(entityAtCell.id);
+      } else {
+        setSelectedEntityId(null);
+      }
+
+      if (activeTool === "tile") {
+        setTile({ x, y, type: selectedTile });
+        return;
+      }
+
+      if (activeTool === "entity") {
+        addEntity(selectedEntity, x, y);
+      }
+    },
+    [activeTool, selectedTile, selectedEntity, entityLookup, removeTile, removeEntity, setSelectedEntityId, setTile, addEntity]
+  );
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === "Delete" || e.key === "Backspace") && selectedEntityId) {
+        removeEntity(selectedEntityId);
+        setSelectedEntityId(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedEntityId, removeEntity, setSelectedEntityId]);
 
   return (
     <section className="rounded-3xl border border-slate-800/90 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10">
@@ -103,16 +142,20 @@ export function LevelCanvas() {
           }}
         >
           {Array.from({ length: height }).flatMap((_, row) =>
-            Array.from({ length: width }).map((_, col) => (
-              <GridCell
-                key={`${col}-${row}`}
-                x={col}
-                y={row}
-                tileType={tileMap.get(`${col}-${row}`) as TileType | undefined}
-                entityType={entityMap.get(`${col}-${row}`) as EntityType | undefined}
-                onClick={() => handleCellClick(col, row)}
-              />
-            ))
+            Array.from({ length: width }).map((_, col) => {
+              const entityAtCell = entityLookup.get(`${col}-${row}`);
+              return (
+                <GridCell
+                  key={`${col}-${row}`}
+                  x={col}
+                  y={row}
+                  tileType={tileMap.get(`${col}-${row}`) as TileType | undefined}
+                  entityType={entityAtCell?.type as EntityType | undefined}
+                  isSelected={entityAtCell?.id === selectedEntityId}
+                  onClick={() => handleCellClick(col, row)}
+                />
+              );
+            })
           )}
         </div>
       </div>
