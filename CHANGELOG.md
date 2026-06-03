@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 2026-06-03
+
+### Added
+
+- Muerte al caer al vacío en el runtime. Se eliminó `setCollideWorldBounds(true)` del jugador. En `update()`, si `player.y > worldHeight + 64` se dispara `onHitSpike()` (Game Over + pausa).
+
 ## [0.8.0] - 2026-06-03
 
 ### Changed

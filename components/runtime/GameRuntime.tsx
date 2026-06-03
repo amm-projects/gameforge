@@ -51,6 +51,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         declare playerLabel?: GameObjects.Text;
         declare statusText?: GameObjects.Text;
         declare enemies: Physics.Arcade.Sprite[];
+        declare worldHeight: number;
 
         constructor() {
           super({ key: "runtime" });
@@ -87,6 +88,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           const { width, height, tiles, entities } = this.level;
           const worldWidth = width * TILE_SIZE;
           const worldHeight = height * TILE_SIZE;
+          this.worldHeight = worldHeight;
 
           this.createRuntimeTextures();
 
@@ -126,7 +128,6 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
             if (entity.type === "player") {
               const player = this.physics.add.sprite(x, y, "runtime-player").setOrigin(0.5) as Physics.Arcade.Sprite;
               player.setBounce(0.1);
-              player.setCollideWorldBounds(true);
               const body = player.body as Physics.Arcade.Body;
               body.setSize(PLAYER_SIZE, PLAYER_SIZE, true);
               body.setAllowGravity(true);
@@ -237,6 +238,10 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
 
           if (this.playerLabel) {
             this.playerLabel.setPosition(this.player.x, this.player.y - 22);
+          }
+
+          if (this.player.y > this.worldHeight + 64) {
+            this.onHitSpike();
           }
         }
 
