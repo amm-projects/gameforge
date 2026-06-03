@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { useEditorStore } from "@/stores/editorStore";
 import { useSelectionStore } from "@/stores/selectionStore";
@@ -15,7 +16,27 @@ export function EditorShell() {
   const { activeTool, selectedTile, selectedEntity } = useSelectionStore();
   const { isPlaying, setIsPlaying } = useRuntimeStore();
 
-  const levelData: LevelData = { width, height, tiles, entities };
+  const levelData: LevelData = useMemo(
+    () => ({
+      width,
+      height,
+      tiles,
+      entities,
+    }),
+    [width, height, tiles, entities]
+  );
+
+  const runtimeRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (isPlaying && runtimeRef.current) {
+      runtimeRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [isPlaying]);
+
+  const handleStop = useCallback(() => {
+    setIsPlaying(false);
+  }, [setIsPlaying]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -47,7 +68,7 @@ export function EditorShell() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen bg-slate-950 text-slate-100" suppressHydrationWarning>
       <header className="border-b border-slate-800/80 bg-slate-900/95 px-6 py-4 backdrop-blur">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -58,8 +79,7 @@ export function EditorShell() {
             <button
               type="button"
               onClick={() => setIsPlaying(true)}
-              disabled={!entities.some((entity) => entity.type === "player")}
-              className="rounded-2xl bg-amber-500 px-4 py-2 font-semibold text-slate-950 transition disabled:cursor-not-allowed disabled:opacity-50 hover:bg-amber-400"
+              className="rounded-2xl bg-amber-500 px-4 py-2 font-semibold text-slate-950 transition hover:bg-amber-400"
             >
               Play
             </button>
@@ -77,6 +97,12 @@ export function EditorShell() {
         </div>
       </header>
 
+      {isPlaying && (
+        <div ref={runtimeRef}>
+          <GameRuntime level={levelData} onStop={handleStop} />
+        </div>
+      )}
+
       <DndContext onDragEnd={handleDragEnd}>
         <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-[1440px] flex-col gap-4 p-6 lg:flex-row">
           <div className="w-full max-w-sm lg:w-[320px]">
@@ -90,8 +116,6 @@ export function EditorShell() {
           </div>
         </div>
       </DndContext>
-
-      {isPlaying && <GameRuntime level={levelData} onStop={() => setIsPlaying(false)} />}
     </main>
   );
 }

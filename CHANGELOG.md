@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 2026-06-03
+
+### Fixed
+
+- Fixed Phaser runtime physics body alignment by replacing scaled 1px debug textures with runtime textures generated at their real collision sizes.
+- Fixed player body sizing by using explicit runtime constants and centering the Arcade Physics body on the player sprite.
+
+### Changed
+
+- Runtime objects now use dedicated generated textures for ground, spikes, player, coins, goal, and enemies instead of relying on `setDisplaySize` for physics objects.
+
+## [0.2.1] - 2026-06-03
+
+### Fixed
+
+- Fixed Phaser runtime collisions between the player and ground tiles by creating ground and spike tiles as static Arcade Physics bodies and refreshing their bodies after display sizing.
+- Fixed static overlap bodies for coins and goals after display sizing.
+
+### Changed
+
+- Tightened Phaser runtime typing for dynamic imports and Arcade Physics overlap callbacks without using `any`.
+
 ## [0.2.0] - 2026-06-02
 
 ### Added

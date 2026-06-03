@@ -73,8 +73,11 @@ export function ToolPanel() {
             <div key={entity} className="grid gap-2 rounded-3xl border border-slate-800/80 bg-slate-900 p-3">
               <button
                 type="button"
-                onClick={() => setSelectedEntity(entity)}
-                className={`rounded-2xl px-3 py-2 text-sm text-left ${selectedEntity === entity ? "bg-slate-700 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}
+                onClick={() => {
+                  setSelectedEntity(entity);
+                  setActiveTool("entity");
+                }}
+                className={`rounded-2xl px-3 py-2 text-sm text-left ${selectedEntity === entity && activeTool === "entity" ? "bg-slate-700 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}
               >
                 {entity}
               </button>

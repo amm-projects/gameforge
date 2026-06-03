@@ -6,20 +6,49 @@ import { useEditorStore } from "@/stores/editorStore";
 import { useSelectionStore } from "@/stores/selectionStore";
 import type { EntityType, TileType } from "@/types/level";
 
-function GridCell({ x, y, tileType, entityLabel, onClick }: { x: number; y: number; tileType?: TileType; entityLabel?: string; onClick: () => void }) {
+// Visual configuration for each entity type
+const ENTITY_VISUAL: Record<EntityType, { color: string; symbol: string; label: string }> = {
+  player: { color: "bg-blue-500", symbol: "P", label: "Player" },
+  coin: { color: "bg-yellow-400", symbol: "C", label: "Coin" },
+  enemy: { color: "bg-red-600", symbol: "E", label: "Enemy" },
+  goal: { color: "bg-green-500", symbol: "G", label: "Goal" },
+};
+
+function GridCell({
+  x,
+  y,
+  tileType,
+  entityType,
+  onClick,
+}: {
+  x: number;
+  y: number;
+  tileType?: TileType;
+  entityType?: EntityType;
+  onClick: () => void;
+}) {
   const { setNodeRef } = useDroppable({ id: `cell-${x}-${y}` });
+  const entityVisual = entityType ? ENTITY_VISUAL[entityType] : null;
+
   return (
     <button
       type="button"
       ref={setNodeRef}
       onClick={onClick}
-      className={`relative h-10 w-10 rounded border border-slate-800 bg-slate-950 transition ${tileType ? "border-slate-600" : "border-slate-900/70"}`}
+      className={`relative h-10 w-10 rounded border border-slate-800 bg-slate-950 transition ${
+        tileType ? "border-slate-600" : "border-slate-900/70"
+      }`}
     >
       {tileType && (
         <span className={`absolute inset-0 block rounded ${tileType === "ground" ? "bg-amber-600" : "bg-rose-500/90"}`} />
       )}
-      {entityLabel && (
-        <span className="absolute inset-x-0 bottom-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-950">{entityLabel}</span>
+      {entityVisual && (
+        <span
+          className={`absolute inset-0 flex items-center justify-center rounded ${entityVisual.color} text-[9px] font-bold text-white drop-shadow-lg`}
+          title={entityVisual.label}
+        >
+          {entityVisual.symbol}
+        </span>
       )}
     </button>
   );
@@ -80,7 +109,7 @@ export function LevelCanvas() {
                 x={col}
                 y={row}
                 tileType={tileMap.get(`${col}-${row}`) as TileType | undefined}
-                entityLabel={entityMap.get(`${col}-${row}`)}
+                entityType={entityMap.get(`${col}-${row}`) as EntityType | undefined}
                 onClick={() => handleCellClick(col, row)}
               />
             ))
