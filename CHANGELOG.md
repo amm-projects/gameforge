@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-06-03
+
+### Changed
+
+- Replaced full 64×64 DOM grid (4096 `<button>` elements) with virtual rendering: only cells containing tiles, entities, or the selected entity generate DOM nodes. Empty cells render as a CSS `background-image` grid pattern (linear-gradient). Celdas posicionadas con `position: absolute` en lugar de CSS Grid.
+- `getCellFromEvent` ahora calcula coordenadas desde la posición del mouse contra `getBoundingClientRect()` del grid cuando no se hace clic sobre un botón existente, permitiendo interactuar con celdas vacías sin elementos DOM.
+- Removed `useDroppable` from all 4096 individual `GridCell` components. Replaced with a single `useDroppable` on the grid container. Drag-and-drop now calculates the target cell from pointer coordinates (`activatorEvent + delta`) in `EditorShell`.
+
+### Added
+
+- Paint-by-drag: holding left mouse button and dragging paints tiles/entities/erase continuously.
+- Batch painting via `batchPaint` action in `editorStore` that applies multiple paint actions in a single state update. Paint changes accumulate during drag and flush via `requestAnimationFrame` (at most once per frame).
+
+### Performance
+
+- Reducción de ~99% de nodos DOM en nivel vacío (de 4096 a ~0).
+- Eliminadas 4096 llamadas a `useDroppable` (registro en dnd-kit).
+- Las actualizaciones durante pintado se bachean en una sola actualización de estado por frame.
+
 ## [0.4.0] - 2026-06-03
 
 ### Changed
