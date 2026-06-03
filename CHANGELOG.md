@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2026-06-03
+
+### Changed
+
+- Selección unificada en `selectionStore`: `selectedTile` y `selectedEntity` ahora son mutuamente excluyentes. Al seleccionar un tile, se limpia `selectedEntity` y se activa el modo `"tile"`. Al seleccionar una entidad, se limpia `selectedTile` y se activa el modo `"entity"`. Los tipos cambiaron a `TileType | null` y `EntityType | null`.
+- `ToolPanel.tsx`: `TileRow` y `EntityRow` ya no llaman `setActiveTool` manualmente; el store lo maneja. El highlight de entidad ya no depende de `activeTool`.
+
+### Added
+
+- `makeAction` en `LevelCanvas.tsx` retorna `null` si no hay tile o entidad seleccionada, evitando pintar acciones inválidas.
+
+## [0.7.5] - 2026-06-03
+
+### Changed
+
+- Eliminados los botones "Pincel de tiles" y "Entidad" del panel de herramientas en `ToolPanel.tsx`. Ahora el modo se selecciona implícitamente al hacer clic en una fila de tile o entidad. Solo se conserva el botón "Borrar" como herramienta explícita.
+- `TileRow` ahora también llama `setActiveTool("tile")` al hacer clic.
+
+## [0.7.4] - 2026-06-03
+
+### Fixed
+
+- Los botones de selección en `ToolPanel.tsx` no funcionaban porque `useDraggable` consumía el evento de click. Se separó el activador de arrastre (preview visual) del `onClick` de selección (etiqueta). `listeners` van solo sobre el `DragHandle`, el `onClick` va sobre un `<button>` independiente.
+
+## [0.7.3] - 2026-06-03
+
+### Changed
+
+- Eliminados los botones "Arrastrar" independientes en `ToolPanel.tsx`. Ahora la fila completa de cada tile/entidad es a la vez seleccionable y arrastrable mediante `useDraggable`, con un único `<button>` que maneja ambas acciones.
+
 ## [0.7.2] - 2026-06-03
 
 ### Fixed

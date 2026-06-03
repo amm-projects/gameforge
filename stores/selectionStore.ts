@@ -5,8 +5,8 @@ export type ToolMode = "tile" | "entity" | "erase";
 
 interface SelectionState {
   activeTool: ToolMode;
-  selectedTile: TileType;
-  selectedEntity: EntityType;
+  selectedTile: TileType | null;
+  selectedEntity: EntityType | null;
   selectedEntityId: string | null;
   setActiveTool: (tool: ToolMode) => void;
   setSelectedTile: (tile: TileType) => void;
@@ -17,10 +17,10 @@ interface SelectionState {
 export const useSelectionStore = create<SelectionState>((set) => ({
   activeTool: "tile",
   selectedTile: "ground",
-  selectedEntity: "player",
+  selectedEntity: null,
   selectedEntityId: null,
   setActiveTool: (tool) => set({ activeTool: tool }),
-  setSelectedTile: (tile) => set({ selectedTile: tile }),
-  setSelectedEntity: (entity) => set({ selectedEntity: entity }),
+  setSelectedTile: (tile) => set({ selectedTile: tile, selectedEntity: null, activeTool: "tile" }),
+  setSelectedEntity: (entity) => set({ selectedEntity: entity, selectedTile: null, activeTool: "entity" }),
   setSelectedEntityId: (id) => set({ selectedEntityId: id }),
 }));

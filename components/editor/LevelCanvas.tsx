@@ -121,10 +121,11 @@ export function LevelCanvas() {
   }, [width, height]);
 
   const makeAction = useCallback(
-    (x: number, y: number): PaintAction => {
+    (x: number, y: number): PaintAction | null => {
       if (activeTool === "erase") return { kind: "erase", x, y };
-      if (activeTool === "tile") return { kind: "tile", x, y, tileType: selectedTile };
-      return { kind: "entity", x, y, entityType: selectedEntity, entityId: makeId() };
+      if (activeTool === "tile" && selectedTile) return { kind: "tile", x, y, tileType: selectedTile };
+      if (activeTool === "entity" && selectedEntity) return { kind: "entity", x, y, entityType: selectedEntity, entityId: makeId() };
+      return null;
     },
     [activeTool, selectedTile, selectedEntity]
   );
@@ -152,9 +153,9 @@ export function LevelCanvas() {
       if (preEntityId) setSelectedEntityId(preEntityId);
       else setSelectedEntityId(null);
 
-      if (activeTool === "tile") {
+      if (activeTool === "tile" && selectedTile) {
         setTile({ x, y, type: selectedTile });
-      } else if (activeTool === "entity") {
+      } else if (activeTool === "entity" && selectedEntity) {
         addEntity(selectedEntity, x, y);
       }
     },
@@ -189,10 +190,12 @@ export function LevelCanvas() {
       if (painted.current.size === 1 && startCell.current) {
         const startKey = `${startCell.current.x}-${startCell.current.y}`;
         painted.current.add(startKey);
-        pendingActions.current.push(makeAction(startCell.current.x, startCell.current.y));
+        const action = makeAction(startCell.current.x, startCell.current.y);
+        if (action) pendingActions.current.push(action);
       }
 
-      pendingActions.current.push(makeAction(cell.x, cell.y));
+      const action = makeAction(cell.x, cell.y);
+      if (action) pendingActions.current.push(action);
       scheduleFlush();
     },
     [getCellFromEvent, makeAction, scheduleFlush]
