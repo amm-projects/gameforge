@@ -9,7 +9,9 @@ import { LevelCanvas } from "@/components/editor/LevelCanvas";
 import { ToolPanel } from "@/components/editor/ToolPanel";
 import { InspectorPanel } from "@/components/editor/InspectorPanel";
 import { GameRuntime } from "@/components/runtime/GameRuntime";
-import type { LevelData } from "@/types/level";
+import type { LevelData, TileType, EntityType } from "@/types/level";
+
+const CELL_SIZE = 10;
 
 export function EditorShell() {
   const { width, height, tiles, entities, setTile, addEntity } = useEditorStore();
@@ -39,31 +41,35 @@ export function EditorShell() {
   }, [setIsPlaying]);
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || !active.data.current) {
+    const { active, over, delta } = event;
+    if (!over || over.id !== "grid" || !active.data.current) {
       return;
     }
 
-    const target = over.id as string;
-    if (!target.startsWith("cell-")) {
-      return;
-    }
+    const gridEl = document.getElementById("grid");
+    if (!gridEl) return;
 
-    const [, xString, yString] = target.split("-");
-    const x = Number(xString);
-    const y = Number(yString);
-    if (Number.isNaN(x) || Number.isNaN(y)) {
-      return;
-    }
+    const gridRect = gridEl.getBoundingClientRect();
+    const activatorEvent = event.activatorEvent as PointerEvent | undefined;
+    if (!activatorEvent) return;
+
+    const dropX = activatorEvent.clientX + delta.x;
+    const dropY = activatorEvent.clientY + delta.y;
+
+    const x = Math.floor((dropX - gridRect.left) / CELL_SIZE);
+    const y = Math.floor((dropY - gridRect.top) / CELL_SIZE);
+
+    const { width: levelWidth, height: levelHeight } = useEditorStore.getState();
+    if (x < 0 || x >= levelWidth || y < 0 || y >= levelHeight) return;
 
     const payload = active.data.current as { type: string; tileType?: string; entityType?: string };
     if (payload.type === "tile") {
-      setTile({ x, y, type: payload.tileType as typeof selectedTile });
+      setTile({ x, y, type: payload.tileType as TileType });
       return;
     }
 
     if (payload.type === "entity") {
-      addEntity(payload.entityType as typeof selectedEntity, x, y);
+      addEntity(payload.entityType as EntityType, x, y);
     }
   };
 
