@@ -247,8 +247,8 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         }
       }
 
-      const canvasWidth = Math.min(level.width * TILE_SIZE, 1024);
-      const canvasHeight = Math.min(level.height * TILE_SIZE, 768);
+      const canvasWidth = Math.min(level.width * TILE_SIZE, 1280);
+      const canvasHeight = Math.min(level.height * TILE_SIZE, 720);
 
       game = new PhaserLib.Game({
         type: PhaserLib.CANVAS,
@@ -325,7 +325,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         </button>
       </div>
       <div
-        className="overflow-hidden rounded-3xl border border-slate-900/80 bg-black h-96 w-full"
+        className="overflow-hidden rounded-3xl border border-slate-900/80 bg-black min-h-[480px] w-full"
         ref={containerRef}
         tabIndex={0}
         onClick={() => containerRef.current?.focus()}

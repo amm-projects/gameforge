@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-06-03
+
+### Changed
+
+- Changed default level grid from 16×12 to 64×64 cells.
+- Reduced editor cell size from 40px to 10px so the 64×64 grid occupies the same visual canvas area (~640×640px).
+- Increased Phaser runtime canvas limits from 1024×768 to 1280×720 for a wider viewport.
+- Changed runtime container height from fixed `h-96` (384px) to `min-h-[480px]`.
+- Updated grid dimension badge in LevelCanvas to show dynamic `{width}x{height}` instead of hardcoded "32x32".
+- Reduced entity symbol text and selection ring size to match the smaller cells.
+
 ## [0.3.0] - 2026-06-03
 
 ### Added

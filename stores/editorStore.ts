@@ -19,8 +19,8 @@ interface EditorState extends LevelData {
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
-  width: 16,
-  height: 12,
+  width: 64,
+  height: 64,
   tiles: [],
   entities: [],
 
@@ -64,8 +64,8 @@ export const useEditorStore = create<EditorState>((set) => ({
 
   resetLevel: () =>
     set(() => ({
-      width: 16,
-      height: 12,
+      width: 64,
+      height: 64,
       tiles: [],
       entities: [],
     })),

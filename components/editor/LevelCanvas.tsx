@@ -37,20 +37,20 @@ function GridCell({
       type="button"
       ref={setNodeRef}
       onClick={onClick}
-      className={`relative h-10 w-10 rounded border bg-slate-950 transition ${
+      className={`relative h-[10px] w-[10px] border bg-slate-950 ${
         isSelected
-          ? "border-cyan-400 ring-2 ring-cyan-400/50"
+          ? "border-cyan-400 ring-1 ring-cyan-400/50"
           : tileType
             ? "border-slate-600"
             : "border-slate-900/70"
       }`}
     >
       {tileType && (
-        <span className={`absolute inset-0 block rounded ${tileType === "ground" ? "bg-amber-600" : "bg-rose-500/90"}`} />
+        <span className={`absolute inset-0 block ${tileType === "ground" ? "bg-amber-600" : "bg-rose-500/90"}`} />
       )}
       {entityVisual && (
         <span
-          className={`absolute inset-0 flex items-center justify-center rounded ${entityVisual.color} text-[9px] font-bold text-white drop-shadow-lg`}
+          className={`absolute inset-0 flex items-center justify-center ${entityVisual.color} text-[5px] font-bold text-white leading-none`}
           title={entityVisual.label}
         >
           {entityVisual.symbol}
@@ -130,15 +130,15 @@ export function LevelCanvas() {
           <h2 className="text-base font-semibold text-white">Canvas del nivel</h2>
           <p className="text-sm text-slate-400">Haz clic o arrastra un objeto para colocar elementos.</p>
         </div>
-        <div className="rounded-full bg-slate-900 px-3 py-1 text-xs uppercase tracking-[0.22em] text-slate-400">32x32 grid</div>
+        <div className="rounded-full bg-slate-900 px-3 py-1 text-xs uppercase tracking-[0.22em] text-slate-400">{width}x{height} grid</div>
       </div>
       <div className="overflow-auto rounded-3xl border border-slate-900/80 bg-slate-950 p-2">
         <div
           className="grid gap-0"
           style={{
             gridTemplateColumns: `repeat(${width}, minmax(0, 1fr))`,
-            width: `${width * 40}px`,
-            height: `${height * 40}px`,
+            width: `${width * 10}px`,
+            height: `${height * 10}px`,
           }}
         >
           {Array.from({ length: height }).flatMap((_, row) =>
