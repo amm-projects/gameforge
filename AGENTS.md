@@ -248,12 +248,71 @@ Mobile será una prioridad secundaria.
 
 # Testing
 
-Cuando se implementen nuevas funcionalidades:
+## Stack de testing
 
-- Crear pruebas unitarias para la lógica crítica.
-- Validar serialización de niveles.
-- Validar carga de proyectos.
-- Validar herramientas del editor.
+| Tipo | Herramienta | Propósito |
+|---|---|---|
+| Unitario | Vitest | Lógica crítica, stores, utilidades, serialización |
+| Integración | Testing Library | Componentes React, interacciones de usuario |
+| E2E | Playwright | Flujos completos (editor, runtime, exportar/cargar) |
+
+## Vitest (unitario)
+
+- Los tests deben ubicarse junto al archivo que prueban con sufijo `.test.ts` o `.test.tsx`.
+- Cubrir: stores de Zustand, serialización/deserialización de niveles, lógica de pintado, herramientas del editor.
+- No mockear Phaser. Separar la lógica pura (tipos, transformaciones) para testearla sin Phaser.
+
+```ts
+// ejemplo: editorStore.test.ts
+import { describe, it, expect } from 'vitest';
+```
+
+## Testing Library (integración)
+
+- Tests en archivos `.test.tsx` junto al componente.
+- Probar: renderizado de componentes, clics, drag & drop con dnd-kit simulado, selección de tiles/entidades, interacción con el canvas.
+- Usar `@testing-library/react`, `@testing-library/user-event`.
+
+```ts
+// ejemplo: ToolPanel.test.tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+```
+
+## Playwright (E2E)
+
+- Tests en `e2e/` con sufijo `.spec.ts`.
+- Cubrir: carga de la página, pintar tiles en el canvas, colocar entidades, borrar, exportar JSON, cargar JSON, abrir runtime y ver el juego funcionando.
+- Usar `@playwright/test`.
+
+```ts
+// ejemplo: e2e/editor.spec.ts
+import { test, expect } from '@playwright/test';
+```
+
+## Comandos
+
+```text
+npm run test        → Vitest (unitario + integración)
+npm run test:e2e    → Playwright
+npm run test:run    → Vitest en modo CI (sin watch)
+```
+
+## Reglas
+
+- Seguir metodología TDD (Test Driven Development):
+  1. Escribir el test que falla primero.
+  2. Implementar el código mínimo para que pase.
+  3. Refactorizar manteniendo los tests verdes.
+- No commitea código sin test si la funcionalidad es testeable.
+- Mantener los tests rápidos (< 100ms por test unitario).
+- No testear implementación interna de Phaser. Testear solo lógica de la aplicación.
+
+## Verificación continua
+
+- Después de cada feature: `npm run test:run && npm run build`
+- Después de cambios en flujos críticos: agregar `npm run test:e2e`
+- Al final: `npm run lint && npm run test:run && npm run build`
 
 ---
 

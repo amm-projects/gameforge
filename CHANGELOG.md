@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-06-04
+
+### Added
+
+- Stack de testing: Vitest (unitario), Testing Library (integración), Playwright (E2E).
+- `vitest.config.ts` con jsdom, plugin React y alias `@/`.
+- `playwright.config.ts` con tests en `e2e/`, servidor Next.js automático.
+- Scripts `test`, `test:run` y `test:e2e` en `package.json`.
+- `eslint.config.mjs` ignora `e2e/` y `*.test.{ts,tsx}`.
+
 ## [0.8.1] - 2026-06-03
 
 ### Added
