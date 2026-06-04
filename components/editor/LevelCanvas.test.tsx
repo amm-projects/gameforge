@@ -63,8 +63,8 @@ describe('LevelCanvas', () => {
         { x: 1, y: 0, type: 'spike' },
       ],
       entities: [
-        { id: 'p1', type: 'player', x: 2, y: 0 },
-        { id: 'c1', type: 'coin', x: 3, y: 0 },
+        { id: 'p1', type: 'player', position: { x: 2, y: 0 }, properties: {} },
+        { id: 'c1', type: 'coin', position: { x: 3, y: 0 }, properties: {} },
       ],
     });
     renderWithDnd();
@@ -74,7 +74,7 @@ describe('LevelCanvas', () => {
 
   it('renders selected entity with cyan ring', () => {
     useEditorStore.setState({
-      entities: [{ id: 'selected-id', type: 'player', x: 0, y: 0 }],
+      entities: [{ id: 'selected-id', type: 'player', position: { x: 0, y: 0 }, properties: {} }],
     });
     useSelectionStore.setState({ selectedEntityId: 'selected-id' });
     renderWithDnd();

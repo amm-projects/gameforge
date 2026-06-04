@@ -14,7 +14,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "GameForge - Editor de niveles 2D",
-  description: "Editor de niveles 2D con runtime Phaser integrado.",
+  description: "Editor visual de juegos de plataformas 2D. Crea niveles con drag & drop, coloca tiles, enemigos, monedas y juega directamente en el navegador.",
+  keywords: ["editor de niveles", "creador de juegos", "plataformas 2D", "game maker", "Mario Maker"],
+  authors: [{ name: "GameForge" }],
+  openGraph: {
+    title: "GameForge - Editor de niveles 2D",
+    description: "Creador de juegos de plataformas 2D similar a Mario Maker, completamente web.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

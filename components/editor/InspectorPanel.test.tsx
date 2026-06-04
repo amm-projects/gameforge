@@ -31,7 +31,7 @@ describe('InspectorPanel', () => {
 
   it('shows correct entity count when entities exist', () => {
     useEditorStore.setState({
-      entities: [{ id: '1', type: 'player', x: 5, y: 5 }],
+      entities: [{ id: '1', type: 'player', position: { x: 5, y: 5 }, properties: {} }],
     });
     render(<InspectorPanel />);
     expect(screen.getByText(/Entidades: 1/)).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe('InspectorPanel', () => {
       width: 16,
       height: 12,
       tiles: [{ x: 0, y: 0, type: 'ground' }],
-      entities: [{ id: 'abc', type: 'player', x: 1, y: 1 }],
+      entities: [{ id: 'abc', type: 'player', position: { x: 1, y: 1 }, properties: {} }],
     });
     const user = userEvent.setup();
     render(<InspectorPanel />);
@@ -74,7 +74,7 @@ describe('InspectorPanel', () => {
       width: 10,
       height: 10,
       tiles: [{ x: 0, y: 0, type: 'ground' }],
-      entities: [{ id: 'x', type: 'player', x: 0, y: 0 }],
+      entities: [{ id: 'x', type: 'player', position: { x: 0, y: 0 }, properties: {} }],
     });
     const user = userEvent.setup();
     render(<InspectorPanel />);

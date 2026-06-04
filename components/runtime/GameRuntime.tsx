@@ -122,8 +122,8 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           });
 
           entities.forEach((entity: Entity) => {
-            const x = entity.x * TILE_SIZE + TILE_SIZE / 2;
-            const y = entity.y * TILE_SIZE + TILE_SIZE / 2;
+            const x = entity.position.x * TILE_SIZE + TILE_SIZE / 2;
+            const y = entity.position.y * TILE_SIZE + TILE_SIZE / 2;
 
             if (entity.type === "player") {
               const player = this.physics.add.sprite(x, y, "runtime-player").setOrigin(0.5) as Physics.Arcade.Sprite;
@@ -343,6 +343,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         <button
           type="button"
           onClick={onStop}
+          aria-label="Detener runtime"
           className="rounded-2xl bg-slate-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-600"
         >
           Detener

@@ -74,8 +74,8 @@ describe('editorStore', () => {
       const { entities } = useEditorStore.getState();
       expect(entities).toHaveLength(1);
       expect(entities[0].type).toBe('player');
-      expect(entities[0].x).toBe(10);
-      expect(entities[0].y).toBe(5);
+      expect(entities[0].position.x).toBe(10);
+      expect(entities[0].position.y).toBe(5);
       expect(entities[0].id).toBeTruthy();
     });
 
@@ -180,7 +180,7 @@ describe('editorStore', () => {
         width: 10,
         height: 10,
         tiles: [{ x: 0, y: 0, type: 'ground' }],
-        entities: [{ id: 'test', type: 'player', x: 5, y: 5 }],
+        entities: [{ id: 'test', type: 'player', position: { x: 5, y: 5 }, properties: {} }],
       });
       const state = useEditorStore.getState();
       expect(state.width).toBe(10);
@@ -203,7 +203,7 @@ describe('editorStore', () => {
         width: 10,
         height: 10,
         tiles: [{ x: 0, y: 0, type: 'ground' }],
-        entities: [{ id: 'x', type: 'player', x: 0, y: 0 }],
+        entities: [{ id: 'x', type: 'player', position: { x: 0, y: 0 }, properties: {} }],
       });
       useEditorStore.getState().resetLevel();
       const state = useEditorStore.getState();

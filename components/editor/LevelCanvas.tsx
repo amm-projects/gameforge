@@ -39,6 +39,7 @@ const GridCell = memo(function GridCell({
       type="button"
       data-x={x}
       data-y={y}
+      aria-label={`Celda ${x},${y}${tileType ? ` ${tileType}` : ""}${entityType ? ` ${entityType}` : ""}`}
       className={`absolute z-10 border ${
         isSelected
           ? "border-cyan-400 bg-slate-950 ring-1 ring-cyan-400/50"
@@ -58,7 +59,7 @@ const GridCell = memo(function GridCell({
       )}
       {entityVisual && (
         <span
-          className={`absolute inset-0 flex items-center justify-center ${entityVisual.color} text-[5px] font-bold text-white leading-none`}
+          className={`absolute inset-0 flex items-center justify-center ${entityVisual.color} text-[0.3125rem] font-bold text-white leading-none`}
           title={entityVisual.label}
         >
           {entityVisual.symbol}
@@ -100,7 +101,7 @@ export function LevelCanvas() {
   );
 
   const entityLookup = useMemo(
-    () => new Map(entities.map((entity) => [`${entity.x}-${entity.y}`, entity])),
+    () => new Map(entities.map((entity) => [`${entity.position.x}-${entity.position.y}`, entity])),
     [entities]
   );
 

@@ -1,6 +1,6 @@
 {
   "name": "game-creator",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -33,6 +33,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.7",
     "jsdom": "^29.1.1",
+    "lighthouse": "^13.3.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.1.8"

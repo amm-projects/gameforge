@@ -43,15 +43,15 @@ export const useEditorStore = create<EditorState>((set) => ({
 
   addEntity: (type, x, y) =>
     set((state) => {
-      const existing = state.entities.filter((entity) => entity.x !== x || entity.y !== y);
+      const existing = state.entities.filter((entity) => entity.position.x !== x || entity.position.y !== y);
       return {
         entities: [
           ...existing,
           {
             id: createId(),
             type,
-            x,
-            y,
+            position: { x, y },
+            properties: {},
           },
         ],
       };
@@ -70,11 +70,11 @@ export const useEditorStore = create<EditorState>((set) => ({
           tiles = tiles.filter((t) => t.x !== action.x || t.y !== action.y);
           tiles = [...tiles, { x: action.x, y: action.y, type: action.tileType }];
         } else if (action.kind === "entity") {
-          entities = entities.filter((e) => e.x !== action.x || e.y !== action.y);
-          entities = [...entities, { id: action.entityId, type: action.entityType, x: action.x, y: action.y }];
+          entities = entities.filter((e) => e.position.x !== action.x || e.position.y !== action.y);
+          entities = [...entities, { id: action.entityId, type: action.entityType, position: { x: action.x, y: action.y }, properties: {} }];
         } else if (action.kind === "erase") {
           tiles = tiles.filter((t) => t.x !== action.x || t.y !== action.y);
-          entities = entities.filter((e) => e.x !== action.x || e.y !== action.y);
+          entities = entities.filter((e) => e.position.x !== action.x || e.position.y !== action.y);
         }
       }
 

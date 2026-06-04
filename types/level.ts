@@ -10,8 +10,11 @@ export interface Tile {
 export interface Entity {
   id: string;
   type: EntityType;
-  x: number;
-  y: number;
+  position: {
+    x: number;
+    y: number;
+  };
+  properties: Record<string, unknown>;
 }
 
 export interface LevelData {

@@ -86,6 +86,7 @@ export function EditorShell() {
             <button
               type="button"
               onClick={() => setIsPlaying(true)}
+              aria-label="Play: iniciar runtime del nivel"
               className="rounded-2xl bg-amber-500 px-4 py-2 font-semibold text-slate-950 transition hover:bg-amber-400"
             >
               Play
@@ -93,11 +94,12 @@ export function EditorShell() {
             <button
               type="button"
               onClick={() => setIsPlaying(false)}
+              aria-label="Stop: detener runtime del nivel"
               className="rounded-2xl border border-slate-700 px-4 py-2 text-slate-100 transition hover:border-slate-500"
             >
               Stop
             </button>
-            <span className="rounded-2xl bg-slate-800 px-3 py-2 text-xs uppercase tracking-[0.22em] text-slate-400">
+            <span role="status" className="rounded-2xl bg-slate-800 px-3 py-2 text-xs uppercase tracking-[0.22em] text-slate-400">
               {isPlaying ? "Runtime activo" : "Editor activo"}
             </span>
           </div>

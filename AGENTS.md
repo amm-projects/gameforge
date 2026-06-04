@@ -229,6 +229,30 @@ Evitar stores monolíticos.
 
 ---
 
+# Lighthouse
+
+El proyecto debe mantener puntuación **100 en todas las categorías** de Lighthouse:
+
+| Categoría | Objetivo |
+|---|---|
+| Rendimiento | 100 |
+| Accesibilidad | 100 |
+| Buenas prácticas | 100 |
+| SEO | 100 |
+
+## Reglas
+
+- Auditar con Lighthouse en **escritorio**, **tablet** y **móvil** antes de cada release.
+- No introducir cambios que degraden ninguna puntuación por debajo de 100.
+- Si una restricción técnica impide el 100, documentar la excepción en `/docs` con plan de mitigación.
+- Priorizar etiquetas semánticas (`<header>`, `<main>`, `<section>`, `<button>`) y roles ARIA donde aplique.
+- Asegurar contraste de color suficiente en todos los temas.
+- Proporcionar textos alternativos (`alt`, `aria-label`) en todos los elementos interactivos y decorativos.
+- Usar tamaños de fuente relativos (`rem`/`em`) y media queries para adaptarse a tablet y móvil.
+- Optimizar imágenes y assets para cada viewport.
+
+---
+
 # Seguridad (OWASP Top 10)
 
 ## A01:2021 – Broken Access Control

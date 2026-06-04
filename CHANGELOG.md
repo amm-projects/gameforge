@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-06-04
+
+### Added
+
+- Directorios `hooks/` y `lib/` con estructura inicial según convención de AGENTS.md.
+- `hooks/useTileBrush.ts`: hook para encapsular lógica de pintado con batch y RAF.
+- `lib/utils.ts`: utilidades compartidas (`makeId`, `clamp`, `isKeyOf`).
+- `types/tile-definitions.ts`: modelo de datos de tiles con `id`, `nombre`, `categoría`, `sprite` y `sólido` según especificación de AGENTS.md.
+- Entity `properties: Record<string, unknown>` para datos dinámicos por entidad.
+
+### Changed
+
+- `types/level.ts`: Entity ahora usa `position: { x, y }` en lugar de `x`, `y` planos, alineado con la interfaz definida en AGENTS.md.
+- `types/level.schema.ts`: actualizado esquema Zod para `position` anidado y `properties` opcional con transform a objeto vacío.
+- `stores/editorStore.ts`: actualizadas referencias a `entity.position.x`/`entity.position.y`.
+- `components/editor/LevelCanvas.tsx`: actualizadas referencias a `entity.position`.
+- `components/runtime/GameRuntime.tsx`: actualizadas referencias a `entity.position`.
+- Todos los tests actualizados para la nueva interfaz Entity.
+
+## [0.9.2] - 2026-06-04
+
+### Added
+
+- Documentación de excepciones Lighthouse en `docs/lighthouse-exceptions.md`.
+- Auditoría Lighthouse completa en escritorio, tablet y móvil usando Edge (Chromium v148).
+
+### Changed
+
+- `ToolPanel.tsx`: headings `<h3>` → `<h2>` para jerarquía correcta (heading-order).
+- `ToolPanel.tsx`: `text-slate-500` → `text-slate-300` en descripciones de 10px para contraste suficiente (color-contrast).
+- `ToolPanel.tsx`: `aria-label` añadido a drag handles y botones de selección (aria-command-name).
+- `EditorShell.tsx`: `aria-label` en Play/Stop ahora incluye texto visible (label-content-name-mismatch).
+- `InspectorPanel.tsx`: `aria-label` actualizados para coincidir con texto visible.
+- `GameRuntime.tsx`: `aria-label` añadido al botón Detener.
+- `text-[10px]` → `text-[0.625rem]` y `text-[5px]` → `text-[0.3125rem]` para tamaños de fuente relativos.
+
+### Fixed
+
+- Contraste de color insuficiente en `text-[10px] text-slate-500` sobre fondo oscuro (2.17:1 → 6.81:1).
+
 ## [0.9.1] - 2026-06-04
 
 ### Added
