@@ -229,6 +229,65 @@ Evitar stores monolíticos.
 
 ---
 
+# Seguridad (OWASP Top 10)
+
+## A01:2021 – Broken Access Control
+
+- No exponer rutas de API internas sin validación.
+- Si se implementan roles (admin/editor/viewer), verificar permisos en cada operación.
+- No confiar en datos del cliente para decidir autorización.
+
+## A02:2021 – Cryptographic Failures
+
+- No transmitir ni almacenar contraseñas sin cifrado (bcrypt/Argon2).
+- Usar HTTPS en producción.
+- No inventar algoritmos criptográficos propios.
+
+## A03:2021 – Injection
+
+- Validar y sanitizar todo JSON de nivel cargado por el usuario antes de parsearlo.
+- Nunca usar `eval()`, `new Function()` ni templates peligrosas.
+- Todo input del usuario (textareas, imports) debe pasar por validación estricta de tipos (Zod).
+
+## A04:2021 – Insecure Design
+
+- Modelar amenazas antes de implementar features críticas (autenticación, pagos, APIs).
+- Establecer límites de tasa (rate limiting) en endpoints públicos futuros.
+- No asumir que el cliente es confiable; validar siempre en el servidor.
+
+## A05:2021 – Security Misconfiguration
+
+- No exponer información sensible en el lado del cliente (claves, URLs internas).
+- Mantener dependencias actualizadas.
+- Deshabilitar características innecesarias de Phaser/Next.js en producción.
+
+## A06:2021 – Vulnerable and Outdated Components
+
+- Revisar dependencias periódicamente con `npm audit`.
+- No introducir dependencias sin necesidad (ver reglas NUNCA).
+
+## A07:2021 – Identification and Authentication Failures
+
+- Si se implementa autenticación en el futuro, usar sesiones seguras (NextAuth).
+- No almacenar tokens ni credenciales en Zustand o localStorage sin cifrado.
+
+## A08:2021 – Software and Data Integrity Failures
+
+- Validar que los assets (sprites, JSON) cargados no contengan código malicioso.
+- Verificar integridad de niveles importados antes de cargarlos en el runtime.
+
+## A09:2021 – Security Logging and Monitoring Failures
+
+- No imprimir datos sensibles en `console.log` / `console.error`.
+- Capturar errores de parseo JSON sin exponer el contenido completo.
+
+## A10:2021 – Server-Side Request Forgery (SSRF)
+
+- Si se implementan APIs de importación/exportación, validar y restringir URLs.
+- No permitir fetch a destinos arbitrarios desde el servidor.
+
+---
+
 # UI
 
 Diseño inspirado en herramientas profesionales.

@@ -4,14 +4,14 @@ import { useMemo } from "react";
 import { useEditorStore } from "@/stores/editorStore";
 import { useProjectStore } from "@/stores/projectStore";
 import { useRuntimeStore } from "@/stores/runtimeStore";
-import type { LevelData } from "@/types/level";
+import { levelDataSchema } from "@/types/level.schema";
 
 export function InspectorPanel() {
   const { tiles, entities, width, height, loadLevel, resetLevel } = useEditorStore();
   const { jsonText, setJsonText } = useProjectStore();
   const { setIsPlaying } = useRuntimeStore();
 
-  const levelData = useMemo<LevelData>(
+  const levelData = useMemo(
     () => ({ width, height, tiles, entities }),
     [width, height, tiles, entities]
   );
@@ -22,13 +22,14 @@ export function InspectorPanel() {
 
   const handleLoad = () => {
     try {
-      const parsed = JSON.parse(jsonText) as LevelData;
-      if (!parsed || typeof parsed.width !== "number" || typeof parsed.height !== "number") {
-        throw new Error("Formato JSON inválido");
+      const parsed = JSON.parse(jsonText);
+      const result = levelDataSchema.safeParse(parsed);
+      if (!result.success) {
+        return;
       }
-      loadLevel(parsed);
-    } catch (error) {
-      console.error("Error al cargar JSON:", error);
+      loadLevel(result.data);
+    } catch {
+      return;
     }
   };
 

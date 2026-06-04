@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.1] - 2026-06-04
+
+### Added
+
+- Schema Zod para validación de LevelData en `types/level.schema.ts` (A03).
+- Tests de integración para rechazo de JSON inválido en InspectorPanel.
+- Documentación de seguridad OWASP en `docs/owasp-security.md`.
+
+### Changed
+
+- `InspectorPanel.handleLoad` ahora usa `levelDataSchema.safeParse()` en lugar de `JSON.parse` + casteo manual.
+- Error logging silenciado en `handleLoad` (A09).
+
+### Security
+
+- Validación estricta de tipos con Zod para todo input JSON de nivel (A03).
+- Eliminada exposición de datos de usuario en `console.error` (A09).
+- Ejecutado `npm audit` (A06): 2 vulnerabilidades moderadas en postcss (transitivas de Next.js).
+
 ## [0.9.0] - 2026-06-04
 
 ### Added

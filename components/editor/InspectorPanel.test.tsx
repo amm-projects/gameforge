@@ -86,6 +86,32 @@ describe('InspectorPanel', () => {
     expect(state.entities).toHaveLength(0);
   });
 
+  it('rejects invalid JSON (missing required fields)', async () => {
+    useEditorStore.setState({ width: 64, height: 64, tiles: [], entities: [] });
+    const user = userEvent.setup();
+    render(<InspectorPanel />);
+    const textarea = screen.getByPlaceholderText('JSON del nivel aquí...');
+    await user.clear(textarea);
+    await user.paste(JSON.stringify({ width: 'bad', height: null }));
+    await user.click(screen.getByText('Cargar JSON'));
+    const state = useEditorStore.getState();
+    expect(state.width).toBe(64);
+    expect(state.height).toBe(64);
+  });
+
+  it('rejects JSON with invalid tile type', async () => {
+    useEditorStore.setState({ width: 64, height: 64, tiles: [], entities: [] });
+    const user = userEvent.setup();
+    render(<InspectorPanel />);
+    const textarea = screen.getByPlaceholderText('JSON del nivel aquí...');
+    const invalid = JSON.stringify({ width: 10, height: 10, tiles: [{ x: 0, y: 0, type: 'invalid' }], entities: [] });
+    await user.clear(textarea);
+    await user.paste(invalid);
+    await user.click(screen.getByText('Cargar JSON'));
+    const state = useEditorStore.getState();
+    expect(state.tiles).toHaveLength(0);
+  });
+
   it('updates textarea when jsonText changes', async () => {
     const user = userEvent.setup();
     render(<InspectorPanel />);
