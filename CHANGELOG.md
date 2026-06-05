@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2026-06-05
+
+### Added
+
+- Contador de monedas en la esquina superior derecha del runtime, con icono de moneda y número actualizable al recolectar.
+
+### Changed
+
+- Gravedad del mundo aumentada de 300 a 1800 para una caída más rápida.
+- Velocidad de salto del jugador aumentada de -320 a -800 para mantener altura de salto.
+- Velocidad horizontal del jugador aumentada de 160 a 300.
+
 ## [0.13.0] - 2026-06-05
 
 ### Added

@@ -45,6 +45,9 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         declare soundCoin: Sound.BaseSound;
         declare soundHit: Sound.BaseSound;
         declare soundGoal: Sound.BaseSound;
+        declare coinCount: number;
+        declare coinText: GameObjects.Text;
+        declare coinIcon: GameObjects.Image;
 
         constructor() {
           super({ key: "runtime" });
@@ -258,6 +261,27 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
             this.physics.add.collider(this.player, enemyLayer, () => this.onHitSpike(), undefined, this);
           }
 
+          this.coinCount = 0;
+          const coinX = this.cameras.main.width - 10;
+          const coinY = 18;
+          this.coinIcon = this.add
+            .image(coinX, coinY, "runtime-coin")
+            .setOrigin(1, 0.5)
+            .setScale(0.5)
+            .setScrollFactor(0)
+            .setDepth(100);
+          this.coinText = this.add
+            .text(coinX - 20, coinY, "0", {
+              fontSize: "16px",
+              color: "#fbbf24",
+              fontStyle: "bold",
+              stroke: "#000000",
+              strokeThickness: 3,
+            })
+            .setOrigin(1, 0.5)
+            .setScrollFactor(0)
+            .setDepth(100);
+
           this.cursors = this.input.keyboard!.createCursorKeys();
           this.statusText = this.add
             .text(16, worldHeight + 16, "", { fontSize: "16px", color: "#ffffff" })
@@ -285,15 +309,15 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           }
 
           if (this.cursors.left?.isDown) {
-            this.player.setVelocityX(-160);
+            this.player.setVelocityX(-300);
           } else if (this.cursors.right?.isDown) {
-            this.player.setVelocityX(160);
+            this.player.setVelocityX(300);
           } else {
             this.player.setVelocityX(0);
           }
 
           if (this.cursors.up?.isDown && (this.player.body as Physics.Arcade.Body).blocked.down) {
-            this.player.setVelocityY(-320);
+            this.player.setVelocityY(-800);
             this.soundJump.play();
           }
 
@@ -303,6 +327,8 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         }
 
         private onCollectCoin(coin: ArcadePhysicsObject) {
+          this.coinCount++;
+          this.coinText.setText(String(this.coinCount));
           this.soundCoin.play();
           if ("gameObject" in coin) {
             coin.gameObject.destroy();
@@ -347,7 +373,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         physics: {
           default: "arcade",
           arcade: {
-            gravity: { x: 0, y: 300 },
+            gravity: { x: 0, y: 1800 },
             debug: false,
           },
         },
