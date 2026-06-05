@@ -1,6 +1,5 @@
 "use client";
 
-import { useDraggable } from "@dnd-kit/core";
 import { useSelectionStore } from "@/stores/selectionStore";
 import type { TileType, EntityType } from "@/types/level";
 
@@ -27,36 +26,25 @@ function Preview({ children, bg }: { children: React.ReactNode; bg: string }) {
   );
 }
 
-function DragHandle({ children, listeners, attributes, label }: { children: React.ReactNode; listeners: ReturnType<typeof useDraggable>["listeners"]; attributes: ReturnType<typeof useDraggable>["attributes"]; label?: string }) {
-  return (
-    <div {...listeners} {...attributes} aria-label={label} className="cursor-grab">
-      {children}
-    </div>
-  );
-}
-
 function TileRow({ tile }: { tile: TileType }) {
   const { selectedTile, setSelectedTile } = useSelectionStore();
   const v = TILE_VISUAL[tile];
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `tile-${tile}`,
-    data: { type: "tile", tileType: tile },
-  });
 
   return (
     <div
-      ref={setNodeRef}
-      className={`flex items-center gap-3 rounded-2xl border px-3 py-2.5 text-sm transition ${isDragging ? "opacity-50" : ""} ${selectedTile === tile ? "border-slate-600 bg-slate-700 text-white" : "border-slate-800/80 bg-slate-900 text-slate-300 hover:bg-slate-800"}`}
+      className={`flex cursor-pointer items-center gap-3 rounded-2xl border px-3 py-2.5 text-sm transition ${selectedTile === tile ? "border-slate-600 bg-slate-700 text-white" : "border-slate-800/80 bg-slate-900 text-slate-300 hover:bg-slate-800"}`}
+      onClick={() => setSelectedTile(tile)}
+      role="button"
+      tabIndex={0}
+      aria-label={`${v.label}: seleccionar tile ${tile}`}
     >
-      <DragHandle listeners={listeners} attributes={attributes} label={`Arrastrar ${v.label}`}>
-        <Preview bg={v.bg}>
-          {tile === "spike" ? <span className="text-[0.625rem] font-bold text-white">^</span> : null}
-        </Preview>
-      </DragHandle>
-      <button type="button" onClick={() => setSelectedTile(tile)} aria-label={`${v.label}: seleccionar tile ${tile}`} className="flex-1 text-left">
+      <Preview bg={v.bg}>
+        {tile === "spike" ? <span className="text-[0.625rem] font-bold text-white">^</span> : null}
+      </Preview>
+      <div className="flex-1">
         <div className="font-medium">{v.label}</div>
         <div className="text-[0.625rem] text-slate-300">{tile}</div>
-      </button>
+      </div>
     </div>
   );
 }
@@ -64,25 +52,22 @@ function TileRow({ tile }: { tile: TileType }) {
 function EntityRow({ entity }: { entity: EntityType }) {
   const { selectedEntity, setSelectedEntity } = useSelectionStore();
   const v = ENTITY_VISUAL[entity];
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `entity-${entity}`,
-    data: { type: "entity", entityType: entity },
-  });
 
   return (
     <div
-      ref={setNodeRef}
-      className={`flex items-center gap-3 rounded-2xl border px-3 py-2.5 text-sm transition ${isDragging ? "opacity-50" : ""} ${selectedEntity === entity ? "border-slate-600 bg-slate-700 text-white" : "border-slate-800/80 bg-slate-900 text-slate-300 hover:bg-slate-800"}`}
+      className={`flex cursor-pointer items-center gap-3 rounded-2xl border px-3 py-2.5 text-sm transition ${selectedEntity === entity ? "border-slate-600 bg-slate-700 text-white" : "border-slate-800/80 bg-slate-900 text-slate-300 hover:bg-slate-800"}`}
+      onClick={() => setSelectedEntity(entity)}
+      role="button"
+      tabIndex={0}
+      aria-label={`${v.label}: seleccionar entidad ${entity}`}
     >
-      <DragHandle listeners={listeners} attributes={attributes} label={`Arrastrar ${v.label}`}>
-        <Preview bg={v.bg}>
-          <span className="text-xs font-bold text-white drop-shadow">{v.symbol}</span>
-        </Preview>
-      </DragHandle>
-      <button type="button" onClick={() => setSelectedEntity(entity)} aria-label={`${v.label}: seleccionar entidad ${entity}`} className="flex-1 text-left">
+      <Preview bg={v.bg}>
+        <span className="text-xs font-bold text-white drop-shadow">{v.symbol}</span>
+      </Preview>
+      <div className="flex-1">
         <div className="font-medium">{v.label}</div>
         <div className="text-[0.625rem] text-slate-300">{entity}</div>
-      </button>
+      </div>
     </div>
   );
 }

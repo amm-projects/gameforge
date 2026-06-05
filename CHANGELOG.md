@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2026-06-05
+
+### Changed
+
+- Eliminado el drag & drag de tiles y entidades en `ToolPanel.tsx`. Cada fila ahora es un `div` clickeable con `role="button"` que selecciona el elemento al hacer clic. Se removieron `useDraggable`, `DragHandle`, `setNodeRef` y la dependencia `@dnd-kit/core` del componente.
+- `ToolPanel.test.tsx`: simplificado el wrapper de test (ya no requiere `DndContext`), actualizado selector de estado seleccionado para usar `getByRole('button')`.
+
+### Removed
+
+- Funcionalidad de arrastrar elementos del panel de selección al canvas. La selección ahora es exclusivamente mediante clic.
+
 ## [0.10.0] - 2026-06-04
 
 ### Added

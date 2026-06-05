@@ -1,16 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { DndContext } from '@dnd-kit/core';
 import { ToolPanel } from './ToolPanel';
 import { useSelectionStore } from '@/stores/selectionStore';
 
-function renderWithDnd() {
-  return render(
-    <DndContext>
-      <ToolPanel />
-    </DndContext>
-  );
+function renderPanel() {
+  return render(<ToolPanel />);
 }
 
 beforeEach(() => {
@@ -24,19 +19,19 @@ beforeEach(() => {
 
 describe('ToolPanel', () => {
   it('renders tile and entity sections', () => {
-    renderWithDnd();
+    renderPanel();
     expect(screen.getByText('Tiles')).toBeInTheDocument();
     expect(screen.getByText('Entidades')).toBeInTheDocument();
   });
 
   it('renders all tile types', () => {
-    renderWithDnd();
+    renderPanel();
     expect(screen.getByText('Suelo')).toBeInTheDocument();
     expect(screen.getByText('Pinchos')).toBeInTheDocument();
   });
 
   it('renders all entity types', () => {
-    renderWithDnd();
+    renderPanel();
     expect(screen.getByText('Jugador')).toBeInTheDocument();
     expect(screen.getByText('Moneda')).toBeInTheDocument();
     expect(screen.getByText('Enemigo')).toBeInTheDocument();
@@ -44,21 +39,21 @@ describe('ToolPanel', () => {
   });
 
   it('has ground selected by default', () => {
-    renderWithDnd();
-    const ground = screen.getByText('Suelo').closest('button');
-    expect(ground?.parentElement).toHaveClass('bg-slate-700');
+    renderPanel();
+    const ground = screen.getByRole('button', { name: /suelo: seleccionar tile ground/i });
+    expect(ground).toHaveClass('bg-slate-700');
   });
 
   it('selects spike tile on click', async () => {
     const user = userEvent.setup();
-    renderWithDnd();
+    renderPanel();
     await user.click(screen.getByText('Pinchos'));
     expect(useSelectionStore.getState().selectedTile).toBe('spike');
   });
 
   it('selects enemy entity on click', async () => {
     const user = userEvent.setup();
-    renderWithDnd();
+    renderPanel();
     await user.click(screen.getByText('Enemigo'));
     const state = useSelectionStore.getState();
     expect(state.selectedEntity).toBe('enemy');
@@ -67,7 +62,7 @@ describe('ToolPanel', () => {
 
   it('switches to erase mode on erase button click', async () => {
     const user = userEvent.setup();
-    renderWithDnd();
+    renderPanel();
     await user.click(screen.getByText('Borrar'));
     expect(useSelectionStore.getState().activeTool).toBe('erase');
   });
@@ -75,7 +70,7 @@ describe('ToolPanel', () => {
   it('selecting a tile clears any selected entity', async () => {
     useSelectionStore.setState({ selectedEntity: 'player', activeTool: 'entity' });
     const user = userEvent.setup();
-    renderWithDnd();
+    renderPanel();
     await user.click(screen.getByText('Suelo'));
     const state = useSelectionStore.getState();
     expect(state.selectedTile).toBe('ground');
@@ -85,7 +80,7 @@ describe('ToolPanel', () => {
 
   it('selecting an entity clears any selected tile', async () => {
     const user = userEvent.setup();
-    renderWithDnd();
+    renderPanel();
     await user.click(screen.getByText('Jugador'));
     const state = useSelectionStore.getState();
     expect(state.selectedEntity).toBe('player');
