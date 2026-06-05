@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2026-06-05
+
+### Added
+
+- Efectos de sonido en el runtime de Phaser: salto (ascendente), moneda (ding brillante), daño/game over (zumbido grave) y nivel completado (arpegio ascendente). Los sonidos se generan mediante síntesis WAV y se cargan en el preload de la escena.
+
+### Changed
+
+- `GameRuntime.tsx`: añadido método `preload()` para cargar audio, declaraciones de sonido (`soundJump`, `soundCoin`, `soundHit`, `soundGoal`) y llamadas a `.play()` en `onCollectCoin`, `onHitSpike`, `onReachGoal` y al saltar.
+- Version bump: nueva feature menor compatible hacia atrás.
+
 ## [0.12.2] - 2026-06-05
 
 ### Fixed

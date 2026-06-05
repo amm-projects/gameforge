@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Game, GameObjects, Physics, Tilemaps, Types } from "phaser";
+import type { Game, GameObjects, Physics, Sound, Tilemaps, Types } from "phaser";
 import type { LevelData, Tile, Entity } from "@/types/level";
 
 const TILE_SIZE = 32;
@@ -41,6 +41,10 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         declare statusText?: GameObjects.Text;
         declare enemies: Physics.Arcade.Sprite[];
         declare worldHeight: number;
+        declare soundJump: Sound.BaseSound;
+        declare soundCoin: Sound.BaseSound;
+        declare soundHit: Sound.BaseSound;
+        declare soundGoal: Sound.BaseSound;
 
         constructor() {
           super({ key: "runtime" });
@@ -48,6 +52,13 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
 
         init(data: { level: LevelData }) {
           this.level = data.level;
+        }
+
+        preload() {
+          this.load.audio("sfx-jump", "/sounds/jump.wav");
+          this.load.audio("sfx-coin", "/sounds/coin.wav");
+          this.load.audio("sfx-hit", "/sounds/hit.wav");
+          this.load.audio("sfx-goal", "/sounds/goal.wav");
         }
 
         private createRuntimeTextures() {
@@ -139,6 +150,11 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           this.worldHeight = worldHeight;
 
           this.createRuntimeTextures();
+
+          this.soundJump = this.sound.add("sfx-jump", { volume: 0.5 });
+          this.soundCoin = this.sound.add("sfx-coin", { volume: 0.6 });
+          this.soundHit = this.sound.add("sfx-hit", { volume: 0.7 });
+          this.soundGoal = this.sound.add("sfx-goal", { volume: 0.6 });
 
           this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
           this.physics.world.setBounds(0, 0, worldWidth, worldHeight);
@@ -278,6 +294,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
 
           if (this.cursors.up?.isDown && (this.player.body as Physics.Arcade.Body).blocked.down) {
             this.player.setVelocityY(-320);
+            this.soundJump.play();
           }
 
           if (this.player.y > this.worldHeight + 64) {
@@ -286,6 +303,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         }
 
         private onCollectCoin(coin: ArcadePhysicsObject) {
+          this.soundCoin.play();
           if ("gameObject" in coin) {
             coin.gameObject.destroy();
             return;
@@ -297,6 +315,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         }
 
         private onHitSpike() {
+          this.soundHit.play();
           if (this.statusText) {
             this.statusText.setText("Game Over");
           }
@@ -304,6 +323,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         }
 
         private onReachGoal() {
+          this.soundGoal.play();
           if (this.statusText) {
             this.statusText.setText("Nivel completado");
           }
