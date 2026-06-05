@@ -5,22 +5,12 @@ import type { Game, GameObjects, Physics, Tilemaps, Types } from "phaser";
 import type { LevelData, Tile, Entity } from "@/types/level";
 
 const TILE_SIZE = 32;
-const PLAYER_SIZE = 28;
-const COIN_SIZE = 18;
-const ENTITY_SIZE = 26;
 
 type ArcadePhysicsObject =
   | Physics.Arcade.Body
   | Physics.Arcade.StaticBody
   | Types.Physics.Arcade.GameObjectWithBody
   | Tilemaps.Tile;
-
-interface RuntimeTexture {
-  key: string;
-  width: number;
-  height: number;
-  color: number;
-}
 
 export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () => void }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -48,7 +38,6 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         declare level: LevelData;
         declare cursors: Types.Input.Keyboard.CursorKeys;
         declare player?: Physics.Arcade.Sprite;
-        declare playerLabel?: GameObjects.Text;
         declare statusText?: GameObjects.Text;
         declare enemies: Physics.Arcade.Sprite[];
         declare worldHeight: number;
@@ -62,26 +51,85 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         }
 
         private createRuntimeTextures() {
-          const textures: RuntimeTexture[] = [
-            { key: "runtime-ground", width: TILE_SIZE, height: TILE_SIZE, color: 0x5d432f },
-            { key: "runtime-spike", width: TILE_SIZE, height: TILE_SIZE, color: 0xdc2626 },
-            { key: "runtime-player", width: PLAYER_SIZE, height: PLAYER_SIZE, color: 0xffffff },
-            { key: "runtime-coin", width: COIN_SIZE, height: COIN_SIZE, color: 0xf59e0b },
-            { key: "runtime-goal", width: ENTITY_SIZE, height: ENTITY_SIZE, color: 0x22c55e },
-            { key: "runtime-enemy", width: ENTITY_SIZE, height: ENTITY_SIZE, color: 0xea580c },
-          ];
-
-          textures.forEach((texture) => {
-            if (this.textures.exists(texture.key)) {
-              return;
-            }
-
-            const graphics = this.add.graphics();
-            graphics.fillStyle(texture.color, 1);
-            graphics.fillRect(0, 0, texture.width, texture.height);
-            graphics.generateTexture(texture.key, texture.width, texture.height);
-            graphics.destroy();
+          this.createTexture("runtime-ground", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0x5d432f);
+            g.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+            g.fillStyle(0x7a5a3e);
+            g.fillRect(0, 0, 16, 16);
+            g.fillRect(16, 16, 16, 16);
+            g.fillStyle(0x6d4e34);
+            g.fillRect(16, 0, 16, 16);
+            g.fillRect(0, 16, 16, 16);
+            g.lineStyle(1, 0x4a3520);
+            g.beginPath();
+            g.moveTo(0, 16); g.lineTo(32, 16);
+            g.moveTo(16, 0); g.lineTo(16, 32);
+            g.strokePath();
           });
+
+          this.createTexture("runtime-spike", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0xdc2626);
+            g.fillTriangle(16, 0, 0, 32, 32, 32);
+            g.fillStyle(0xef4444);
+            g.fillTriangle(16, 4, 4, 32, 28, 32);
+          });
+
+          this.createTexture("runtime-player", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0x3b82f6);
+            g.fillCircle(16, 9, 7);
+            g.fillRect(9, 16, 14, 8);
+            g.fillRect(9, 24, 5, 6);
+            g.fillRect(18, 24, 5, 6);
+            g.fillStyle(0xffffff);
+            g.fillCircle(13, 8, 1.5);
+            g.fillCircle(19, 8, 1.5);
+          });
+
+          this.createTexture("runtime-coin", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0xf59e0b);
+            g.fillCircle(16, 16, 14);
+            g.fillStyle(0xfbbf24);
+            g.fillCircle(16, 16, 10);
+          });
+
+          this.createTexture("runtime-enemy", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0xea580c);
+            g.fillCircle(16, 16, 14);
+            g.fillStyle(0xf97316);
+            g.fillCircle(16, 16, 11);
+            g.fillStyle(0xffffff);
+            g.fillCircle(11, 12, 2.5);
+            g.fillCircle(21, 12, 2.5);
+            g.fillStyle(0x000000);
+            g.fillCircle(11, 13, 1.2);
+            g.fillCircle(21, 13, 1.2);
+            g.fillStyle(0xffffff);
+            g.fillRect(10, 21, 12, 3);
+          });
+
+          this.createTexture("runtime-goal", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0x16a34a);
+            g.fillRect(6, 2, 4, 28);
+            g.fillStyle(0x22c55e);
+            g.fillRect(10, 2, 18, 14);
+            g.lineStyle(1, 0x15803d);
+            g.strokeRect(10, 2, 18, 14);
+            g.fillStyle(0x4ade80);
+            g.fillRect(13, 6, 12, 3);
+          });
+        }
+
+        private createTexture(
+          key: string,
+          width: number,
+          height: number,
+          draw: (g: GameObjects.Graphics) => void
+        ) {
+          if (this.textures.exists(key)) return;
+          const g = this.add.graphics();
+          draw(g);
+          g.generateTexture(key, width, height);
+          g.destroy();
         }
 
         create() {
@@ -129,22 +177,18 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
               const player = this.physics.add.sprite(x, y, "runtime-player").setOrigin(0.5) as Physics.Arcade.Sprite;
               player.setBounce(0.1);
               const body = player.body as Physics.Arcade.Body;
-              body.setSize(PLAYER_SIZE, PLAYER_SIZE, true);
+              body.setSize(20, 28, true);
               body.setAllowGravity(true);
               body.setDrag(0.99, 0);
               player.setDepth(10);
               this.player = player;
-              this.playerLabel = this.add
-                .text(player.x, player.y - 20, "P", { fontSize: "14px", color: "#000000", backgroundColor: "#ffffff" })
-                .setOrigin(0.5)
-                .setDepth(20);
             }
 
             if (entity.type === "coin") {
               const coin = coinLayer
                 .create(x, y, "runtime-coin")
                 .setOrigin(0.5) as Physics.Arcade.Sprite;
-              (coin.body as Physics.Arcade.StaticBody).setSize(COIN_SIZE, COIN_SIZE);
+              (coin.body as Physics.Arcade.StaticBody).setSize(18, 18);
               coin.refreshBody();
             }
 
@@ -152,7 +196,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
               const goal = goalLayer
                 .create(x, y, "runtime-goal")
                 .setOrigin(0.5) as Physics.Arcade.Sprite;
-              (goal.body as Physics.Arcade.StaticBody).setSize(ENTITY_SIZE, ENTITY_SIZE);
+              (goal.body as Physics.Arcade.StaticBody).setSize(22, 28);
               goal.refreshBody();
             }
 
@@ -160,7 +204,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
               const enemy = this.physics.add.sprite(x, y, "runtime-enemy").setOrigin(0.5);
               enemy.setVelocityX(80);
               const enemyBody = enemy.body as Physics.Arcade.Body;
-              enemyBody.setSize(ENTITY_SIZE, ENTITY_SIZE, true);
+              enemyBody.setSize(22, 26, true);
               enemyBody.setAllowGravity(true);
               enemyBody.setCollideWorldBounds(true);
               enemyLayer.add(enemy);
@@ -234,10 +278,6 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
 
           if (this.cursors.up?.isDown && (this.player.body as Physics.Arcade.Body).blocked.down) {
             this.player.setVelocityY(-320);
-          }
-
-          if (this.playerLabel) {
-            this.playerLabel.setPosition(this.player.x, this.player.y - 22);
           }
 
           if (this.player.y > this.worldHeight + 64) {

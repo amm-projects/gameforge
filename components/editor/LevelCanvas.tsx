@@ -8,11 +8,13 @@ import type { EntityType, TileType } from "@/types/level";
 
 const CELL_SIZE = 10;
 
-const ENTITY_VISUAL: Record<EntityType, { color: string; symbol: string; label: string }> = {
-  player: { color: "bg-blue-500", symbol: "P", label: "Player" },
-  coin: { color: "bg-yellow-400", symbol: "C", label: "Coin" },
-  enemy: { color: "bg-red-600", symbol: "E", label: "Enemy" },
-  goal: { color: "bg-green-500", symbol: "G", label: "Goal" },
+const SPRITE_PATH: Record<string, string> = {
+  ground: "/sprites/ground.svg",
+  spike: "/sprites/spike.svg",
+  player: "/sprites/player.svg",
+  coin: "/sprites/coin.svg",
+  enemy: "/sprites/enemy.svg",
+  goal: "/sprites/goal.svg",
 };
 
 function makeId() {
@@ -32,7 +34,8 @@ const GridCell = memo(function GridCell({
   entityType?: EntityType;
   isSelected: boolean;
 }) {
-  const entityVisual = entityType ? ENTITY_VISUAL[entityType] : null;
+  const spriteKey = tileType ?? entityType;
+  const sprite = spriteKey ? SPRITE_PATH[spriteKey] : null;
 
   return (
     <button
@@ -43,7 +46,7 @@ const GridCell = memo(function GridCell({
       className={`absolute z-10 border ${
         isSelected
           ? "border-cyan-400 bg-slate-950 ring-1 ring-cyan-400/50"
-          : tileType
+          : tileType || entityType
             ? "border-slate-600 bg-slate-950"
             : "border-slate-900/70 bg-slate-950"
       }`}
@@ -52,20 +55,9 @@ const GridCell = memo(function GridCell({
         top: y * CELL_SIZE,
         width: CELL_SIZE,
         height: CELL_SIZE,
+        ...(sprite ? { backgroundImage: `url(${sprite})`, backgroundSize: "100% 100%", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {}),
       }}
-    >
-      {tileType && (
-        <span className={`absolute inset-0 block ${tileType === "ground" ? "bg-amber-600" : "bg-rose-500/90"}`} />
-      )}
-      {entityVisual && (
-        <span
-          className={`absolute inset-0 flex items-center justify-center ${entityVisual.color} text-[0.3125rem] font-bold text-white leading-none`}
-          title={entityVisual.label}
-        >
-          {entityVisual.symbol}
-        </span>
-      )}
-    </button>
+    />
   );
 });
 

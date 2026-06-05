@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.2] - 2026-06-05
+
+### Fixed
+
+- Eliminada la palabra "GOAL" del sprite de meta (goal) tanto en el SVG como en el runtime de Phaser.
+
+## [0.12.1] - 2026-06-05
+
+### Fixed
+
+- Las imágenes de sprites en `LevelCanvas.tsx` ahora ocupan toda la celda (`background-size: cover` en lugar de `contain`), eliminando bordes vacíos alrededor del sprite.
+- Eliminada la etiqueta "P" que aparecía sobre el jugador durante la ejecución del juego en `GameRuntime.tsx`.
+
+## [0.12.0] - 2026-06-05
+
+### Changed
+
+- Reemplazados los rectángulos de color sólido en el runtime de Phaser por sprites dibujados programáticamente con formas reconocibles: suelo con textura de ladrillos, pincho triangular, personaje azul, moneda circular, enemigo con ojos y meta con banderín.
+- Eliminada la interfaz `RuntimeTexture` y el bucle genérico de creación de texturas. Ahora cada sprite se dibuja con primitivas Phaser Graphics (`fillRect`, `fillCircle`, `fillTriangle`, `lineStyle`).
+- `ToolPanel.tsx`: los previews de tiles y entidades ahora muestran los sprites SVG desde `public/sprites/` en lugar de cuadros de color sólido con letras.
+
+### Added
+
+- Sprites SVG en `public/sprites/` para cada tile (`ground.svg`, `spike.svg`) y entidad (`player.svg`, `coin.svg`, `enemy.svg`, `goal.svg`).
+
 ## [0.11.0] - 2026-06-05
 
 ### Changed

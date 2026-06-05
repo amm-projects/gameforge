@@ -6,22 +6,22 @@ import type { TileType, EntityType } from "@/types/level";
 const tileOptions: TileType[] = ["ground", "spike"];
 const entityOptions: EntityType[] = ["player", "coin", "enemy", "goal"];
 
-const TILE_VISUAL: Record<TileType, { bg: string; label: string }> = {
-  ground: { bg: "bg-amber-700", label: "Suelo" },
-  spike: { bg: "bg-rose-600", label: "Pinchos" },
+const TILE_VISUAL: Record<TileType, { sprite: string; label: string }> = {
+  ground: { sprite: "/sprites/ground.svg", label: "Suelo" },
+  spike: { sprite: "/sprites/spike.svg", label: "Pinchos" },
 };
 
-const ENTITY_VISUAL: Record<EntityType, { bg: string; symbol: string; label: string }> = {
-  player: { bg: "bg-blue-500", symbol: "P", label: "Jugador" },
-  coin: { bg: "bg-yellow-400", symbol: "C", label: "Moneda" },
-  enemy: { bg: "bg-red-600", symbol: "E", label: "Enemigo" },
-  goal: { bg: "bg-green-500", symbol: "G", label: "Meta" },
+const ENTITY_VISUAL: Record<EntityType, { sprite: string; label: string }> = {
+  player: { sprite: "/sprites/player.svg", label: "Jugador" },
+  coin: { sprite: "/sprites/coin.svg", label: "Moneda" },
+  enemy: { sprite: "/sprites/enemy.svg", label: "Enemigo" },
+  goal: { sprite: "/sprites/goal.svg", label: "Meta" },
 };
 
-function Preview({ children, bg }: { children: React.ReactNode; bg: string }) {
+function SpritePreview({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${bg} shadow-inner`}>
-      {children}
+    <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-slate-950 ring-1 ring-slate-700/50">
+      <img src={src} alt={alt} className="h-full w-full object-contain" />
     </div>
   );
 }
@@ -38,9 +38,7 @@ function TileRow({ tile }: { tile: TileType }) {
       tabIndex={0}
       aria-label={`${v.label}: seleccionar tile ${tile}`}
     >
-      <Preview bg={v.bg}>
-        {tile === "spike" ? <span className="text-[0.625rem] font-bold text-white">^</span> : null}
-      </Preview>
+      <SpritePreview src={v.sprite} alt={v.label} />
       <div className="flex-1">
         <div className="font-medium">{v.label}</div>
         <div className="text-[0.625rem] text-slate-300">{tile}</div>
@@ -61,9 +59,7 @@ function EntityRow({ entity }: { entity: EntityType }) {
       tabIndex={0}
       aria-label={`${v.label}: seleccionar entidad ${entity}`}
     >
-      <Preview bg={v.bg}>
-        <span className="text-xs font-bold text-white drop-shadow">{v.symbol}</span>
-      </Preview>
+      <SpritePreview src={v.sprite} alt={v.label} />
       <div className="flex-1">
         <div className="font-medium">{v.label}</div>
         <div className="text-[0.625rem] text-slate-300">{entity}</div>
