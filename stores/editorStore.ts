@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { LevelData, Tile, TileType, EntityType } from "@/types/level";
+import { Layer, LevelData, Tile, TileType, EntityType } from "@/types/level";
 
 export type PaintAction =
-  | { kind: "tile"; x: number; y: number; tileType: TileType }
+  | { kind: "tile"; x: number; y: number; tileType: TileType; layer?: Layer }
   | { kind: "entity"; x: number; y: number; entityType: EntityType; entityId: string }
   | { kind: "erase"; x: number; y: number };
 
@@ -19,6 +19,7 @@ interface EditorState extends LevelData {
   removeTile: (x: number, y: number) => void;
   addEntity: (type: EntityType, x: number, y: number) => void;
   removeEntity: (id: string) => void;
+  updateEntityProperty: (id: string, key: string, value: unknown) => void;
   loadLevel: (level: LevelData) => void;
   resetLevel: () => void;
   batchPaint: (actions: PaintAction[]) => void;
@@ -43,6 +44,9 @@ export const useEditorStore = create<EditorState>((set) => ({
 
   addEntity: (type, x, y) =>
     set((state) => {
+      const isUnique = type !== "player" && type !== "goal";
+      const alreadyExists = state.entities.some((e) => e.type === type);
+      if (!isUnique && alreadyExists) return state;
       const existing = state.entities.filter((entity) => entity.position.x !== x || entity.position.y !== y);
       return {
         entities: [
@@ -60,20 +64,35 @@ export const useEditorStore = create<EditorState>((set) => ({
   removeEntity: (id) =>
     set((state) => ({ entities: state.entities.filter((entity) => entity.id !== id) })),
 
+  updateEntityProperty: (id, key, value) =>
+    set((state) => ({
+      entities: state.entities.map((entity) =>
+        entity.id === id
+          ? { ...entity, properties: { ...entity.properties, [key]: value } }
+          : entity
+      ),
+    })),
+
   batchPaint: (actions) =>
     set((state) => {
       let tiles = state.tiles;
       let entities = state.entities;
+      const seenTypes = new Set(entities.map((e) => e.type));
 
       for (const action of actions) {
         if (action.kind === "tile") {
           tiles = tiles.filter((t) => t.x !== action.x || t.y !== action.y);
-          tiles = [...tiles, { x: action.x, y: action.y, type: action.tileType }];
+          tiles = [...tiles, { x: action.x, y: action.y, type: action.tileType, layer: action.layer }];
         } else if (action.kind === "entity") {
+          const isUnique = action.entityType !== "player" && action.entityType !== "goal";
+          if (!isUnique && seenTypes.has(action.entityType)) continue;
+          seenTypes.add(action.entityType);
           entities = entities.filter((e) => e.position.x !== action.x || e.position.y !== action.y);
           entities = [...entities, { id: action.entityId, type: action.entityType, position: { x: action.x, y: action.y }, properties: {} }];
         } else if (action.kind === "erase") {
           tiles = tiles.filter((t) => t.x !== action.x || t.y !== action.y);
+          const removed = entities.find((e) => e.position.x === action.x && e.position.y === action.y);
+          if (removed) seenTypes.delete(removed.type);
           entities = entities.filter((e) => e.position.x !== action.x || e.position.y !== action.y);
         }
       }

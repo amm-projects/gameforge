@@ -27,7 +27,10 @@ describe('ToolPanel', () => {
   it('renders all tile types', () => {
     renderPanel();
     expect(screen.getByText('Suelo')).toBeInTheDocument();
-    expect(screen.getByText('Pinchos')).toBeInTheDocument();
+    expect(screen.getByText('Pinchos ↑')).toBeInTheDocument();
+    expect(screen.getByText('Pinchos ↓')).toBeInTheDocument();
+    expect(screen.getByText('Pinchos ←')).toBeInTheDocument();
+    expect(screen.getByText('Pinchos →')).toBeInTheDocument();
   });
 
   it('renders all entity types', () => {
@@ -44,11 +47,11 @@ describe('ToolPanel', () => {
     expect(ground).toHaveClass('bg-slate-700');
   });
 
-  it('selects spike tile on click', async () => {
+  it('selects spike-up tile on click', async () => {
     const user = userEvent.setup();
     renderPanel();
-    await user.click(screen.getByText('Pinchos'));
-    expect(useSelectionStore.getState().selectedTile).toBe('spike');
+    await user.click(screen.getByText('Pinchos ↑'));
+    expect(useSelectionStore.getState().selectedTile).toBe('spike-up');
   });
 
   it('selects enemy entity on click', async () => {

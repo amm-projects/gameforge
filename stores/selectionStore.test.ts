@@ -21,9 +21,9 @@ describe('selectionStore', () => {
 
   describe('setSelectedTile', () => {
     it('selects a tile and switches to tile mode', () => {
-      useSelectionStore.getState().setSelectedTile('spike');
+      useSelectionStore.getState().setSelectedTile('spike-up');
       const state = useSelectionStore.getState();
-      expect(state.selectedTile).toBe('spike');
+      expect(state.selectedTile).toBe('spike-up');
       expect(state.activeTool).toBe('tile');
       expect(state.selectedEntity).toBeNull();
     });

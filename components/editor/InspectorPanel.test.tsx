@@ -59,7 +59,7 @@ describe('InspectorPanel', () => {
     const user = userEvent.setup();
     render(<InspectorPanel />);
     const textarea = screen.getByPlaceholderText('JSON del nivel aquí...');
-    const level = JSON.stringify({ width: 10, height: 8, tiles: [{ x: 2, y: 3, type: 'spike' }], entities: [] });
+    const level = JSON.stringify({ width: 10, height: 8, tiles: [{ x: 2, y: 3, type: 'spike-up' }], entities: [] });
     await user.clear(textarea);
     await user.paste(level);
     await user.click(screen.getByText('Cargar JSON'));

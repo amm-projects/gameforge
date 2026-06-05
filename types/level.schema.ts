@@ -1,14 +1,17 @@
 import { z } from "zod";
 
+const tileTypeEnum = z.enum(["ground", "brick", "platform", "spike", "spike-up", "spike-down", "spike-left", "spike-right"]);
+
 export const tileSchema = z.object({
   x: z.number().int().min(0),
   y: z.number().int().min(0),
-  type: z.enum(["ground", "spike"]),
+  type: tileTypeEnum.transform((v) => (v === "spike" ? "spike-up" : v)),
+  layer: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional(),
 });
 
 export const entitySchema = z.object({
   id: z.string().min(1),
-  type: z.enum(["player", "coin", "enemy", "goal"]),
+  type: z.enum(["player", "coin", "enemy", "goal", "checkpoint", "door", "key"]),
   position: z.object({
     x: z.number().int().min(0),
     y: z.number().int().min(0),

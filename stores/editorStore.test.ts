@@ -32,15 +32,15 @@ describe('editorStore', () => {
 
     it('replaces existing tile at same position', () => {
       useEditorStore.getState().setTile({ x: 5, y: 10, type: 'ground' });
-      useEditorStore.getState().setTile({ x: 5, y: 10, type: 'spike' });
+      useEditorStore.getState().setTile({ x: 5, y: 10, type: 'spike-up' });
       const { tiles } = useEditorStore.getState();
       expect(tiles).toHaveLength(1);
-      expect(tiles[0].type).toBe('spike');
+      expect(tiles[0].type).toBe('spike-up');
     });
 
     it('keeps tiles at different positions', () => {
       useEditorStore.getState().setTile({ x: 0, y: 0, type: 'ground' });
-      useEditorStore.getState().setTile({ x: 1, y: 1, type: 'spike' });
+      useEditorStore.getState().setTile({ x: 1, y: 1, type: 'spike-up' });
       const { tiles } = useEditorStore.getState();
       expect(tiles).toHaveLength(2);
     });
@@ -60,11 +60,11 @@ describe('editorStore', () => {
 
     it('only removes the tile at exact coordinates', () => {
       useEditorStore.getState().setTile({ x: 0, y: 0, type: 'ground' });
-      useEditorStore.getState().setTile({ x: 1, y: 1, type: 'spike' });
+      useEditorStore.getState().setTile({ x: 1, y: 1, type: 'spike-up' });
       useEditorStore.getState().removeTile(0, 0);
       const { tiles } = useEditorStore.getState();
       expect(tiles).toHaveLength(1);
-      expect(tiles[0]).toEqual({ x: 1, y: 1, type: 'spike' });
+      expect(tiles[0]).toEqual({ x: 1, y: 1, type: 'spike-up' });
     });
   });
 
@@ -118,7 +118,7 @@ describe('editorStore', () => {
       useEditorStore.getState().batchPaint([
         { kind: 'tile', x: 0, y: 0, tileType: 'ground' },
         { kind: 'tile', x: 1, y: 0, tileType: 'ground' },
-        { kind: 'tile', x: 2, y: 0, tileType: 'spike' },
+        { kind: 'tile', x: 2, y: 0, tileType: 'spike-up' },
       ]);
       expect(useEditorStore.getState().tiles).toHaveLength(3);
     });
@@ -145,11 +145,11 @@ describe('editorStore', () => {
     it('replaces existing content at same cell during batch', () => {
       useEditorStore.getState().setTile({ x: 5, y: 5, type: 'ground' });
       useEditorStore.getState().batchPaint([
-        { kind: 'tile', x: 5, y: 5, tileType: 'spike' },
+        { kind: 'tile', x: 5, y: 5, tileType: 'spike-up' },
       ]);
       const { tiles } = useEditorStore.getState();
       expect(tiles).toHaveLength(1);
-      expect(tiles[0].type).toBe('spike');
+      expect(tiles[0].type).toBe('spike-up');
     });
 
     it('handles empty batch', () => {
@@ -162,13 +162,13 @@ describe('editorStore', () => {
       useEditorStore.getState().setTile({ x: 0, y: 0, type: 'ground' });
       useEditorStore.getState().addEntity('coin', 1, 0);
       useEditorStore.getState().batchPaint([
-        { kind: 'tile', x: 0, y: 0, tileType: 'spike' },
+        { kind: 'tile', x: 0, y: 0, tileType: 'spike-up' },
         { kind: 'erase', x: 1, y: 0 },
         { kind: 'entity', x: 2, y: 0, entityType: 'enemy', entityId: 'e1' },
       ]);
       const { tiles, entities } = useEditorStore.getState();
       expect(tiles).toHaveLength(1);
-      expect(tiles[0].type).toBe('spike');
+      expect(tiles[0].type).toBe('spike-up');
       expect(entities).toHaveLength(1);
       expect(entities[0].type).toBe('enemy');
     });

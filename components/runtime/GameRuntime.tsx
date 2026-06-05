@@ -16,6 +16,8 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [runtimeError, setRuntimeError] = useState<string | null>(null);
   const [isReady, setIsReady] = useState(false);
+  const [showHitboxes, setShowHitboxes] = useState(false);
+  const toggleDebugRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) {
@@ -48,6 +50,8 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         declare coinCount: number;
         declare coinText: GameObjects.Text;
         declare coinIcon: GameObjects.Image;
+        declare hasKey: boolean;
+        declare keyIcon: GameObjects.Image;
 
         constructor() {
           super({ key: "runtime" });
@@ -131,6 +135,68 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
             g.fillStyle(0x4ade80);
             g.fillRect(13, 6, 12, 3);
           });
+
+          this.createTexture("runtime-brick", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0xb45309);
+            g.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+            g.fillStyle(0xd97706);
+            g.fillRect(0, 0, 16, 16);
+            g.fillRect(16, 16, 16, 16);
+            g.fillStyle(0x92400e);
+            g.fillRect(16, 0, 16, 16);
+            g.fillRect(0, 16, 16, 16);
+            g.lineStyle(1, 0x78350f);
+            g.moveTo(0, 16); g.lineTo(32, 16);
+            g.moveTo(16, 0); g.lineTo(16, 32);
+            g.strokePath();
+          });
+
+          this.createTexture("runtime-platform", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0x64748b);
+            g.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+            g.fillStyle(0x475569);
+            g.fillRect(0, 24, TILE_SIZE, 8);
+            g.lineStyle(2, 0x94a3b8);
+            g.moveTo(4, 12); g.lineTo(4, 24);
+            g.moveTo(16, 8); g.lineTo(16, 24);
+            g.moveTo(28, 12); g.lineTo(28, 24);
+            g.strokePath();
+          });
+
+          this.createTexture("runtime-checkpoint", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0x92400e);
+            g.fillRect(13, 2, 6, 28);
+            g.fillStyle(0xfbbf24);
+            g.fillTriangle(19, 6, 19, 22, 30, 14);
+            g.fillStyle(0xfef08a);
+            g.fillTriangle(19, 8, 19, 20, 28, 14);
+          });
+
+          this.createTexture("runtime-door", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0x7c2d12);
+            g.fillRect(2, 2, 28, 28);
+            g.fillStyle(0x92400e);
+            g.fillRect(4, 4, 24, 24);
+            g.fillStyle(0x451a03);
+            g.fillRect(6, 6, 8, 10);
+            g.fillRect(18, 6, 8, 10);
+            g.fillRect(6, 18, 8, 8);
+            g.fillRect(18, 18, 8, 8);
+            g.fillStyle(0xfbbf24);
+            g.fillCircle(26, 16, 2);
+          });
+
+          this.createTexture("runtime-key", TILE_SIZE, TILE_SIZE, (g) => {
+            g.fillStyle(0xfbbf24);
+            g.fillCircle(22, 10, 6);
+            g.fillStyle(0xd97706);
+            g.lineStyle(2, 0xd97706);
+            g.fillRect(10, 16, 12, 4);
+            g.fillStyle(0xf59e0b);
+            g.fillRect(10, 12, 4, 16);
+            g.fillStyle(0xfef08a);
+            g.fillCircle(22, 10, 2.5);
+          });
         }
 
         private createTexture(
@@ -167,24 +233,40 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           const goalLayer = this.physics.add.staticGroup();
           const coinLayer = this.physics.add.staticGroup();
           const enemyLayer = this.physics.add.group({ collideWorldBounds: true });
+          const checkpointLayer = this.physics.add.staticGroup();
+          const doorLayer = this.physics.add.staticGroup();
+          const keyLayer = this.physics.add.staticGroup();
           this.enemies = [];
+
+          const SPIKE_ANGLE: Record<string, number> = {
+            "spike-up": 0,
+            "spike-down": 180,
+            "spike-left": -90,
+            "spike-right": 90,
+          };
 
           tiles.forEach((tile: Tile) => {
             const x = tile.x * TILE_SIZE + TILE_SIZE / 2;
             const y = tile.y * TILE_SIZE + TILE_SIZE / 2;
-            if (tile.type === "ground") {
-              const ground = solidLayer.create(x, y, "runtime-ground") as Physics.Arcade.Sprite;
-              ground.setOrigin(0.5);
-              const body = ground.body as Physics.Arcade.StaticBody;
+            if (tile.type === "ground" || tile.type === "brick" || tile.type === "platform") {
+              const texKey = tile.type === "ground" ? "runtime-ground" : tile.type === "brick" ? "runtime-brick" : "runtime-platform";
+              const tileSprite = solidLayer.create(x, y, texKey) as Physics.Arcade.Sprite;
+              tileSprite.setOrigin(0.5);
+              const body = tileSprite.body as Physics.Arcade.StaticBody;
               body.setSize(TILE_SIZE, TILE_SIZE);
-              ground.refreshBody();
+              body.x = x - TILE_SIZE / 2;
+              body.y = y - TILE_SIZE / 2;
+              body.updateCenter();
             }
-            if (tile.type === "spike") {
+            if (tile.type.startsWith("spike")) {
               const spike = spikeLayer.create(x, y, "runtime-spike") as Physics.Arcade.Sprite;
               spike.setOrigin(0.5);
+              spike.setAngle(SPIKE_ANGLE[tile.type] ?? 0);
               const body = spike.body as Physics.Arcade.StaticBody;
               body.setSize(TILE_SIZE, TILE_SIZE);
-              spike.refreshBody();
+              body.x = x - TILE_SIZE / 2;
+              body.y = y - TILE_SIZE / 2;
+              body.updateCenter();
             }
           });
 
@@ -229,7 +311,45 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
               enemyLayer.add(enemy);
               this.enemies.push(enemy);
             }
+
+            if (entity.type === "checkpoint") {
+              const cp = checkpointLayer
+                .create(x, y, "runtime-checkpoint")
+                .setOrigin(0.5) as Physics.Arcade.Sprite;
+              (cp.body as Physics.Arcade.StaticBody).setSize(20, 28);
+              cp.refreshBody();
+            }
+
+            if (entity.type === "door") {
+              const door = doorLayer
+                .create(x, y, "runtime-door")
+                .setOrigin(0.5) as Physics.Arcade.Sprite;
+              (door.body as Physics.Arcade.StaticBody).setSize(24, 28);
+              door.refreshBody();
+            }
+
+            if (entity.type === "key") {
+              const key = keyLayer
+                .create(x, y, "runtime-key")
+                .setOrigin(0.5) as Physics.Arcade.Sprite;
+              (key.body as Physics.Arcade.StaticBody).setSize(18, 18);
+              key.refreshBody();
+            }
           });
+
+          const world = this.physics.world;
+          toggleDebugRef.current = () => {
+            if (world.drawDebug) {
+              world.drawDebug = false;
+              if (world.debugGraphic) world.debugGraphic.clear();
+              setShowHitboxes(false);
+            } else {
+              if (!world.debugGraphic) world.createDebugGraphic();
+              world.drawDebug = true;
+              setShowHitboxes(true);
+            }
+          };
+          this.physics.world.drawDebug = false;
 
           if (!this.player) {
             this.add.text(16, 16, "Place a player to start", { fontSize: "18px", color: "#ffffff" });
@@ -237,9 +357,28 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
 
           if (this.player) {
             this.physics.add.collider(this.player, solidLayer);
-            this.physics.add.collider(this.player, spikeLayer, () => {
-              this.onHitSpike();
-            });
+            this.physics.add.collider(
+              this.player,
+              spikeLayer,
+              () => { this.onHitSpike(); },
+              (player: ArcadePhysicsObject, spike: ArcadePhysicsObject) => {
+                const pSprite = player as unknown as Physics.Arcade.Sprite;
+                const sSprite = spike as unknown as Physics.Arcade.Sprite;
+                const pBody = pSprite.body as Physics.Arcade.Body;
+                const sBody = sSprite.body as Physics.Arcade.StaticBody;
+                const angle = sSprite.angle;
+
+                const playerCx = pBody.x + pBody.width / 2;
+                const playerCy = pBody.y + pBody.height / 2;
+
+                if (angle === 180) return playerCy >= sBody.y + sBody.height / 2;
+                if (angle === 0) return playerCy <= sBody.y + sBody.height / 2;
+                if (angle === 90) return playerCx >= sBody.x + sBody.width / 2;
+                if (angle === -90) return playerCx <= sBody.x + sBody.width / 2;
+                return true;
+              },
+              this
+            );
             this.physics.add.overlap(
               this.player,
               coinLayer,
@@ -252,6 +391,33 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
             this.physics.add.overlap(this.player, goalLayer, () => {
               this.onReachGoal();
             }, undefined, this);
+            this.physics.add.overlap(
+              this.player,
+              checkpointLayer,
+              () => {
+                this.onReachCheckpoint();
+              },
+              undefined,
+              this
+            );
+            this.physics.add.overlap(
+              this.player,
+              keyLayer,
+              (_player: ArcadePhysicsObject, key: ArcadePhysicsObject) => {
+                this.onCollectKey(key);
+              },
+              undefined,
+              this
+            );
+            this.physics.add.overlap(
+              this.player,
+              doorLayer,
+              () => {
+                this.onTryDoor();
+              },
+              undefined,
+              this
+            );
             this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
             this.input.keyboard?.addCapture(["LEFT", "RIGHT", "UP"]);
           }
@@ -282,13 +448,23 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
             .setScrollFactor(0)
             .setDepth(100);
 
+          this.hasKey = false;
+          const keyIconX = coinX - 55;
+          this.keyIcon = this.add
+            .image(keyIconX, coinY, "runtime-key")
+            .setOrigin(1, 0.5)
+            .setScale(0.5)
+            .setScrollFactor(0)
+            .setDepth(100)
+            .setVisible(false);
+
           this.cursors = this.input.keyboard!.createCursorKeys();
           this.statusText = this.add
             .text(16, worldHeight + 16, "", { fontSize: "16px", color: "#ffffff" })
             .setScrollFactor(0);
         }
 
-        update(_time: number, delta: number) {
+        update() {
           for (const enemy of this.enemies) {
             const body = enemy.body as Physics.Arcade.Body;
             const speed = 80;
@@ -322,7 +498,15 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           }
 
           if (this.player.y > this.worldHeight + 64) {
-            this.onHitSpike();
+            const cpX = this.player.getData("checkpointX") as number | undefined;
+            const cpY = this.player.getData("checkpointY") as number | undefined;
+            if (cpX !== undefined && cpY !== undefined) {
+              this.player.setPosition(cpX, cpY);
+              const body = this.player.body as Physics.Arcade.Body;
+              body.setVelocity(0, 0);
+            } else {
+              this.onHitSpike();
+            }
           }
         }
 
@@ -340,8 +524,58 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           }
         }
 
+        private onCollectKey(key: ArcadePhysicsObject) {
+          this.hasKey = true;
+          this.keyIcon.setVisible(true);
+          this.soundCoin.play();
+          if ("gameObject" in key) {
+            key.gameObject.destroy();
+            return;
+          }
+
+          if ("destroy" in key) {
+            key.destroy();
+          }
+        }
+
+        private onReachCheckpoint() {
+          if (!this.player) return;
+          this.player.setData("checkpointX", this.player.x);
+          this.player.setData("checkpointY", this.player.y);
+          if (this.statusText) {
+            this.statusText.setText("Checkpoint!");
+          }
+        }
+
+        private onTryDoor() {
+          if (!this.hasKey) {
+            if (this.statusText) {
+              this.statusText.setText("Need a key!");
+            }
+            return;
+          }
+          this.soundGoal.play();
+          if (this.statusText) {
+            this.statusText.setText("Door opened!");
+          }
+          this.scene.pause();
+        }
+
         private onHitSpike() {
           this.soundHit.play();
+          if (this.player) {
+            const cpX = this.player.getData("checkpointX") as number | undefined;
+            const cpY = this.player.getData("checkpointY") as number | undefined;
+            if (cpX !== undefined && cpY !== undefined) {
+              this.player.setPosition(cpX, cpY);
+              const body = this.player.body as Physics.Arcade.Body;
+              body.setVelocity(0, 0);
+              if (this.statusText) {
+                this.statusText.setText("Respawn");
+              }
+              return;
+            }
+          }
           if (this.statusText) {
             this.statusText.setText("Game Over");
           }
@@ -386,13 +620,12 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
       }
     };
 
-    void initializeGame().catch((error) => {
+    void initializeGame().catch(() => {
       if (isDisposed) {
         return;
       }
 
-      setRuntimeError(String(error));
-      console.error("Error inicializando Phaser runtime:", error);
+      setRuntimeError("Error al inicializar el runtime del juego.");
     });
 
     return () => {
@@ -426,14 +659,28 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
               : "Inicializando runtime..."}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onStop}
-          aria-label="Detener runtime"
-          className="rounded-2xl bg-slate-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-600"
-        >
-          Detener
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => toggleDebugRef.current?.()}
+            aria-label={showHitboxes ? "Ocultar hitboxes" : "Mostrar hitboxes"}
+            className={`rounded-2xl px-4 py-2 text-sm font-semibold text-white transition ${
+              showHitboxes
+                ? "bg-emerald-600 hover:bg-emerald-500"
+                : "bg-slate-700 hover:bg-slate-600"
+            }`}
+          >
+            {showHitboxes ? "Hitboxes ON" : "Hitboxes OFF"}
+          </button>
+          <button
+            type="button"
+            onClick={onStop}
+            aria-label="Detener runtime"
+            className="rounded-2xl bg-slate-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-600"
+          >
+            Detener
+          </button>
+        </div>
       </div>
       <div
         className="overflow-hidden rounded-3xl border border-slate-900/80 bg-black min-h-[480px] w-full"

@@ -2,6 +2,103 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.18.1] - 2026-06-05
+
+### Fixed
+
+- **E2E test "places an entity on the canvas"**: Playwright's CDP-based mouse events (`mouse.move/down/up`) do not synchronize correctly with React's async state updates when switching tools before clicking the grid. Replaced with `page.evaluate` + native `dispatchEvent` calls, which execute synchronously within the same event loop tick and reliably trigger `handleMouseDown`/`handleMouseUp`.
+
+## [0.18.0] - 2026-06-05
+
+### Added
+
+- **Asset Explorer**: nuevo panel lateral izquierdo que lista assets por categorías (Suelo, Pinchos, Jugador, Enemigos, Objetos) con previsualización de sprites y selección por clic. Categorizado para facilitar la navegación.
+- **Sistema de cámara del editor**: zoom (+/−/reset), pan con botón central/derecho del ratón. Almacén separado `cameraStore` con estado `zoom`, `panX`, `panY`. Hook `useEditorCamera` que maneja eventos wheel, mousedown/move/up y contextmenu.
+- **Navegación por teclado en lista de entidades**: las flechas ArrowUp/ArrowDown permiten navegar entre entidades en el InspectorPanel.
+- **Carpeta `features/`**: estructura de directorios según arquitectura de AGENTS.md (`features/editor/`, `features/runtime/`), preparada para futura migración de lógica desde `components/`.
+- **Tests**: `layerStore.test.ts` (8 tests, cobertura de toggle visibilidad, capa activa, reset), `cameraStore.test.ts` (8 tests, cobertura de zoom, pan, fitToMap, límites).
+
+### Changed
+
+- **EditorShell**: integra AssetExplorer en la barra lateral izquierda. `handleDragEnd` asigna `activeLayer` al colocar tiles vía drag & drop.
+- **LevelCanvas**: integra `useEditorCamera` con transform CSS `scale()` y `translate()` en el contenedor grid. Añadidos botones de zoom en el header del canvas. `getCellFromEvent` escala coordenadas por `zoom` para clicks en espacio vacío.
+- **InspectorPanel**: lista de entidades con `tabIndex={0}` y `onKeyDown` para navegación por teclado.
+- **`types/level.test.ts`**: actualizado para usar tipos correctos (`spike-up` en lugar de `spike`), añadidos tests para Layer system y nuevos entity types.
+- **`package.json`**: v0.17.0 → v0.18.0.
+
+### Fixed
+
+- `getCellFromEvent` en LevelCanvas: ahora escala las coordenadas del rect por `zoom` cuando se usa la posición del bounding rect como fallback, evitando desajustes al hacer zoom.
+- `types/level.test.ts`: reemplazado tipo `'spike'` obsoleto por `'spike-up'` para coincidir con el union type actual.
+
+## [0.17.0] - 2026-06-05
+
+### Added
+
+- Nuevos tiles: **brick** (ladrillo sólido, textura similar a ground pero marrón) y **platform** (plataforma sólida con textura metálica gris).
+- Nuevas entidades: **checkpoint** (punto de respawn), **door** (puerta que requiere llave), **key** (llave coleccionable para abrir la puerta).
+- Propiedades de entidad editables en el InspectorPanel. Al seleccionar una entidad (clic en el canvas o en la lista del inspector), se muestran sus propiedades `Record<string, unknown>` con campos editables y botón "+" para agregar nuevas.
+- Sistema de capas (Layers 0-5): barra de botones numerados sobre el canvas para ocultar/mostrar cada capa. Doble clic en un botón de capa la establece como activa. Las capas filtran qué tiles se renderizan en el canvas del editor.
+- Almacén `layerStore` (Zustand) con estado `activeLayer` y `visibleLayers`.
+- Sprites SVG: `brick.svg`, `platform.svg`, `checkpoint.svg`, `door.svg`, `key.svg`.
+- Texturas procedimentales en runtime para brick, platform, checkpoint, door, key.
+- Checkpoint resetea posición del jugador al morir (si se activó antes). Si no hay checkpoint, muestra Game Over.
+- Key coleccionable: se recoge al tocarla, muestra icono de llave en la UI del runtime, y permite abrir la puerta.
+- Puerta: si el jugador tiene la llave, la puerta se abre y completa el nivel; si no, muestra mensaje "Need a key!".
+- Respawn al caer fuera del mundo: si hay checkpoint activo, reaparece allí; si no, Game Over.
+
+### Changed
+
+- `types/level.ts`: Tile extendido con propiedad opcional `layer: Layer`. Añadidos tipos `Layer`, `LAYERS`, `LAYER_NAMES`, `LAYER_VISIBLE_DEFAULT`.
+- `types/level.schema.ts`: tileSchema ahora acepta `layer` opcional (0-5).
+- `stores/editorStore.ts`: PaintAction.tile ahora incluye `layer?: Layer`. `batchPaint` asigna capa al crear tiles. Añadida función `updateEntityProperty`.
+- `components/editor/LevelCanvas.tsx`: tileMap filtra por `visibleLayers`. Al colocar tile se usa `activeLayer`. Añadidos botones de capa en el header del canvas.
+- `components/editor/InspectorPanel.tsx`: añadida sección "Entities" con lista clicable y editor de propiedades por entidad seleccionada.
+- `components/editor/ToolPanel.tsx`: tileOptions incluye `brick`, `platform`. entityOptions incluye `checkpoint`, `door`, `key`.
+- `components/runtime/GameRuntime.tsx`: clase RuntimeScene extendida con `hasKey`, `keyIcon`, `checkpointLayer`, `doorLayer`, `keyLayer`. Nueva lógica en `update()` para respawn con checkpoint. Métodos `onCollectKey`, `onReachCheckpoint`, `onTryDoor`.
+- `package.json`: v0.16.0 → v0.17.0.
+
+## [0.16.0] - 2026-06-05
+
+### Added
+
+- Botón "Hitboxes ON/OFF" en el runtime que activa/desactiva la visualización de los bodies de física Arcade de Phaser (hitboxes de tiles, entidades y jugador). Al activarlo se llama `world.createDebugGraphic()` y `world.drawDebug = true`; al desactivarlo se limpia el gráfico y se deshabilita el dibujo.
+
+### Fixed
+
+- Hitboxes de pinchos rotados desplazadas una celda: `refreshBody()` de Phaser posiciona incorrectamente el body estático cuando el sprite tiene `setAngle()` distinto de 0. Se reemplazó por asignación explícita de `body.x` / `body.y` usando la posición calculada del tile.
+
+### Changed
+
+- `GameRuntime.tsx`: añadidos `toggleDebugRef`, estado `showHitboxes` y botón toggle en la UI.
+- `GameRuntime.tsx`: ground y spikes ahora posicionan su body manualmente (`body.x = x - TILE_SIZE/2`) en lugar de llamar `refreshBody()`.
+
+## [0.15.1] - 2026-06-05
+
+### Fixed
+
+- Colisión de pinchos direccionales: el `processCallback` ahora compara la posición del jugador contra el borde donde está la punta del triángulo (ej. `pBody.bottom > sBody.bottom` para spike-down). Así el jugador solo muere al alcanzar la punta del pincho, no al cruzar el centro del tile. Esto permite atravesar el pincho desde el lado seguro (base plana) sin morir antes de llegar a la punta.
+
+### Changed
+
+- `GameRuntime.tsx`: eliminada la detección de dirección por centros. Ahora cada orientación compara contra el borde de la punta: `sBody.bottom` (spike-down), `sBody.top` (spike-up), `sBody.right` (spike-right), `sBody.left` (spike-left).
+
+## [0.15.0] - 2026-06-05
+
+### Added
+
+- Cuatro variantes direccionales de pinchos en el panel de selección: `spike-up`, `spike-down`, `spike-left` y `spike-right`. Cada una se muestra con la orientación visual correcta (rotación CSS en ToolPanel y LevelCanvas, `setAngle()` en el runtime de Phaser).
+- Backward compatibility: el schema Zod transforma automáticamente el valor `"spike"` a `"spike-up"` al cargar niveles antiguos.
+
+### Changed
+
+- `TILE_REGISTRY` en `types/tile-definitions.ts`: reemplazada la entrada `spike` por cuatro entradas direccionales (`spike-up`, `spike-down`, `spike-left`, `spike-right`).
+- `ToolPanel.tsx`: el panel de tiles lista los 4 pinchos con su sprite rotado mediante CSS `transform: rotate()`.
+- `LevelCanvas.tsx`: `GridCell` aplica `transform: rotate()` a los pinchos según su dirección.
+- `GameRuntime.tsx`: los pinchos se rotan con `setAngle()` según dirección definida en `SPIKE_ANGLE`.
+- `types/level.ts`: `TileType` ahora incluye `"spike-up" | "spike-down" | "spike-left" | "spike-right"` en lugar de solo `"spike"`.
+- Tests actualizados para reflejar los nuevos nombres de tipo y etiquetas en el panel.
+
 ## [0.14.0] - 2026-06-05
 
 ### Added

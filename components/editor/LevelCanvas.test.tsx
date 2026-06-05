@@ -60,7 +60,7 @@ describe('LevelCanvas', () => {
     useEditorStore.setState({
       tiles: [
         { x: 0, y: 0, type: 'ground' },
-        { x: 1, y: 0, type: 'spike' },
+        { x: 1, y: 0, type: 'spike-up' },
       ],
       entities: [
         { id: 'p1', type: 'player', position: { x: 2, y: 0 }, properties: {} },

@@ -1,14 +1,20 @@
 "use client";
 
+import Image from "next/image";
 import { useSelectionStore } from "@/stores/selectionStore";
 import type { TileType, EntityType } from "@/types/level";
 
-const tileOptions: TileType[] = ["ground", "spike"];
-const entityOptions: EntityType[] = ["player", "coin", "enemy", "goal"];
+const tileOptions: TileType[] = ["ground", "brick", "platform", "spike-up", "spike-down", "spike-left", "spike-right"];
+const entityOptions: EntityType[] = ["player", "coin", "enemy", "goal", "checkpoint", "door", "key"];
 
-const TILE_VISUAL: Record<TileType, { sprite: string; label: string }> = {
+const TILE_VISUAL: Record<TileType, { sprite: string; label: string; rotate?: string }> = {
   ground: { sprite: "/sprites/ground.svg", label: "Suelo" },
-  spike: { sprite: "/sprites/spike.svg", label: "Pinchos" },
+  brick: { sprite: "/sprites/brick.svg", label: "Ladrillo" },
+  platform: { sprite: "/sprites/platform.svg", label: "Plataforma" },
+  "spike-up": { sprite: "/sprites/spike.svg", label: "Pinchos ↑" },
+  "spike-down": { sprite: "/sprites/spike.svg", label: "Pinchos ↓", rotate: "180deg" },
+  "spike-left": { sprite: "/sprites/spike.svg", label: "Pinchos ←", rotate: "270deg" },
+  "spike-right": { sprite: "/sprites/spike.svg", label: "Pinchos →", rotate: "90deg" },
 };
 
 const ENTITY_VISUAL: Record<EntityType, { sprite: string; label: string }> = {
@@ -16,12 +22,23 @@ const ENTITY_VISUAL: Record<EntityType, { sprite: string; label: string }> = {
   coin: { sprite: "/sprites/coin.svg", label: "Moneda" },
   enemy: { sprite: "/sprites/enemy.svg", label: "Enemigo" },
   goal: { sprite: "/sprites/goal.svg", label: "Meta" },
+  checkpoint: { sprite: "/sprites/checkpoint.svg", label: "Checkpoint" },
+  door: { sprite: "/sprites/door.svg", label: "Puerta" },
+  key: { sprite: "/sprites/key.svg", label: "Llave" },
 };
 
-function SpritePreview({ src, alt }: { src: string; alt: string }) {
+function SpritePreview({ src, alt, rotate }: { src: string; alt: string; rotate?: string }) {
   return (
     <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-slate-950 ring-1 ring-slate-700/50">
-      <img src={src} alt={alt} className="h-full w-full object-contain" />
+      <div style={rotate ? { transform: `rotate(${rotate})` } : undefined} className="h-full w-full">
+        <Image
+          src={src}
+          alt={alt}
+          width={32}
+          height={32}
+          className="h-full w-full object-contain"
+        />
+      </div>
     </div>
   );
 }
@@ -38,7 +55,7 @@ function TileRow({ tile }: { tile: TileType }) {
       tabIndex={0}
       aria-label={`${v.label}: seleccionar tile ${tile}`}
     >
-      <SpritePreview src={v.sprite} alt={v.label} />
+      <SpritePreview src={v.sprite} alt={v.label} rotate={v.rotate} />
       <div className="flex-1">
         <div className="font-medium">{v.label}</div>
         <div className="text-[0.625rem] text-slate-300">{tile}</div>

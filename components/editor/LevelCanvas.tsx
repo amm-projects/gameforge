@@ -4,17 +4,37 @@ import { useMemo, useEffect, useCallback, memo, useRef } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { useEditorStore, type PaintAction } from "@/stores/editorStore";
 import { useSelectionStore } from "@/stores/selectionStore";
-import type { EntityType, TileType } from "@/types/level";
+import { useLayerStore } from "@/stores/layerStore";
+import { useEditorCamera } from "@/hooks/useEditorCamera";
+import type { EntityType, TileType, Layer } from "@/types/level";
+import { LAYERS, LAYER_NAMES } from "@/types/level";
 
 const CELL_SIZE = 10;
 
+const SPIKE_SPRITE = "/sprites/spike.svg";
+
 const SPRITE_PATH: Record<string, string> = {
   ground: "/sprites/ground.svg",
-  spike: "/sprites/spike.svg",
+  brick: "/sprites/brick.svg",
+  platform: "/sprites/platform.svg",
+  "spike-up": SPIKE_SPRITE,
+  "spike-down": SPIKE_SPRITE,
+  "spike-left": SPIKE_SPRITE,
+  "spike-right": SPIKE_SPRITE,
   player: "/sprites/player.svg",
   coin: "/sprites/coin.svg",
   enemy: "/sprites/enemy.svg",
   goal: "/sprites/goal.svg",
+  checkpoint: "/sprites/checkpoint.svg",
+  door: "/sprites/door.svg",
+  key: "/sprites/key.svg",
+};
+
+const SPIKE_ROTATE: Record<string, string> = {
+  "spike-up": "0deg",
+  "spike-down": "180deg",
+  "spike-left": "270deg",
+  "spike-right": "90deg",
 };
 
 function makeId() {
@@ -36,6 +56,7 @@ const GridCell = memo(function GridCell({
 }) {
   const spriteKey = tileType ?? entityType;
   const sprite = spriteKey ? SPRITE_PATH[spriteKey] : null;
+  const rotate = tileType ? SPIKE_ROTATE[tileType] : undefined;
 
   return (
     <button
@@ -55,7 +76,7 @@ const GridCell = memo(function GridCell({
         top: y * CELL_SIZE,
         width: CELL_SIZE,
         height: CELL_SIZE,
-        ...(sprite ? { backgroundImage: `url(${sprite})`, backgroundSize: "100% 100%", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {}),
+        ...(sprite ? { backgroundImage: `url(${sprite})`, backgroundSize: "100% 100%", backgroundPosition: "center", backgroundRepeat: "no-repeat", transform: rotate ? `rotate(${rotate})` : undefined } : {}),
       }}
     />
   );
@@ -77,8 +98,14 @@ export function LevelCanvas() {
   const selectedEntity = useSelectionStore((s) => s.selectedEntity);
   const selectedEntityId = useSelectionStore((s) => s.selectedEntityId);
   const setSelectedEntityId = useSelectionStore((s) => s.setSelectedEntityId);
+  const activeLayer = useLayerStore((s) => s.activeLayer);
+  const visibleLayers = useLayerStore((s) => s.visibleLayers);
+  const setActiveLayer = useLayerStore((s) => s.setActiveLayer);
+  const toggleLayerVisibility = useLayerStore((s) => s.toggleLayerVisibility);
 
   const { setNodeRef } = useDroppable({ id: "grid" });
+  const cameraContainerRef = useRef<HTMLDivElement | null>(null);
+  const { zoom, panX, panY, zoomIn, zoomOut, resetZoom } = useEditorCamera(cameraContainerRef);
 
   const isPainting = useRef(false);
   const painted = useRef<Set<string>>(new Set());
@@ -88,8 +115,8 @@ export function LevelCanvas() {
   const startEntityId = useRef<string | null>(null);
 
   const tileMap = useMemo(
-    () => new Map(tiles.map((tile) => [`${tile.x}-${tile.y}`, tile.type])),
-    [tiles]
+    () => new Map(tiles.filter((tile) => visibleLayers.has((tile.layer ?? LAYERS.SOLID) as Layer)).map((tile) => [`${tile.x}-${tile.y}`, tile.type])),
+    [tiles, visibleLayers]
   );
 
   const entityLookup = useMemo(
@@ -107,11 +134,11 @@ export function LevelCanvas() {
     const gridEl = document.getElementById("grid");
     if (!gridEl) return null;
     const rect = gridEl.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
-    const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
+    const x = Math.floor(((e.clientX - rect.left) / zoom) / CELL_SIZE);
+    const y = Math.floor(((e.clientY - rect.top) / zoom) / CELL_SIZE);
     if (x >= 0 && x < width && y >= 0 && y < height) return { x, y };
     return null;
-  }, [width, height]);
+  }, [width, height, zoom]);
 
   const makeAction = useCallback(
     (x: number, y: number): PaintAction | null => {
@@ -147,12 +174,12 @@ export function LevelCanvas() {
       else setSelectedEntityId(null);
 
       if (activeTool === "tile" && selectedTile) {
-        setTile({ x, y, type: selectedTile });
+        setTile({ x, y, type: selectedTile, layer: activeLayer });
       } else if (activeTool === "entity" && selectedEntity) {
         addEntity(selectedEntity, x, y);
       }
     },
-    [activeTool, selectedTile, selectedEntity, removeTile, removeEntity, setSelectedEntityId, setTile, addEntity]
+    [activeTool, selectedTile, selectedEntity, removeTile, removeEntity, setSelectedEntityId, setTile, addEntity, activeLayer]
   );
 
   const handleMouseDown = useCallback(
@@ -267,17 +294,73 @@ export function LevelCanvas() {
           <h2 className="text-base font-semibold text-white">Canvas del nivel</h2>
           <p className="text-sm text-slate-400">Haz clic o arrastra un objeto para colocar elementos.</p>
         </div>
-        <div className="rounded-full bg-slate-900 px-3 py-1 text-xs uppercase tracking-[0.22em] text-slate-400">{width}x{height} grid</div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={zoomOut}
+              aria-label="Zoom out"
+              className="rounded-md bg-slate-800 px-2 py-0.5 text-xs text-slate-300 transition hover:bg-slate-700"
+            >
+              −
+            </button>
+            <span className="w-8 text-center text-xs text-slate-400">{Math.round(zoom * 100)}%</span>
+            <button
+              type="button"
+              onClick={zoomIn}
+              aria-label="Zoom in"
+              className="rounded-md bg-slate-800 px-2 py-0.5 text-xs text-slate-300 transition hover:bg-slate-700"
+            >
+              +
+            </button>
+            <button
+              type="button"
+              onClick={resetZoom}
+              aria-label="Reset zoom"
+              className="rounded-md bg-slate-800 px-2 py-0.5 text-[10px] text-slate-400 transition hover:bg-slate-700"
+            >
+              ⊞
+            </button>
+            <div className="mx-1 h-4 w-px bg-slate-800" />
+            <div className="flex gap-1">
+            {([0, 1, 2, 3, 4, 5] as Layer[]).map((layer) => (
+              <button
+                key={layer}
+                type="button"
+                onClick={() => toggleLayerVisibility(layer)}
+                aria-label={`Toggle layer ${LAYER_NAMES[layer]}`}
+                className={`rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider transition ${
+                  visibleLayers.has(layer)
+                    ? layer === activeLayer
+                      ? "bg-amber-500 text-slate-950"
+                      : "bg-slate-800 text-slate-300"
+                    : "bg-slate-900/50 text-slate-700 line-through"
+                }`}
+                onDoubleClick={(e) => {
+                  e.stopPropagation();
+                  setActiveLayer(layer);
+                }}
+              >
+                {layer}
+              </button>
+            ))}
+            </div>
+          </div>
+          <div className="rounded-full bg-slate-900 px-3 py-1 text-xs uppercase tracking-[0.22em] text-slate-400">{width}x{height} grid</div>
+        </div>
       </div>
-      <div className="overflow-auto select-none rounded-3xl border border-slate-900/80 bg-slate-950 p-2" ref={setNodeRef}>
+      <div className="overflow-hidden select-none rounded-3xl border border-slate-900/80 bg-slate-950 p-2" ref={setNodeRef}>
         <div
           id="grid"
+          ref={cameraContainerRef}
           className="relative"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           style={{
             width: `${width * CELL_SIZE}px`,
             height: `${height * CELL_SIZE}px`,
+            transform: `scale(${zoom}) translate(${panX / zoom}px, ${panY / zoom}px)`,
+            transformOrigin: "0 0",
             backgroundImage: `
               linear-gradient(rgba(100,116,139,0.12) 1px, transparent 1px),
               linear-gradient(90deg, rgba(100,116,139,0.12) 1px, transparent 1px)
