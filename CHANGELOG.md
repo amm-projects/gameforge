@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.21.0] - 2026-06-08
+
+### Added
+
+- **Pantalla de victoria**: al alcanzar la meta (`goal`) aparece overlay "NIVEL COMPLETADO" con botones Retry (reinicia el nivel) y Stop (vuelve al editor).
+- **Pantalla de Game Over**: al perder todas las vidas aparece overlay "GAME OVER" con botones Retry y Stop.
+- **Física pausada en pantallas**: el mundo físico se pausa al mostrar victoria o Game Over (enemigos, gravedad y colisiones se detienen).
+- **Enemigos colisionan con puertas**: `enemyLayer` ahora también colisiona con `doorLayer`, los enemigos rebotan contra las puertas como con los tiles sólidos.
+
+### Changed
+
+- `GameRuntime.tsx`: `onReachGoal` reemplazado por `showVictory()`. Añadido `showGameOver()` con overlay y botones interactivos. Añadido `this.physics.world.pause()` en ambas pantallas. Añadido collider entre `enemyLayer` y `doorLayer`.
+
+## [0.20.0] - 2026-06-08
+
+### Added
+
+- **Sistema de 3 vidas**: el jugador comienza con 3 vidas. Cada muerte (pincho, enemigo, caída al vacío) resta 1 vida. Al llegar a 0, Game Over.
+- **Respawn al inicio**: al morir con vidas restantes, el jugador reaparece en su posición inicial del nivel, o en el checkpoint si lo ha activado.
+- **HUD de vidas**: indicador "♥ x3" en la esquina superior izquierda del runtime que se actualiza al perder vidas.
+
+### Changed
+
+- `GameRuntime.tsx`: refactor de `onHitSpike()` para gestionar vidas, respawn y Game Over. La muerte por caída al vacío ahora llama a `onHitSpike()` en lugar de mantener lógica duplicada.
+- `GameRuntime.tsx`: guardada la posición inicial del jugador (`spawnX`/`spawnY`) al crearlo.
+
 ## [0.19.0] - 2026-06-08
 
 ### Added

@@ -52,6 +52,11 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         declare coinIcon: GameObjects.Image;
         declare hasKey: boolean;
         declare keyIcon: GameObjects.Image;
+        declare lives: number;
+        declare livesText: GameObjects.Text;
+        declare spawnX: number;
+        declare spawnY: number;
+        declare gameOver: boolean;
 
         constructor() {
           super({ key: "runtime" });
@@ -283,6 +288,8 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
               body.setDrag(0.99, 0);
               player.setDepth(10);
               this.player = player;
+              this.spawnX = x;
+              this.spawnY = y;
             }
 
             if (entity.type === "coin") {
@@ -389,7 +396,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
               this
             );
             this.physics.add.overlap(this.player, goalLayer, () => {
-              this.onReachGoal();
+              this.showVictory();
             }, undefined, this);
             this.physics.add.overlap(
               this.player,
@@ -423,6 +430,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           }
 
           this.physics.add.collider(enemyLayer, solidLayer);
+          this.physics.add.collider(enemyLayer, doorLayer);
           if (this.player) {
             this.physics.add.collider(this.player, enemyLayer, () => this.onHitSpike(), undefined, this);
           }
@@ -458,6 +466,19 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
             .setDepth(100)
             .setVisible(false);
 
+          this.lives = 3;
+          this.gameOver = false;
+          this.livesText = this.add
+            .text(16, 16, "♥ x 3", {
+              fontSize: "16px",
+              color: "#ef4444",
+              fontStyle: "bold",
+              stroke: "#000000",
+              strokeThickness: 3,
+            })
+            .setScrollFactor(0)
+            .setDepth(100);
+
           this.cursors = this.input.keyboard!.createCursorKeys();
           this.statusText = this.add
             .text(16, worldHeight + 16, "", { fontSize: "16px", color: "#ffffff" })
@@ -480,7 +501,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
             }
           }
 
-          if (!this.player) {
+          if (!this.player || this.gameOver) {
             return;
           }
 
@@ -498,15 +519,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           }
 
           if (this.player.y > this.worldHeight + 64) {
-            const cpX = this.player.getData("checkpointX") as number | undefined;
-            const cpY = this.player.getData("checkpointY") as number | undefined;
-            if (cpX !== undefined && cpY !== undefined) {
-              this.player.setPosition(cpX, cpY);
-              const body = this.player.body as Physics.Arcade.Body;
-              body.setVelocity(0, 0);
-            } else {
-              this.onHitSpike();
-            }
+            this.onHitSpike();
           }
         }
 
@@ -567,32 +580,137 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         }
 
         private onHitSpike() {
+          this.lives--;
           this.soundHit.play();
-          if (this.player) {
-            const cpX = this.player.getData("checkpointX") as number | undefined;
-            const cpY = this.player.getData("checkpointY") as number | undefined;
-            if (cpX !== undefined && cpY !== undefined) {
-              this.player.setPosition(cpX, cpY);
-              const body = this.player.body as Physics.Arcade.Body;
-              body.setVelocity(0, 0);
-              if (this.statusText) {
-                this.statusText.setText("Respawn");
-              }
-              return;
-            }
+          this.livesText.setText(`♥ x ${this.lives}`);
+
+          if (this.lives <= 0) {
+            this.showGameOver();
+            return;
           }
+
+          if (!this.player) return;
+          const cpX = this.player.getData("checkpointX") as number | undefined;
+          const cpY = this.player.getData("checkpointY") as number | undefined;
+          if (cpX !== undefined && cpY !== undefined) {
+            this.player.setPosition(cpX, cpY);
+          } else {
+            this.player.setPosition(this.spawnX, this.spawnY);
+          }
+          const body = this.player.body as Physics.Arcade.Body;
+          body.setVelocity(0, 0);
           if (this.statusText) {
-            this.statusText.setText("Game Over");
+            this.statusText.setText("Respawn");
           }
-          this.scene.pause();
         }
 
-        private onReachGoal() {
+        private showGameOver() {
+          if (this.gameOver) return;
+          this.gameOver = true;
+          this.physics.world.pause();
+
+          const cx = this.cameras.main.centerX;
+          const cy = this.cameras.main.centerY;
+
+          this.add.rectangle(cx, cy, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.75)
+            .setScrollFactor(0)
+            .setDepth(200);
+
+          this.add.text(cx, cy - 80, "GAME OVER", {
+            fontSize: "48px",
+            color: "#ef4444",
+            fontStyle: "bold",
+            stroke: "#000000",
+            strokeThickness: 5,
+          })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(201);
+
+          this.add.text(cx, cy + 10, "Retry", {
+            fontSize: "28px",
+            color: "#22c55e",
+            fontStyle: "bold",
+            stroke: "#000000",
+            strokeThickness: 3,
+            backgroundColor: "#1e293b",
+            padding: { x: 24, y: 10 },
+          })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(201)
+            .setInteractive({ useHandCursor: true })
+            .on("pointerdown", () => { this.scene.restart(); });
+
+          this.add.text(cx, cy + 80, "Stop", {
+            fontSize: "28px",
+            color: "#94a3b8",
+            fontStyle: "bold",
+            stroke: "#000000",
+            strokeThickness: 3,
+            backgroundColor: "#1e293b",
+            padding: { x: 24, y: 10 },
+          })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(201)
+            .setInteractive({ useHandCursor: true })
+            .on("pointerdown", () => { onStop(); });
+        }
+
+        private showVictory() {
+          if (this.gameOver) return;
+          this.gameOver = true;
           this.soundGoal.play();
-          if (this.statusText) {
-            this.statusText.setText("Nivel completado");
-          }
-          this.scene.pause();
+          this.physics.world.pause();
+
+          const cx = this.cameras.main.centerX;
+          const cy = this.cameras.main.centerY;
+
+          this.add.rectangle(cx, cy, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.75)
+            .setScrollFactor(0)
+            .setDepth(200);
+
+          this.add.text(cx, cy - 80, "NIVEL COMPLETADO", {
+            fontSize: "40px",
+            color: "#fbbf24",
+            fontStyle: "bold",
+            stroke: "#000000",
+            strokeThickness: 5,
+          })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(201);
+
+          this.add.text(cx, cy + 10, "Retry", {
+            fontSize: "28px",
+            color: "#22c55e",
+            fontStyle: "bold",
+            stroke: "#000000",
+            strokeThickness: 3,
+            backgroundColor: "#1e293b",
+            padding: { x: 24, y: 10 },
+          })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(201)
+            .setInteractive({ useHandCursor: true })
+            .on("pointerdown", () => { this.scene.restart(); });
+
+          this.add.text(cx, cy + 80, "Stop", {
+            fontSize: "28px",
+            color: "#94a3b8",
+            fontStyle: "bold",
+            stroke: "#000000",
+            strokeThickness: 3,
+            backgroundColor: "#1e293b",
+            padding: { x: 24, y: 10 },
+          })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(201)
+            .setInteractive({ useHandCursor: true })
+            .on("pointerdown", () => { onStop(); });
         }
       }
 
