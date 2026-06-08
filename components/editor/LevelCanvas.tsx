@@ -47,16 +47,26 @@ const GridCell = memo(function GridCell({
   tileType,
   entityType,
   isSelected,
+  isEditTarget,
 }: {
   x: number;
   y: number;
   tileType?: TileType;
   entityType?: EntityType;
   isSelected: boolean;
+  isEditTarget: boolean;
 }) {
   const spriteKey = tileType ?? entityType;
   const sprite = spriteKey ? SPRITE_PATH[spriteKey] : null;
   const rotate = tileType ? SPIKE_ROTATE[tileType] : undefined;
+
+  const border = isSelected
+    ? "border-cyan-400 bg-slate-950 ring-1 ring-cyan-400/50"
+    : isEditTarget
+      ? "border-amber-400 bg-slate-950 ring-1 ring-amber-400/50"
+      : tileType || entityType
+        ? "border-slate-600 bg-slate-950"
+        : "border-slate-900/70 bg-slate-950";
 
   return (
     <button
@@ -64,13 +74,7 @@ const GridCell = memo(function GridCell({
       data-x={x}
       data-y={y}
       aria-label={`Celda ${x},${y}${tileType ? ` ${tileType}` : ""}${entityType ? ` ${entityType}` : ""}`}
-      className={`absolute z-10 border ${
-        isSelected
-          ? "border-cyan-400 bg-slate-950 ring-1 ring-cyan-400/50"
-          : tileType || entityType
-            ? "border-slate-600 bg-slate-950"
-            : "border-slate-900/70 bg-slate-950"
-      }`}
+      className={`absolute z-10 border ${border}`}
       style={{
         left: x * CELL_SIZE,
         top: y * CELL_SIZE,
@@ -98,6 +102,8 @@ export function LevelCanvas() {
   const selectedEntity = useSelectionStore((s) => s.selectedEntity);
   const selectedEntityId = useSelectionStore((s) => s.selectedEntityId);
   const setSelectedEntityId = useSelectionStore((s) => s.setSelectedEntityId);
+  const selectedEditTarget = useSelectionStore((s) => s.selectedEditTarget);
+  const setSelectedEditTarget = useSelectionStore((s) => s.setSelectedEditTarget);
   const activeLayer = useLayerStore((s) => s.activeLayer);
   const visibleLayers = useLayerStore((s) => s.visibleLayers);
   const setActiveLayer = useLayerStore((s) => s.setActiveLayer);
@@ -188,6 +194,16 @@ export function LevelCanvas() {
       const cell = getCellFromEvent(e);
       if (!cell) return;
 
+      const tool = useSelectionStore.getState().activeTool;
+      if (tool === "edit") {
+        startCell.current = cell;
+        startEntityId.current = null;
+        isPainting.current = true;
+        painted.current.clear();
+        pendingActions.current = [];
+        return;
+      }
+
       startCell.current = cell;
       startEntityId.current = entityLookup.get(`${cell.x}-${cell.y}`)?.id ?? null;
       isPainting.current = true;
@@ -200,6 +216,8 @@ export function LevelCanvas() {
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
       if (!isPainting.current) return;
+      const tool = useSelectionStore.getState().activeTool;
+      if (tool === "edit") return;
       const cell = getCellFromEvent(e);
       if (!cell) return;
 
@@ -237,7 +255,24 @@ export function LevelCanvas() {
         }
       } else if (startCell.current) {
         const { x, y } = startCell.current;
-        commitCellAction(x, y, startEntityId.current);
+        const tool = useSelectionStore.getState().activeTool;
+        if (tool === "edit") {
+          const tMap = useEditorStore.getState().tiles;
+          const eList = useEditorStore.getState().entities;
+          const tileAtCell = tMap.find((t) => t.x === x && t.y === y);
+          if (tileAtCell) {
+            setSelectedEditTarget({ kind: "tile", x, y, type: tileAtCell.type });
+          } else {
+            const entityAtCell = eList.find((e) => e.position.x === x && e.position.y === y);
+            if (entityAtCell) {
+              setSelectedEditTarget({ kind: "entity", id: entityAtCell.id, x, y, type: entityAtCell.type });
+            } else {
+              setSelectedEditTarget(null);
+            }
+          }
+        } else {
+          commitCellAction(x, y, startEntityId.current);
+        }
       }
 
       startCell.current = null;
@@ -260,7 +295,7 @@ export function LevelCanvas() {
   }, [selectedEntityId, removeEntity, setSelectedEntityId, batchPaint, commitCellAction]);
 
   const gridCells = useMemo(() => {
-    if (tileMap.size === 0 && entityLookup.size === 0 && !selectedEntityId) {
+    if (tileMap.size === 0 && entityLookup.size === 0 && !selectedEntityId && !selectedEditTarget) {
       return null;
     }
     const cells: React.ReactElement[] = [];
@@ -270,7 +305,10 @@ export function LevelCanvas() {
         const tileAtCell = tileMap.get(key);
         const entityAtCell = entityLookup.get(key);
         const isSelected = entityAtCell?.id === selectedEntityId;
-        if (tileAtCell || entityAtCell || isSelected) {
+        const isEditTarget = selectedEditTarget !== null
+          && ((selectedEditTarget.kind === "tile" && selectedEditTarget.x === col && selectedEditTarget.y === row)
+            || (selectedEditTarget.kind === "entity" && entityAtCell?.id === selectedEditTarget.id));
+        if (tileAtCell || entityAtCell || isSelected || isEditTarget) {
           cells.push(
             <GridCell
               key={key}
@@ -279,13 +317,14 @@ export function LevelCanvas() {
               tileType={tileAtCell as TileType | undefined}
               entityType={entityAtCell?.type as EntityType | undefined}
               isSelected={isSelected}
+              isEditTarget={isEditTarget}
             />
           );
         }
       }
     }
     return cells.length > 0 ? cells : null;
-  }, [width, height, tileMap, entityLookup, selectedEntityId]);
+  }, [width, height, tileMap, entityLookup, selectedEntityId, selectedEditTarget]);
 
   return (
     <section className="rounded-3xl border border-slate-800/90 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10">

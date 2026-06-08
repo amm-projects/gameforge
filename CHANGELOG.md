@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.23.0] - 2026-06-08
+
+### Added
+
+- **Movimiento de plataformas**: las plataformas ahora pueden configurarse en el inspector (modo editar) para moverse verticalmente (arriba-abajo) u horizontalmente (izquierda-derecha). Se pueden ajustar la velocidad y el rango de movimiento.
+
+### Changed
+
+- **Pinchos sin dirección**: eliminado el `processCallback` direccional en la colisión entre el jugador y los pinchos. Ahora cualquier contacto con un pincho (independientemente del lado) mata al jugador. Ya no existe el "lado seguro" de la base.
+- **Propiedades en tiles**: añadido campo `properties?: Record<string, unknown>` a la interfaz `Tile` y al schema Zod, permitiendo almacenar datos por tile (consistente con la interfaz `Entity`).
+- **Acción `updateTileProperty`**: nueva acción en `editorStore` para modificar propiedades de un tile individual.
+
+### Changed
+
+- `types/level.ts`: `Tile` ahora incluye `properties?: Record<string, unknown>`.
+- `types/level.schema.ts`: `tileSchema` acepta `properties` opcional con transform a objeto vacío.
+- `stores/editorStore.ts`: añadida acción `updateTileProperty(x, y, key, value)`.
+- `components/editor/InspectorPanel.tsx`: los tiles de tipo "platform" en modo editar ahora muestran controles de dirección (None/Up-Down/Left-Right), velocidad y rango.
+- `components/runtime/GameRuntime.tsx`: las plataformas con `moveAxis` distinto de "none" se crean en un grupo dinámico y se mueven en el bucle `update()` con velocidad y rango configurables.
+
+## [0.22.0] - 2026-06-08
+
+### Added
+
+- **Herramienta Editar**: nuevo botón "Editar" en el panel de herramientas. Al activarlo, se puede hacer clic en cualquier tile o entidad del canvas para ver y modificar sus propiedades en el inspector.
+- **Inspector de elementos**: al seleccionar un elemento en modo edición, el inspector muestra su nombre (lectura), coordenadas (lectura) y un toggle de colisión (ON/OFF).
+- **Colisión por elemento**: los tiles ahora tienen una propiedad `solid` opcional que sobreescribe la solidez por defecto del tipo. Si se desactiva, el tile se renderiza sin física (decoración).
+- **Tile `solid?: boolean`**: añadido campo opcional a la interfaz `Tile` y al schema Zod.
+
+### Changed
+
+- `stores/selectionStore.ts`: añadido `"edit"` a `ToolMode`, nuevo tipo `EditTarget` y estado `selectedEditTarget`.
+- `stores/editorStore.ts`: añadida acción `updateTileSolid(x, y, solid)` para toggle de colisión por tile.
+- `components/editor/ToolPanel.tsx`: añadido botón "Editar" junto a "Borrar".
+- `components/editor/LevelCanvas.tsx`: en modo edición, el clic selecciona el elemento como edit target sin pintar/borrar. `GridCell` resalta en ámbar el elemento seleccionado para edición.
+- `components/editor/InspectorPanel.tsx`: nueva sección que muestra propiedades (nombre, coordenadas, colisión) del `selectedEditTarget`.
+- `components/runtime/GameRuntime.tsx`: la creación de tiles respeta `tile.solid` — si es `false`, se crea sin physics body (solo visual).
+
 ## [0.21.0] - 2026-06-08
 
 ### Added

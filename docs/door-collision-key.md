@@ -1,7 +1,7 @@
 # Puerta y Llave
 
 ## Añadido: v0.19.0 (2026-06-08)
-## Actualizado: v0.21.0 (enemigos rebotan contra puertas)
+## Actualizado: v0.22.0 (colisión configurable por elemento)
 
 ## ¿Cómo funciona?
 
@@ -17,6 +17,10 @@ La puerta es un obstáculo físico. El jugador no puede atravesarla a menos que 
 - El jugador toca la puerta y esta se abre (desaparece).
 - Aparece el mensaje "Door opened!".
 - El nivel **no termina** al abrir la puerta. El jugador debe seguir hasta la meta para ganar.
+
+### Colisión configurable
+
+Desde la herramienta **Editar** se puede activar o desactivar la colisión de cualquier tile, incluidas las puertas. Si se desactiva, la puerta se vuelve decorativa y el jugador puede atravesarla incluso sin llave.
 
 ### ¿Cómo se consigue la llave?
 

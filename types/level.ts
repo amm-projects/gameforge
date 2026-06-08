@@ -35,6 +35,8 @@ export interface Tile {
   y: number;
   type: TileType;
   layer?: Layer;
+  solid?: boolean;
+  properties?: Record<string, unknown>;
 }
 
 export interface Entity {

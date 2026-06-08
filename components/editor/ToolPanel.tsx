@@ -90,14 +90,22 @@ export function ToolPanel() {
 
   return (
     <aside className="space-y-4 rounded-3xl border border-slate-800/80 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10">
-      <div>
+      <div className="flex gap-2">
         <button
           type="button"
           onClick={() => setActiveTool("erase")}
           aria-label="Borrar: herramienta de borrado"
-          className={`w-full rounded-2xl px-3 py-2 text-sm transition ${activeTool === "erase" ? "bg-slate-700 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}
+          className={`flex-1 rounded-2xl px-3 py-2 text-sm transition ${activeTool === "erase" ? "bg-slate-700 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}
         >
           Borrar
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTool("edit")}
+          aria-label="Editar: seleccionar elemento para editar propiedades"
+          className={`flex-1 rounded-2xl px-3 py-2 text-sm transition ${activeTool === "edit" ? "bg-amber-500 text-slate-950" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}
+        >
+          Editar
         </button>
       </div>
 

@@ -42,6 +42,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         declare player?: Physics.Arcade.Sprite;
         declare statusText?: GameObjects.Text;
         declare enemies: Physics.Arcade.Sprite[];
+        declare movingPlatforms: { sprite: Physics.Arcade.Sprite; startX: number; startY: number; axis: "vertical" | "horizontal"; speed: number; range: number; direction: number }[];
         declare worldHeight: number;
         declare soundJump: Sound.BaseSound;
         declare soundCoin: Sound.BaseSound;
@@ -57,6 +58,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         declare spawnX: number;
         declare spawnY: number;
         declare gameOver: boolean;
+        declare ridingPlatform: Physics.Arcade.Sprite | null;
 
         constructor() {
           super({ key: "runtime" });
@@ -225,6 +227,8 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
 
           this.createRuntimeTextures();
 
+          this.movingPlatforms = [];
+          this.ridingPlatform = null;
           this.soundJump = this.sound.add("sfx-jump", { volume: 0.5 });
           this.soundCoin = this.sound.add("sfx-coin", { volume: 0.6 });
           this.soundHit = this.sound.add("sfx-hit", { volume: 0.7 });
@@ -250,28 +254,55 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
             "spike-right": 90,
           };
 
+          const movingPlatformGroup = this.physics.add.group({ allowGravity: false, immovable: true });
+
           tiles.forEach((tile: Tile) => {
             const x = tile.x * TILE_SIZE + TILE_SIZE / 2;
             const y = tile.y * TILE_SIZE + TILE_SIZE / 2;
+            const isSolid = tile.solid ?? true;
             if (tile.type === "ground" || tile.type === "brick" || tile.type === "platform") {
               const texKey = tile.type === "ground" ? "runtime-ground" : tile.type === "brick" ? "runtime-brick" : "runtime-platform";
-              const tileSprite = solidLayer.create(x, y, texKey) as Physics.Arcade.Sprite;
-              tileSprite.setOrigin(0.5);
-              const body = tileSprite.body as Physics.Arcade.StaticBody;
-              body.setSize(TILE_SIZE, TILE_SIZE);
-              body.x = x - TILE_SIZE / 2;
-              body.y = y - TILE_SIZE / 2;
-              body.updateCenter();
+              if (tile.type === "platform" && isSolid && tile.properties?.moveAxis && tile.properties.moveAxis !== "none") {
+                const sprite = movingPlatformGroup.create(x, y, texKey) as Physics.Arcade.Sprite;
+                sprite.setOrigin(0.5);
+                const body = sprite.body as Physics.Arcade.Body;
+                body.setSize(TILE_SIZE, TILE_SIZE);
+                body.setImmovable(true);
+                body.setAllowGravity(false);
+                this.movingPlatforms.push({
+                  sprite,
+                  startX: x,
+                  startY: y,
+                  axis: tile.properties.moveAxis as "vertical" | "horizontal",
+                  speed: Number(tile.properties.moveSpeed) || 100,
+                  range: Number(tile.properties.moveRange) || 96,
+                  direction: 1,
+                });
+              } else if (isSolid) {
+                const tileSprite = solidLayer.create(x, y, texKey) as Physics.Arcade.Sprite;
+                tileSprite.setOrigin(0.5);
+                const body = tileSprite.body as Physics.Arcade.StaticBody;
+                body.setSize(TILE_SIZE, TILE_SIZE);
+                body.x = x - TILE_SIZE / 2;
+                body.y = y - TILE_SIZE / 2;
+                body.updateCenter();
+              } else {
+                this.add.image(x, y, texKey).setOrigin(0.5);
+              }
             }
             if (tile.type.startsWith("spike")) {
-              const spike = spikeLayer.create(x, y, "runtime-spike") as Physics.Arcade.Sprite;
-              spike.setOrigin(0.5);
-              spike.setAngle(SPIKE_ANGLE[tile.type] ?? 0);
-              const body = spike.body as Physics.Arcade.StaticBody;
-              body.setSize(TILE_SIZE, TILE_SIZE);
-              body.x = x - TILE_SIZE / 2;
-              body.y = y - TILE_SIZE / 2;
-              body.updateCenter();
+              if (isSolid) {
+                const spike = spikeLayer.create(x, y, "runtime-spike") as Physics.Arcade.Sprite;
+                spike.setOrigin(0.5);
+                spike.setAngle(SPIKE_ANGLE[tile.type] ?? 0);
+                const body = spike.body as Physics.Arcade.StaticBody;
+                body.setSize(TILE_SIZE, TILE_SIZE);
+                body.x = x - TILE_SIZE / 2;
+                body.y = y - TILE_SIZE / 2;
+                body.updateCenter();
+              } else {
+                this.add.image(x, y, "runtime-spike").setOrigin(0.5).setAngle(SPIKE_ANGLE[tile.type] ?? 0);
+              }
             }
           });
 
@@ -364,26 +395,22 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
 
           if (this.player) {
             this.physics.add.collider(this.player, solidLayer);
+            if (movingPlatformGroup.getLength() > 0) {
+              this.physics.add.collider(
+                this.player,
+                movingPlatformGroup,
+                (_player, platform) => {
+                  this.ridingPlatform = platform as Physics.Arcade.Sprite;
+                },
+                undefined,
+                this
+              );
+            }
             this.physics.add.collider(
               this.player,
               spikeLayer,
               () => { this.onHitSpike(); },
-              (player: ArcadePhysicsObject, spike: ArcadePhysicsObject) => {
-                const pSprite = player as unknown as Physics.Arcade.Sprite;
-                const sSprite = spike as unknown as Physics.Arcade.Sprite;
-                const pBody = pSprite.body as Physics.Arcade.Body;
-                const sBody = sSprite.body as Physics.Arcade.StaticBody;
-                const angle = sSprite.angle;
-
-                const playerCx = pBody.x + pBody.width / 2;
-                const playerCy = pBody.y + pBody.height / 2;
-
-                if (angle === 180) return playerCy >= sBody.y + sBody.height / 2;
-                if (angle === 0) return playerCy <= sBody.y + sBody.height / 2;
-                if (angle === 90) return playerCx >= sBody.x + sBody.width / 2;
-                if (angle === -90) return playerCx <= sBody.x + sBody.width / 2;
-                return true;
-              },
+              undefined,
               this
             );
             this.physics.add.overlap(
@@ -486,6 +513,29 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         }
 
         update() {
+          if (this.ridingPlatform && this.player) {
+            const body = this.ridingPlatform.body as Physics.Arcade.Body;
+            this.player.x += body.velocity.x * (this.game.loop.delta / 1000);
+            this.player.y += body.velocity.y * (this.game.loop.delta / 1000);
+          }
+          this.ridingPlatform = null;
+
+          for (const mp of this.movingPlatforms) {
+            if (mp.axis === "vertical") {
+              mp.sprite.setVelocityY(mp.speed * mp.direction);
+              const dy = mp.sprite.y - mp.startY;
+              if ((mp.direction > 0 && dy >= mp.range) || (mp.direction < 0 && dy <= -mp.range)) {
+                mp.direction *= -1;
+              }
+            } else {
+              mp.sprite.setVelocityX(mp.speed * mp.direction);
+              const dx = mp.sprite.x - mp.startX;
+              if ((mp.direction > 0 && dx >= mp.range) || (mp.direction < 0 && dx <= -mp.range)) {
+                mp.direction *= -1;
+              }
+            }
+          }
+
           for (const enemy of this.enemies) {
             const body = enemy.body as Physics.Arcade.Body;
             const speed = 80;

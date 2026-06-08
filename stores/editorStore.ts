@@ -20,6 +20,8 @@ interface EditorState extends LevelData {
   addEntity: (type: EntityType, x: number, y: number) => void;
   removeEntity: (id: string) => void;
   updateEntityProperty: (id: string, key: string, value: unknown) => void;
+  updateTileSolid: (x: number, y: number, solid: boolean) => void;
+  updateTileProperty: (x: number, y: number, key: string, value: unknown) => void;
   loadLevel: (level: LevelData) => void;
   resetLevel: () => void;
   batchPaint: (actions: PaintAction[]) => void;
@@ -70,6 +72,22 @@ export const useEditorStore = create<EditorState>((set) => ({
         entity.id === id
           ? { ...entity, properties: { ...entity.properties, [key]: value } }
           : entity
+      ),
+    })),
+
+  updateTileSolid: (x, y, solid) =>
+    set((state) => ({
+      tiles: state.tiles.map((tile) =>
+        tile.x === x && tile.y === y ? { ...tile, solid } : tile
+      ),
+    })),
+
+  updateTileProperty: (x, y, key, value) =>
+    set((state) => ({
+      tiles: state.tiles.map((tile) =>
+        tile.x === x && tile.y === y
+          ? { ...tile, properties: { ...tile.properties, [key]: value } }
+          : tile
       ),
     })),
 

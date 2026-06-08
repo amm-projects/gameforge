@@ -7,6 +7,8 @@ export const tileSchema = z.object({
   y: z.number().int().min(0),
   type: tileTypeEnum.transform((v) => (v === "spike" ? "spike-up" : v)),
   layer: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional(),
+  solid: z.boolean().optional(),
+  properties: z.record(z.string(), z.unknown()).optional().transform((v) => v ?? {}),
 });
 
 export const entitySchema = z.object({
