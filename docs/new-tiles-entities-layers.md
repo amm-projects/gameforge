@@ -34,10 +34,11 @@
 - **Type**: `door`
 - **Sprite**: `public/sprites/door.svg`
 - **Runtime texture**: `runtime-door`
-- **Comportamiento**: al superponerse con el jugador:
-  - Si `hasKey = true`: reproduce sonido de goal, muestra "Door opened!" y pausa el nivel (victoria).
-  - Si `hasKey = false`: muestra "Need a key!".
+- **Comportamiento**: la puerta es un objeto **sólido** (`collider` en Phaser). Bloquea físicamente al jugador hasta que obtiene la llave:
+  - Si `hasKey = true`: la puerta se destruye (libera el paso), muestra "Door opened!". El nivel **no** se completa — el jugador debe llegar a la meta (`goal`) para ganar.
+  - Si `hasKey = false`: el jugador rebota contra la puerta y se muestra "Need a key!".
 - **Runtime layer**: `doorLayer` (StaticGroup)
+- **Cambio en v0.19.0**: migrado de `overlap` a `collider` para que la puerta sea un obstáculo físico real. La apertura ya no dispara victoria.
 
 ### Key
 - **Type**: `key`

@@ -409,11 +409,11 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
               undefined,
               this
             );
-            this.physics.add.overlap(
+            this.physics.add.collider(
               this.player,
               doorLayer,
-              () => {
-                this.onTryDoor();
+              (_player, door) => {
+                this.onTryDoor(door);
               },
               undefined,
               this
@@ -547,18 +547,23 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           }
         }
 
-        private onTryDoor() {
+        private onTryDoor(door: ArcadePhysicsObject) {
           if (!this.hasKey) {
             if (this.statusText) {
               this.statusText.setText("Need a key!");
             }
             return;
           }
-          this.soundGoal.play();
           if (this.statusText) {
             this.statusText.setText("Door opened!");
           }
-          this.scene.pause();
+          if ("gameObject" in door) {
+            door.gameObject.destroy();
+            return;
+          }
+          if ("destroy" in door) {
+            door.destroy();
+          }
         }
 
         private onHitSpike() {

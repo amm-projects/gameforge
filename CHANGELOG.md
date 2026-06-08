@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.19.0] - 2026-06-08
+
+### Added
+
+- **Door con colisión física**: la puerta (`door`) ahora usa `collider` en lugar de `overlap`, por lo que bloquea físicamente al jugador hasta que tenga la llave.
+- **Apertura de puerta con llave**: al tocar la puerta con `hasKey = true`, la puerta se destruye (liberando el paso) sin completar el nivel. El nivel solo se completa al alcanzar la entidad `goal`.
+
+### Changed
+
+- `GameRuntime.tsx`: `doorLayer` cambió de `this.physics.add.overlap` a `this.physics.add.collider`. El callback `onTryDoor` ahora recibe el objeto puerta y lo destruye al abrirse, sin reproducir sonido de victoria ni pausar la escena.
+
+### Fixed
+
+- La puerta ya no es un obstáculo meramente visual — ahora detiene físicamente al jugador hasta obtener la llave.
+- Abrir la puerta con la llave ya no completa el nivel prematuramente; el jugador puede pasar y debe llegar a la meta (`goal`) para ganar.
+
 ## [0.18.1] - 2026-06-05
 
 ### Fixed
