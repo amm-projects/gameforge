@@ -7,6 +7,7 @@ import { useEditorStore } from "@/stores/editorStore";
 import { useRuntimeStore } from "@/stores/runtimeStore";
 import { LevelCanvas } from "@/components/editor/LevelCanvas";
 import { ToolPanel } from "@/components/editor/ToolPanel";
+import { SampleLevels } from "@/components/editor/SampleLevels";
 import { InspectorPanel } from "@/components/editor/InspectorPanel";
 import dynamic from "next/dynamic";
 const GameRuntime = dynamic(() => import("@/components/runtime/GameRuntime").then((m) => m.GameRuntime), { ssr: false });
@@ -114,6 +115,7 @@ export function EditorShell() {
         <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-[1440px] flex-col gap-4 p-6 lg:flex-row">
           <div className="w-full max-w-sm lg:w-[320px] space-y-4 min-h-[300px]">
             <ToolPanel />
+            <SampleLevels />
           </div>
           <div className="flex-1 min-h-[400px]">
             <LevelCanvas />

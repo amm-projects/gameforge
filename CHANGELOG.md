@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - xxxx-xx-xx
 
+## [0.37.0] - 2026-06-09
+
+### Added
+
+- **6 additional sample levels**: Sky Fortress (ascending platforms, sunset), Underground (cave tunnels, purple), Speed Run (flat sprint, desert), Treasure Tower (vertical climb, forest), Bridge of Spikes (narrow platforms over spike pit, dark), Vertical Descent (narrow shaft descent, sky). Each level features distinct terrain, enemies, coins, and environmental hazards.
+
+## [0.36.0] - 2026-06-09
+
+### Added
+
+- **Sample Levels panel**: new section below the ToolPanel in the editor sidebar. Displays a list of pre-made levels (Empty, First Steps, Coin Run, Danger Pass) as buttons. Clicking one calls `editorStore.loadLevel()` to load the level into the editor. Includes a `src/data/sampleLevels.ts` module with the level definitions and a `SampleLevels.test.tsx` file with 6 tests covering rendering and load behavior.
+
 ## [0.35.1] - 2026-06-09
 
 ### Removed
