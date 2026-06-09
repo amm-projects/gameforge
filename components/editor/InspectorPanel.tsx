@@ -7,7 +7,8 @@ import { useRuntimeStore } from "@/stores/runtimeStore";
 import { levelDataSchema } from "@/types/level.schema";
 import { useSelectionStore } from "@/stores/selectionStore";
 import { getTileDefinition } from "@/types/tile-definitions";
-import type { EntityType } from "@/types/level";
+import type { EntityType, BackgroundTheme } from "@/types/level";
+import { BACKGROUND_COLORS, BACKGROUND_LABELS } from "@/types/level";
 
 const ENTITY_NAMES: Record<EntityType, string> = {
   player: "Jugador",
@@ -23,6 +24,8 @@ export function InspectorPanel() {
   const { tiles, entities, width, height, loadLevel, resetLevel, updateEntityProperty, updateTileSolid, updateTileProperty } = useEditorStore();
   const { jsonText, setJsonText } = useProjectStore();
   const { setIsPlaying } = useRuntimeStore();
+  const background = useEditorStore((s) => s.background);
+  const setBackground = useEditorStore((s) => s.setBackground);
   const { selectedEntityId, selectedEditTarget, setSelectedEditTarget } = useSelectionStore();
   const [newKey, setNewKey] = useState("");
   const [newValue, setNewValue] = useState("");
@@ -69,6 +72,31 @@ export function InspectorPanel() {
           <p>Dimensiones: {width} × {height}</p>
           <p>Tiles: {tiles.length}</p>
           <p>Entidades: {entities.length}</p>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Background</h3>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {(Object.keys(BACKGROUND_COLORS) as BackgroundTheme[]).map((key) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setBackground(key)}
+              aria-label={`Set background to ${BACKGROUND_LABELS[key]}`}
+              className={`flex items-center gap-1.5 rounded-lg px-2 py-1 text-[10px] font-medium transition ${
+                background === key
+                  ? "bg-amber-500/20 ring-1 ring-amber-500/50 text-amber-300"
+                  : "bg-slate-900 text-slate-400 hover:bg-slate-800"
+              }`}
+            >
+              <span
+                className="inline-block h-3 w-3 rounded-full ring-1 ring-slate-700/50"
+                style={{ backgroundColor: BACKGROUND_COLORS[key] }}
+              />
+              {BACKGROUND_LABELS[key]}
+            </button>
+          ))}
         </div>
       </div>
 

@@ -15,7 +15,7 @@ import type { LevelData, TileType, EntityType } from "@/types/level";
 const CELL_SIZE = 10;
 
 export function EditorShell() {
-  const { width, height, tiles, entities, setTile, addEntity } = useEditorStore();
+  const { width, height, tiles, entities, background, setTile, addEntity } = useEditorStore();
   const { isPlaying, setIsPlaying } = useRuntimeStore();
 
   const levelData: LevelData = useMemo(
@@ -24,8 +24,9 @@ export function EditorShell() {
       height,
       tiles,
       entities,
+      background,
     }),
-    [width, height, tiles, entities]
+    [width, height, tiles, entities, background]
   );
 
   const runtimeRef = useRef<HTMLDivElement | null>(null);

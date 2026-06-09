@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.27.0] - 2026-06-09
+
+### Added
+
+- **Fondo personalizable del nivel**: nuevo campo `background` en `LevelData` (tipo `BackgroundTheme`). Seis temas disponibles: Oscuro (default), Cielo, Bosque, Desierto, Atardecer y Púrpura.
+  - `types/level.ts`: añadidos tipos `BackgroundTheme`, constantes `BACKGROUND_COLORS` y `BACKGROUND_LABELS`.
+  - `types/level.schema.ts`: campo `background` con `z.enum()` y default `"dark"`.
+  - `stores/editorStore.ts`: nuevo estado `background`, acción `setBackground`, incluido en `loadLevel`/`resetLevel`.
+  - `components/editor/InspectorPanel.tsx`: selector visual de fondo con círculos de color y etiquetas.
+  - `components/editor/LevelCanvas.tsx`: el grid del editor muestra el color de fondo seleccionado.
+  - `components/runtime/GameRuntime.tsx`: el runtime de Phaser usa `backgroundColor` del nivel.
+
 ## [0.26.0] - 2026-06-09
 
 ### Removed

@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Game, GameObjects, Physics, Sound, Tilemaps, Types } from "phaser";
-import type { LevelData, Tile, Entity } from "@/types/level";
+import type { LevelData, Tile, Entity, BackgroundTheme } from "@/types/level";
+import { BACKGROUND_COLORS } from "@/types/level";
 
 const TILE_SIZE = 32;
 
@@ -235,6 +236,8 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
           this.soundGoal = this.sound.add("sfx-goal", { volume: 0.6 });
 
           this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
+          const bgTheme = (this.level.background ?? "dark") as BackgroundTheme;
+          this.cameras.main.setBackgroundColor(BACKGROUND_COLORS[bgTheme]);
           this.physics.world.setBounds(0, 0, worldWidth, worldHeight);
 
           const solidLayer = this.physics.add.staticGroup();
@@ -766,13 +769,15 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
 
       const canvasWidth = Math.min(level.width * TILE_SIZE, 1280);
       const canvasHeight = Math.min(level.height * TILE_SIZE, 720);
+      const bgTheme = (level.background ?? "dark") as BackgroundTheme;
+      const bgColor = BACKGROUND_COLORS[bgTheme];
 
       game = new PhaserLib.Game({
         type: PhaserLib.CANVAS,
         parent: containerRef.current!,
         width: canvasWidth,
         height: canvasHeight,
-        backgroundColor: "#0f172a",
+        backgroundColor: bgColor,
         scale: {
           mode: PhaserLib.Scale.NONE,
           autoCenter: PhaserLib.Scale.CENTER_BOTH,

@@ -26,4 +26,5 @@ export const levelDataSchema = z.object({
   height: z.number().int().min(1).max(256),
   tiles: z.array(tileSchema),
   entities: z.array(entitySchema),
+  background: z.enum(["dark", "sky", "forest", "desert", "sunset", "purple"]).optional().default("dark"),
 });

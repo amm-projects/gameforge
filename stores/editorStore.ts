@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Layer, LevelData, Tile, TileType, EntityType } from "@/types/level";
+import { Layer, LevelData, Tile, TileType, EntityType, BackgroundTheme } from "@/types/level";
 
 export type PaintAction =
   | { kind: "tile"; x: number; y: number; tileType: TileType; layer?: Layer }
@@ -22,6 +22,7 @@ interface EditorState extends LevelData {
   updateEntityProperty: (id: string, key: string, value: unknown) => void;
   updateTileSolid: (x: number, y: number, solid: boolean) => void;
   updateTileProperty: (x: number, y: number, key: string, value: unknown) => void;
+  setBackground: (background: BackgroundTheme) => void;
   loadLevel: (level: LevelData) => void;
   resetLevel: () => void;
   batchPaint: (actions: PaintAction[]) => void;
@@ -32,6 +33,7 @@ export const useEditorStore = create<EditorState>((set) => ({
   height: 64,
   tiles: [],
   entities: [],
+  background: "dark",
 
   setTile: (tile) =>
     set((state) => {
@@ -91,6 +93,8 @@ export const useEditorStore = create<EditorState>((set) => ({
       ),
     })),
 
+  setBackground: (background) => set({ background }),
+
   batchPaint: (actions) =>
     set((state) => {
       let tiles = state.tiles;
@@ -124,6 +128,7 @@ export const useEditorStore = create<EditorState>((set) => ({
       height: level.height,
       tiles: [...level.tiles],
       entities: [...level.entities],
+      background: level.background ?? "dark",
     })),
 
   resetLevel: () =>
@@ -132,5 +137,6 @@ export const useEditorStore = create<EditorState>((set) => ({
       height: 64,
       tiles: [],
       entities: [],
+      background: "dark",
     })),
 }));

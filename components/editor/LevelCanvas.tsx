@@ -6,8 +6,8 @@ import { useEditorStore, type PaintAction } from "@/stores/editorStore";
 import { useSelectionStore } from "@/stores/selectionStore";
 import { useLayerStore } from "@/stores/layerStore";
 import { useEditorCamera } from "@/hooks/useEditorCamera";
-import type { EntityType, TileType, Layer } from "@/types/level";
-import { LAYERS, LAYER_NAMES } from "@/types/level";
+import type { EntityType, TileType, Layer, BackgroundTheme } from "@/types/level";
+import { LAYERS, LAYER_NAMES, BACKGROUND_COLORS } from "@/types/level";
 
 const CELL_SIZE = 10;
 
@@ -104,6 +104,7 @@ export function LevelCanvas() {
   const setSelectedEntityId = useSelectionStore((s) => s.setSelectedEntityId);
   const selectedEditTarget = useSelectionStore((s) => s.selectedEditTarget);
   const setSelectedEditTarget = useSelectionStore((s) => s.setSelectedEditTarget);
+  const background = useEditorStore((s) => s.background);
   const activeLayer = useLayerStore((s) => s.activeLayer);
   const visibleLayers = useLayerStore((s) => s.visibleLayers);
   const setActiveLayer = useLayerStore((s) => s.setActiveLayer);
@@ -400,6 +401,7 @@ export function LevelCanvas() {
             height: `${height * CELL_SIZE}px`,
             transform: `scale(${zoom}) translate(${panX / zoom}px, ${panY / zoom}px)`,
             transformOrigin: "0 0",
+            backgroundColor: BACKGROUND_COLORS[(background ?? "dark") as BackgroundTheme],
             backgroundImage: `
               linear-gradient(rgba(100,116,139,0.12) 1px, transparent 1px),
               linear-gradient(90deg, rgba(100,116,139,0.12) 1px, transparent 1px)
