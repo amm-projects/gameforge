@@ -1,33 +1,25 @@
 # Plataformas móviles
 
-## ¿Qué es?
+## [0.18.0] - 2026-06-06
 
-Las plataformas (tipo `platform`) pueden configurarse para moverse automáticamente en el runtime, ya sea de arriba a abajo o de izquierda a derecha.
+### Added
 
-Esto permite crear niveles con plataformas que el jugador debe alcanzar saltando, y que pueden transportarlo mientras se mueven.
+- Las plataformas (tipo `platform`) pueden configurarse para moverse automáticamente en el runtime.
+- Movimiento vertical (`Up-Down`) u horizontal (`Left-Right`).
+- Velocidad configurable (por defecto 100 px/s).
+- Rango configurable (por defecto 96 px, ~3 celdas).
+- El jugador puede pararse sobre la plataforma y es transportado.
+- Las plataformas móviles colisionan con jugador y enemigos.
 
-## Cómo usar
+### Properties
 
-1. Coloca una plataforma en el canvas.
-2. Activa la herramienta **Editar** (botón ámbar en el panel de herramientas).
-3. Haz clic en la plataforma para abrir sus propiedades en el inspector.
-4. En la sección **Movement**:
-   - **Direction**: elige `Up-Down` (vertical) o `Left-Right` (horizontal).
-   - **Speed**: velocidad en píxeles por segundo (por defecto 100).
-   - **Range**: distancia en píxeles antes de invertir la dirección (por defecto 96, equivalente a 3 celdas).
-
-## Comportamiento en runtime
-
-- La plataforma se mueve desde su posición inicial hacia una dirección, y al alcanzar el rango configurado invierte el sentido (va y vuelve).
-- El jugador puede pararse sobre la plataforma y será transportado junto con ella.
-- Las plataformas móviles colisionan con el jugador (como cualquier tile sólido) y también afectan a enemigos (colisionan con ellos).
-
-## Propiedades técnicas
-
-| Propiedad | Tipo | Valor por defecto | Descripción |
+| Propiedad | Tipo | Default | Descripción |
 |---|---|---|---|
 | `moveAxis` | `"none"` \| `"vertical"` \| `"horizontal"` | `"none"` | Dirección del movimiento |
-| `moveSpeed` | `number` | `100` | Velocidad en píxeles/segundo |
-| `moveRange` | `number` | `96` | Distancia máxima antes de invertir (píxeles) |
+| `moveSpeed` | `number` | `100` | Velocidad px/s |
+| `moveRange` | `number` | `96` | Distancia máxima antes de invertir (px) |
 
-Estas propiedades se almacenan en `tile.properties` dentro del JSON del nivel.
+### Technical details
+
+- La plataforma se mueve desde su posición inicial, y al alcanzar el rango invierte el sentido.
+- Las propiedades se almacenan en `tile.properties` dentro del JSON del nivel.

@@ -2,6 +2,90 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - xxxx-xx-xx
+
+## [0.35.0] - 2026-06-09
+
+### Added
+
+- **Tests para EditorShell**: 10 tests que cubren renderizado del header, botones Play/Stop, estados Editor activo/Runtime activo, paneles ToolPanel/LevelCanvas/InspectorPanel, grid element, y verificación de estado via store (src/components/EditorShell.test.tsx).
+- **Tests para useTileBrush**: 10 tests que cubren propiedades del hook, makeAction (tile/erase/entity/null), getCellFromEvent (null/sin zoom/con zoom/fuera de rango), y gestión de estado startBrush/endBrush (src/hooks/useTileBrush.test.ts).
+- **README.md personalizado**: reemplazado template por defecto de Next.js con documentación del proyecto GameForge, stack, comandos, testing y arquitectura.
+
+### Fixed
+
+- **BackgroundPicker.test.tsx**: corregidas queries que usaban etiquetas en inglés ("Dark", "Cave", "Sky", "Forest", `/set background to sky/i`) para usar las españolas reales del componente (Oscuro, Cielo, Bosque, Desierto, `/set background to ciel/i`).
+- **EditTargetInspector.test.tsx**: corregido spread de `{...baseProps}` que sobrescribía `tiles={tiles}` con `tiles: []`, causando que el test de inputs speed/range fallara al no encontrar el tile.
+- **EntityProperties.test.tsx**: corregida query `getByLabelText(/property value/i)` que matcheaba dos inputs (Property value + New property value), reemplazada por `getByDisplayValue("10")`. También reemplazado `userEvent.clear()` por `fireEvent.change` por incompatibilidad con inputs controlados en jsdom.
+- **EditorShell.test.tsx**: añadido mock de `Element.prototype.scrollIntoView` para evitar TypeError en jsdom.
+
+## [0.34.0] - 2026-06-09
+
+### Fixed
+
+- **Tamaños de fuente relativos (`rem`/`em`)**: reemplazados 8 usos de `text-[10px]` y `text-[8px]` por `text-[0.625rem]` y `text-[0.5rem]` en `ToolPanel.tsx`, `LayerBar.tsx`, `CameraControls.tsx` y `BackgroundPicker.tsx`, cumpliendo el requisito de Lighthouse de usar unidades relativas.
+
+### Changed
+
+- **Documentación unificada a formato keepachangelog**: los 22 archivos en `/docs` convertidos al formato `## [X.Y.Z] - YYYY-MM-DD` con secciones `Added`, `Changed`, `Fixed`, `Security`, `Removed`. Esto alinea el proyecto con AGENTS.md línea 484 ("Los archivos deben seguir la estructura definida en Keep a Changelog").
+- **CHANGELOG.md corregido**: añadida sección `[Unreleased]` requerida por keepachangelog, fusionada sección `### Fixed` duplicada en v0.30.0.
+
+## [0.33.0] - 2026-06-09
+
+### Changed
+
+- **Estructura migrada a `src/`**: todas las carpetas de aplicación (`app/`, `components/`, `features/`, `engine/`, `stores/`, `hooks/`, `lib/`, `types/`, `assets/`) movidas bajo `src/`, alineando el proyecto con la especificación de AGENTS.md (líneas 120-135). Next.js detecta automáticamente `src/app/`. Path alias `@/*` actualizado a `./src/*` en `tsconfig.json` y `vitest.config.ts`.
+
+## [0.30.0] - 2026-06-09
+
+### Added
+
+- **Tests para hooks, utils y componentes**: creados `lib/utils.test.ts`, `hooks/useEditorCamera.test.ts`, `components/editor/GridCell.test.tsx`, `components/editor/LayerBar.test.tsx`. Total: 17 test files, 149 tests (+25 tests).
+
+### Changed
+
+- **`useTileBrush` hook mejorado y conectado a LevelCanvas**: el hook ahora incluye `startBrush`, `endBrush`, `getPendingActions`, `clearPendingActions` y `getCellFromEvent` con soporte de zoom. `LevelCanvas.tsx` refactorizado para usar el hook en lugar de duplicar la lógica de pintado, eliminando ~60 líneas de código duplicado.
+- **LayerBar accesibilidad rediseñada**: reemplazado `onDoubleClick` (no accesible para teclado/lectores de pantalla) por `onContextMenu` (clic derecho) para activar capa. Añadidos `aria-pressed`, `role="group"`, y descripción de estado (`visible`/`oculta`) en `aria-label`.
+- **Reportes Lighthouse movidos a `/reports/`**: 9 archivos JSON de auditoría movidos de la raíz a `reports/` para ordenar el proyecto.
+
+### Fixed
+
+- **`docs/lighthouse-exceptions.md` desactualizado**: actualizado para reflejar escritorio 100/100/100/100 (no 92). Documentada excepción de móvil (56/100) y tablet (no ejecutada). Añadido historial con versión actual.
+- **CLS en móvil (0.518 → 0)**: `ToolPanel` se importaba con `ssr: false` (herencia de un hydration mismatch con dnd-kit en v0.7.1, ya eliminado en v0.11.0). Durante SSR no se renderizaba, el wrapper colapsaba a 0px, y al cargarse en cliente empujaba todo el contenido hacia abajo.
+  - Cambiado a importación estática (`import { ToolPanel }`), eliminando `next/dynamic` con `ssr: false`.
+  - Añadido `min-h-[300px]` al wrapper del ToolPanel y `min-h-[400px]` al contenedor del canvas como safety net.
+  - Añadido `min-h-[200px]` a la sección `<section>` del LevelCanvas para reservar espacio durante carga.
+
+### Performance
+
+- **Eliminado forced reflow en paint-by-drag**: `useTileBrush` expone `gridRect` como ref mutable. `LevelCanvas.handleMouseDown` lee `getBoundingClientRect()` una sola vez al iniciar el clic y lo asigna a `gridRect.current`. Durante los `mousemove` posteriores, `getCellFromEvent` solo lee el ref cacheado — cero lecturas de geometría DOM en el hot path.
+- **Eliminado fallback `readGridRect()` en `getCellFromEvent`**: el método ahora retorna `null` si no hay rect cacheado, en lugar de hacer una lectura viva. Esto fuerza al llamante a proveer el rect explícitamente (en `handleMouseDown`), eliminando la doble lectura de `getBoundingClientRect()` que ocurría por mousedown.
+- **`cameraStore.centerView` refactorizado**: reemplazadas 4 lecturas secuenciales (`clientWidth`, `clientHeight`, `scrollWidth`, `scrollHeight`) por 2 llamadas a `getBoundingClientRect()` (1 para el grid, 1 para el padre), eliminando layout thrashing en esa ruta.
+
+## [0.28.0] - 2026-06-09
+
+### Added
+
+- **Lazy loading de GameRuntime**: el componente `GameRuntime` (Phaser) ahora se importa con `next/dynamic` y `ssr: false`, eliminando ~5.7 KB del bundle inicial. Phaser solo se descarga al hacer clic en "Play".
+
+### Changed
+
+- **RuntimeScene migrada a `engine/runtime/`**: la clase `RuntimeScene` (870+ líneas de lógica Phaser) se extrajo del wrapper React `GameRuntime.tsx` a `engine/runtime/RuntimeScene.ts` mediante patrón factory `createRuntimeScene(PhaserLib, ctx, toggleDebugRef)`. `GameRuntime.tsx` se redujo de 871 a ~140 líneas (~84% de reducción).
+- **Editor logic extraída a `engine/editor/`**: creado `engine/editor/paint-actions.ts` con funciones puras `applyPaintActions`, `createId`, `isUniqueEntity`. El store `editorStore.ts` importa desde `@/engine/editor` en lugar de contener lógica inline.
+- **`features/` y `assets/` populados**: `features/editor/index.ts`, `features/runtime/index.ts`, `features/index.ts` y `assets/index.ts` ahora exportan constantes y re-exports significativos (SPRITE_PATHS, SPRITE_LABELS, CELL_SIZE, RUNTIME_TILE_SIZE).
+
+### Fixed
+
+- **E2E tests (3 tests)**: actualizadas aserciones en `e2e/editor.spec.ts`:
+  - Eliminada aserción obsoleta para heading "Assets" (eliminado en v0.25.0).
+  - Cambiadas aserciones de clase seleccionada `bg-slate-700` → `bg-amber-500/20` (nuevo estado visual de selección ámbar).
+- **Lint warning en LevelCanvas.tsx**: añadida dependencia `setSelectedEditTarget` al array de `useEffect` en línea 296.
+- **Accesibilidad Lighthouse**: arreglados `heading-order` (h3→h2), `color-contrast` (text-slate-500/600→text-slate-400) y `label-content-name-mismatch` (layer buttons con número en aria-label).
+
+### Performance
+
+- Lighthouse: accessibility 100, best-practices 100, seo 100. Rendimiento 92 en servidor de producción (peso del editor).
+
 ## [0.27.0] - 2026-06-09
 
 ### Added

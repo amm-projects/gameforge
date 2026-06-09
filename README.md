@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GameForge
 
-## Getting Started
+Editor visual de juegos de plataformas 2D. Construye niveles arrastrando bloques, enemigos, monedas y objetos interactivos. Previsualiza y juega el nivel directamente desde el navegador.
 
-First, run the development server:
+## Stack
+
+- **Next.js** 16 (App Router)
+- **React** 19
+- **TypeScript** (strict)
+- **Tailwind CSS** 4
+- **Zustand** (estado global)
+- **Phaser** 3 (motor de juego)
+- **dnd-kit** (drag & drop)
+- **Zod** (validación)
+
+## Requisitos
+
+- Node.js 20+
+
+## Desarrollo
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # servidor de desarrollo (http://localhost:3000)
+npm run build      # build de producción
+npm run test       # tests unitarios (Vitest, watch mode)
+npm run test:run   # tests unitarios (CI)
+npm run test:e2e   # tests E2E (Playwright)
+npm run lint       # ESLint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Testing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Tipo | Herramienta | Comando |
+|---|---|---|
+| Unitario | Vitest | `npm run test:run` |
+| Integración | Testing Library | `npm run test:run` |
+| E2E | Playwright | `npm run test:e2e` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Arquitectura
 
-## Learn More
+```
+src/
+├── app/            # App Router
+├── components/     # Componentes React
+│   ├── editor/     #   Editor UI
+│   └── runtime/    #   Runtime wrapper
+├── engine/         # Motor del juego
+│   ├── editor/     #   Lógica de edición
+│   └── runtime/    #   Lógica de ejecución (Phaser)
+├── stores/         # Estado global (Zustand)
+├── hooks/          # Custom hooks
+├── types/          # Tipos compartidos
+├── lib/            # Utilidades
+├── assets/         # Constantes y assets
+└── features/       # Módulos de feature
+```
 
-To learn more about Next.js, take a look at the following resources:
+El editor y el runtime están completamente separados. El editor no contiene lógica del juego, y el runtime no contiene herramientas de edición.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Licencia
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Uso privado.

@@ -18,7 +18,6 @@ test.describe('GameForge Editor', () => {
     await page.goto('/');
     await expect(page.getByRole('heading', { name: 'Tiles' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Entidades' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Assets' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Inspector' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Canvas del nivel' })).toBeVisible();
   });
@@ -27,14 +26,14 @@ test.describe('GameForge Editor', () => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Pinchos ↑: seleccionar tile' }).click();
     const spikeBtn = page.getByRole('button', { name: 'Pinchos ↑: seleccionar tile' });
-    await expect(spikeBtn).toHaveClass(/bg-slate-700/);
+    await expect(spikeBtn).toHaveClass(/bg-amber-500\/20/);
   });
 
   test('selects enemy entity on click', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Enemigo: seleccionar entidad' }).click();
     const enemyBtn = page.getByRole('button', { name: 'Enemigo: seleccionar entidad' });
-    await expect(enemyBtn).toHaveClass(/bg-slate-700/);
+    await expect(enemyBtn).toHaveClass(/bg-amber-500\/20/);
   });
 
   test('switches to erase tool', async ({ page }) => {

@@ -1,27 +1,20 @@
 # Puerta y Llave
 
-## Añadido: v0.19.0 (2026-06-08)
-## Actualizado: v0.22.0 (colisión configurable por elemento)
+## [0.19.0] - 2026-06-08
 
-## ¿Cómo funciona?
+### Added
 
-La puerta es un obstáculo físico. El jugador no puede atravesarla a menos que tenga la llave. Los enemigos tampoco pueden atravesarla: rebotan contra ella igual que contra las paredes.
+- Sistema de puerta y llave en el runtime.
+- La puerta es un obstáculo físico: el jugador no puede atravesarla sin la llave.
+- Los enemigos rebotan contra la puerta igual que contra las paredes.
+- La llave se recoge al instante al tocarla, mostrando un icono en pantalla.
+- Mensajes "Need a key!" y "Door opened!" según el estado.
+- El nivel no termina al abrir la puerta; el jugador debe llegar a la meta.
 
-### Sin llave
+## [0.22.0] - 2026-06-08
 
-- El jugador choca contra la puerta y no puede pasar.
-- Aparece el mensaje "Need a key!".
+### Changed
 
-### Con llave
-
-- El jugador toca la puerta y esta se abre (desaparece).
-- Aparece el mensaje "Door opened!".
-- El nivel **no termina** al abrir la puerta. El jugador debe seguir hasta la meta para ganar.
-
-### Colisión configurable
-
-Desde la herramienta **Editar** se puede activar o desactivar la colisión de cualquier tile, incluidas las puertas. Si se desactiva, la puerta se vuelve decorativa y el jugador puede atravesarla incluso sin llave.
-
-### ¿Cómo se consigue la llave?
-
-El jugador solo tiene que tocarla. La llave se recoge al instante y aparece un icono en la pantalla indicando que ya la tienes.
+- Colisión de puerta configurable desde la herramienta Editar.
+- Se puede activar/desactivar la colisión de cualquier tile, incluyendo puertas.
+- Si la colisión está desactivada, la puerta es decorativa y el jugador la atraviesa aunque no tenga llave.
