@@ -4,202 +4,210 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - xxxx-xx-xx
 
+## [0.35.1] - 2026-06-09
+
+### Removed
+
+- **Layer system**: completely removed. Deleted `LayerBar`, `layerStore`, the `Layer` type, `LAYERS`/`LAYER_NAMES`/`LAYER_VISIBLE_DEFAULT` constants, and the `layer` field from `Tile`, `PaintAction`, and `tileSchema`. Removed the `visibleLayers` filter from `LevelCanvas` and the `activeLayer` reference from `EditorShell`.
+- **Grid dimension badge**: removed the `{width}x{height} grid` indicator from `LevelCanvas` header and its corresponding test.
+- **"Fit map to viewport" button**: removed the `⊡` button from `CameraControls`, its `onFitToMap` prop, and the `handleFitToMap` function from `LevelCanvas`. Removed `fitToMap` from `useEditorCamera` return value. The underlying `cameraStore.fitToMap` implementation is preserved.
+
 ## [0.35.0] - 2026-06-09
 
 ### Added
 
-- **Tests para EditorShell**: 10 tests que cubren renderizado del header, botones Play/Stop, estados Editor activo/Runtime activo, paneles ToolPanel/LevelCanvas/InspectorPanel, grid element, y verificación de estado via store (src/components/EditorShell.test.tsx).
-- **Tests para useTileBrush**: 10 tests que cubren propiedades del hook, makeAction (tile/erase/entity/null), getCellFromEvent (null/sin zoom/con zoom/fuera de rango), y gestión de estado startBrush/endBrush (src/hooks/useTileBrush.test.ts).
-- **README.md personalizado**: reemplazado template por defecto de Next.js con documentación del proyecto GameForge, stack, comandos, testing y arquitectura.
+- **EditorShell tests**: 10 tests covering header rendering, Play/Stop buttons, Editor active/Runtime active states, ToolPanel/LevelCanvas/InspectorPanel panels, grid element, and store state verification (src/components/EditorShell.test.tsx).
+- **useTileBrush tests**: 10 tests covering hook properties, makeAction (tile/erase/entity/null), getCellFromEvent (null/no zoom/with zoom/out of range), and startBrush/endBrush state management (src/hooks/useTileBrush.test.ts).
+- **Custom README.md**: replaced the default Next.js template with GameForge project documentation, stack, commands, testing and architecture.
 
 ### Fixed
 
-- **BackgroundPicker.test.tsx**: corregidas queries que usaban etiquetas en inglés ("Dark", "Cave", "Sky", "Forest", `/set background to sky/i`) para usar las españolas reales del componente (Oscuro, Cielo, Bosque, Desierto, `/set background to ciel/i`).
-- **EditTargetInspector.test.tsx**: corregido spread de `{...baseProps}` que sobrescribía `tiles={tiles}` con `tiles: []`, causando que el test de inputs speed/range fallara al no encontrar el tile.
-- **EntityProperties.test.tsx**: corregida query `getByLabelText(/property value/i)` que matcheaba dos inputs (Property value + New property value), reemplazada por `getByDisplayValue("10")`. También reemplazado `userEvent.clear()` por `fireEvent.change` por incompatibilidad con inputs controlados en jsdom.
-- **EditorShell.test.tsx**: añadido mock de `Element.prototype.scrollIntoView` para evitar TypeError en jsdom.
+- **BackgroundPicker.test.tsx**: fixed queries that used English labels ("Dark", "Cave", "Sky", "Forest", `/set background to sky/i`) to use the actual Spanish labels from the component (Oscuro, Cielo, Bosque, Desierto, `/set background to ciel/i`).
+- **EditTargetInspector.test.tsx**: fixed spread of `{...baseProps}` which overwrote `tiles={tiles}` with `tiles: []`, causing the speed/range input tests to fail because no tile was found.
+- **EntityProperties.test.tsx**: fixed `getByLabelText(/property value/i)` query that matched two inputs (Property value + New property value), replaced with `getByDisplayValue("10")`. Also replaced `userEvent.clear()` with `fireEvent.change` due to incompatibility with controlled inputs in jsdom.
+- **EditorShell.test.tsx**: added mock for `Element.prototype.scrollIntoView` to avoid TypeError in jsdom.
 
 ## [0.34.0] - 2026-06-09
 
 ### Fixed
 
-- **Tamaños de fuente relativos (`rem`/`em`)**: reemplazados 8 usos de `text-[10px]` y `text-[8px]` por `text-[0.625rem]` y `text-[0.5rem]` en `ToolPanel.tsx`, `LayerBar.tsx`, `CameraControls.tsx` y `BackgroundPicker.tsx`, cumpliendo el requisito de Lighthouse de usar unidades relativas.
+- **Relative font sizes (`rem`/`em`)**: replaced 8 uses of `text-[10px]` and `text-[8px]` with `text-[0.625rem]` and `text-[0.5rem]` in `ToolPanel.tsx`, `LayerBar.tsx`, `CameraControls.tsx` and `BackgroundPicker.tsx`, complying with Lighthouse's requirement for relative units.
 
 ### Changed
 
-- **Documentación unificada a formato keepachangelog**: los 22 archivos en `/docs` convertidos al formato `## [X.Y.Z] - YYYY-MM-DD` con secciones `Added`, `Changed`, `Fixed`, `Security`, `Removed`. Esto alinea el proyecto con AGENTS.md línea 484 ("Los archivos deben seguir la estructura definida en Keep a Changelog").
-- **CHANGELOG.md corregido**: añadida sección `[Unreleased]` requerida por keepachangelog, fusionada sección `### Fixed` duplicada en v0.30.0.
+- **Docs unified to keepachangelog format**: all 22 files in `/docs` converted to `## [X.Y.Z] - YYYY-MM-DD` format with `Added`, `Changed`, `Fixed`, `Security`, `Removed` sections. This aligns the project with AGENTS.md line 484 ("Files must follow the structure defined in Keep a Changelog").
+- **CHANGELOG.md fixed**: added required `[Unreleased]` section per keepachangelog, merged duplicate `### Fixed` section in v0.30.0.
 
 ## [0.33.0] - 2026-06-09
 
 ### Changed
 
-- **Estructura migrada a `src/`**: todas las carpetas de aplicación (`app/`, `components/`, `features/`, `engine/`, `stores/`, `hooks/`, `lib/`, `types/`, `assets/`) movidas bajo `src/`, alineando el proyecto con la especificación de AGENTS.md (líneas 120-135). Next.js detecta automáticamente `src/app/`. Path alias `@/*` actualizado a `./src/*` en `tsconfig.json` y `vitest.config.ts`.
+- **Structure migrated to `src/`**: all application folders (`app/`, `components/`, `features/`, `engine/`, `stores/`, `hooks/`, `lib/`, `types/`, `assets/`) moved under `src/`, aligning the project with AGENTS.md specification (lines 120-135). Next.js auto-detects `src/app/`. Path alias `@/*` updated to `./src/*` in `tsconfig.json` and `vitest.config.ts`.
 
 ## [0.30.0] - 2026-06-09
 
 ### Added
 
-- **Tests para hooks, utils y componentes**: creados `lib/utils.test.ts`, `hooks/useEditorCamera.test.ts`, `components/editor/GridCell.test.tsx`, `components/editor/LayerBar.test.tsx`. Total: 17 test files, 149 tests (+25 tests).
+- **Tests for hooks, utils and components**: created `lib/utils.test.ts`, `hooks/useEditorCamera.test.ts`, `components/editor/GridCell.test.tsx`, `components/editor/LayerBar.test.tsx`. Total: 17 test files, 149 tests (+25 tests).
 
 ### Changed
 
-- **`useTileBrush` hook mejorado y conectado a LevelCanvas**: el hook ahora incluye `startBrush`, `endBrush`, `getPendingActions`, `clearPendingActions` y `getCellFromEvent` con soporte de zoom. `LevelCanvas.tsx` refactorizado para usar el hook en lugar de duplicar la lógica de pintado, eliminando ~60 líneas de código duplicado.
-- **LayerBar accesibilidad rediseñada**: reemplazado `onDoubleClick` (no accesible para teclado/lectores de pantalla) por `onContextMenu` (clic derecho) para activar capa. Añadidos `aria-pressed`, `role="group"`, y descripción de estado (`visible`/`oculta`) en `aria-label`.
-- **Reportes Lighthouse movidos a `/reports/`**: 9 archivos JSON de auditoría movidos de la raíz a `reports/` para ordenar el proyecto.
+- **`useTileBrush` hook improved and connected to LevelCanvas**: the hook now includes `startBrush`, `endBrush`, `getPendingActions`, `clearPendingActions` and `getCellFromEvent` with zoom support. `LevelCanvas.tsx` refactored to use the hook instead of duplicating paint logic, removing ~60 lines of duplicated code.
+- **LayerBar accessibility redesigned**: replaced `onDoubleClick` (not accessible for keyboard/screen readers) with `onContextMenu` (right-click) to activate a layer. Added `aria-pressed`, `role="group"`, and state description (`visible`/`hidden`) in `aria-label`.
+- **Lighthouse reports moved to `/reports/`**: 9 audit JSON files moved from root to `reports/` for project tidiness.
 
 ### Fixed
 
-- **`docs/lighthouse-exceptions.md` desactualizado**: actualizado para reflejar escritorio 100/100/100/100 (no 92). Documentada excepción de móvil (56/100) y tablet (no ejecutada). Añadido historial con versión actual.
-- **CLS en móvil (0.518 → 0)**: `ToolPanel` se importaba con `ssr: false` (herencia de un hydration mismatch con dnd-kit en v0.7.1, ya eliminado en v0.11.0). Durante SSR no se renderizaba, el wrapper colapsaba a 0px, y al cargarse en cliente empujaba todo el contenido hacia abajo.
-  - Cambiado a importación estática (`import { ToolPanel }`), eliminando `next/dynamic` con `ssr: false`.
-  - Añadido `min-h-[300px]` al wrapper del ToolPanel y `min-h-[400px]` al contenedor del canvas como safety net.
-  - Añadido `min-h-[200px]` a la sección `<section>` del LevelCanvas para reservar espacio durante carga.
+- **`docs/lighthouse-exceptions.md` outdated**: updated to reflect desktop 100/100/100/100 (not 92). Documented mobile exception (56/100) and tablet (not run). Added history with current version.
+- **CLS on mobile (0.518 → 0)**: `ToolPanel` was imported with `ssr: false` (legacy from a hydration mismatch with dnd-kit in v0.7.1, already removed in v0.11.0). During SSR it was not rendered, the wrapper collapsed to 0px, and when loaded on the client it pushed all content down.
+  - Changed to static import (`import { ToolPanel }`), removing `next/dynamic` with `ssr: false`.
+  - Added `min-h-[300px]` to ToolPanel wrapper and `min-h-[400px]` to canvas container as safety net.
+  - Added `min-h-[200px]` to the `<section>` in LevelCanvas to reserve space during loading.
 
 ### Performance
 
-- **Eliminado forced reflow en paint-by-drag**: `useTileBrush` expone `gridRect` como ref mutable. `LevelCanvas.handleMouseDown` lee `getBoundingClientRect()` una sola vez al iniciar el clic y lo asigna a `gridRect.current`. Durante los `mousemove` posteriores, `getCellFromEvent` solo lee el ref cacheado — cero lecturas de geometría DOM en el hot path.
-- **Eliminado fallback `readGridRect()` en `getCellFromEvent`**: el método ahora retorna `null` si no hay rect cacheado, en lugar de hacer una lectura viva. Esto fuerza al llamante a proveer el rect explícitamente (en `handleMouseDown`), eliminando la doble lectura de `getBoundingClientRect()` que ocurría por mousedown.
-- **`cameraStore.centerView` refactorizado**: reemplazadas 4 lecturas secuenciales (`clientWidth`, `clientHeight`, `scrollWidth`, `scrollHeight`) por 2 llamadas a `getBoundingClientRect()` (1 para el grid, 1 para el padre), eliminando layout thrashing en esa ruta.
+- **Removed forced reflow in paint-by-drag**: `useTileBrush` exposes `gridRect` as a mutable ref. `LevelCanvas.handleMouseDown` reads `getBoundingClientRect()` once at click start and assigns it to `gridRect.current`. During subsequent `mousemove` events, `getCellFromEvent` only reads the cached ref — zero DOM geometry reads on the hot path.
+- **Removed `readGridRect()` fallback in `getCellFromEvent`**: the method now returns `null` if no rect is cached, instead of performing a live read. This forces the caller to provide the rect explicitly (in `handleMouseDown`), removing the double `getBoundingClientRect()` read that occurred per mousedown.
+- **`cameraStore.centerView` refactored**: replaced 4 sequential reads (`clientWidth`, `clientHeight`, `scrollWidth`, `scrollHeight`) with 2 `getBoundingClientRect()` calls (1 for the grid, 1 for the parent), eliminating layout thrashing on that path.
 
 ## [0.28.0] - 2026-06-09
 
 ### Added
 
-- **Lazy loading de GameRuntime**: el componente `GameRuntime` (Phaser) ahora se importa con `next/dynamic` y `ssr: false`, eliminando ~5.7 KB del bundle inicial. Phaser solo se descarga al hacer clic en "Play".
+- **Lazy loading for GameRuntime**: the `GameRuntime` component (Phaser) is now imported with `next/dynamic` and `ssr: false`, removing ~5.7 KB from the initial bundle. Phaser is only downloaded when clicking "Play".
 
 ### Changed
 
-- **RuntimeScene migrada a `engine/runtime/`**: la clase `RuntimeScene` (870+ líneas de lógica Phaser) se extrajo del wrapper React `GameRuntime.tsx` a `engine/runtime/RuntimeScene.ts` mediante patrón factory `createRuntimeScene(PhaserLib, ctx, toggleDebugRef)`. `GameRuntime.tsx` se redujo de 871 a ~140 líneas (~84% de reducción).
-- **Editor logic extraída a `engine/editor/`**: creado `engine/editor/paint-actions.ts` con funciones puras `applyPaintActions`, `createId`, `isUniqueEntity`. El store `editorStore.ts` importa desde `@/engine/editor` en lugar de contener lógica inline.
-- **`features/` y `assets/` populados**: `features/editor/index.ts`, `features/runtime/index.ts`, `features/index.ts` y `assets/index.ts` ahora exportan constantes y re-exports significativos (SPRITE_PATHS, SPRITE_LABELS, CELL_SIZE, RUNTIME_TILE_SIZE).
+- **RuntimeScene migrated to `engine/runtime/`**: the `RuntimeScene` class (870+ lines of Phaser logic) was extracted from the React wrapper `GameRuntime.tsx` to `engine/runtime/RuntimeScene.ts` via factory pattern `createRuntimeScene(PhaserLib, ctx, toggleDebugRef)`. `GameRuntime.tsx` reduced from 871 to ~140 lines (~84% reduction).
+- **Editor logic extracted to `engine/editor/`**: created `engine/editor/paint-actions.ts` with pure functions `applyPaintActions`, `createId`, `isUniqueEntity`. The `editorStore.ts` imports from `@/engine/editor` instead of containing inline logic.
+- **`features/` and `assets/` populated**: `features/editor/index.ts`, `features/runtime/index.ts`, `features/index.ts` and `assets/index.ts` now export meaningful constants and re-exports (SPRITE_PATHS, SPRITE_LABELS, CELL_SIZE, RUNTIME_TILE_SIZE).
 
 ### Fixed
 
-- **E2E tests (3 tests)**: actualizadas aserciones en `e2e/editor.spec.ts`:
-  - Eliminada aserción obsoleta para heading "Assets" (eliminado en v0.25.0).
-  - Cambiadas aserciones de clase seleccionada `bg-slate-700` → `bg-amber-500/20` (nuevo estado visual de selección ámbar).
-- **Lint warning en LevelCanvas.tsx**: añadida dependencia `setSelectedEditTarget` al array de `useEffect` en línea 296.
-- **Accesibilidad Lighthouse**: arreglados `heading-order` (h3→h2), `color-contrast` (text-slate-500/600→text-slate-400) y `label-content-name-mismatch` (layer buttons con número en aria-label).
+- **E2E tests (3 tests)**: updated assertions in `e2e/editor.spec.ts`:
+  - Removed obsolete assertion for "Assets" heading (removed in v0.25.0).
+  - Changed selected class assertions from `bg-slate-700` → `bg-amber-500/20` (new amber selection visual state).
+- **Lint warning in LevelCanvas.tsx**: added `setSelectedEditTarget` dependency to `useEffect` array on line 296.
+- **Lighthouse accessibility**: fixed `heading-order` (h3→h2), `color-contrast` (text-slate-500/600→text-slate-400) and `label-content-name-mismatch` (layer buttons with number in aria-label).
 
 ### Performance
 
-- Lighthouse: accessibility 100, best-practices 100, seo 100. Rendimiento 92 en servidor de producción (peso del editor).
+- Lighthouse: accessibility 100, best-practices 100, seo 100. Performance 92 on production server (editor weight).
 
 ## [0.27.0] - 2026-06-09
 
 ### Added
 
-- **Fondo personalizable del nivel**: nuevo campo `background` en `LevelData` (tipo `BackgroundTheme`). Seis temas disponibles: Oscuro (default), Cielo, Bosque, Desierto, Atardecer y Púrpura.
-  - `types/level.ts`: añadidos tipos `BackgroundTheme`, constantes `BACKGROUND_COLORS` y `BACKGROUND_LABELS`.
-  - `types/level.schema.ts`: campo `background` con `z.enum()` y default `"dark"`.
-  - `stores/editorStore.ts`: nuevo estado `background`, acción `setBackground`, incluido en `loadLevel`/`resetLevel`.
-  - `components/editor/InspectorPanel.tsx`: selector visual de fondo con círculos de color y etiquetas.
-  - `components/editor/LevelCanvas.tsx`: el grid del editor muestra el color de fondo seleccionado.
-  - `components/runtime/GameRuntime.tsx`: el runtime de Phaser usa `backgroundColor` del nivel.
+- **Customizable level background**: new `background` field in `LevelData` (`BackgroundTheme` type). Six available themes: Dark (default), Sky, Forest, Desert, Sunset and Purple.
+  - `types/level.ts`: added `BackgroundTheme` types, `BACKGROUND_COLORS` and `BACKGROUND_LABELS` constants.
+  - `types/level.schema.ts`: `background` field with `z.enum()` and default `"dark"`.
+  - `stores/editorStore.ts`: new `background` state, `setBackground` action, included in `loadLevel`/`resetLevel`.
+  - `components/editor/InspectorPanel.tsx`: visual background picker with color circles and labels.
+  - `components/editor/LevelCanvas.tsx`: the editor grid shows the selected background color.
+  - `components/runtime/GameRuntime.tsx`: the Phaser runtime uses the level's `backgroundColor`.
 
 ## [0.26.0] - 2026-06-09
 
 ### Removed
 
-- **Lista de entidades del Inspector**: eliminada la lista interactiva de entidades en `InspectorPanel.tsx` (`<div className="space-y-2"><h3>Entities</h3>...`). Las entidades solo se seleccionan desde el canvas mediante la herramienta Editar. La edición de propiedades de entidad seleccionada se conserva.
+- **Inspector entity list**: removed the interactive entity list in `InspectorPanel.tsx` (`<div className="space-y-2"><h3>Entities</h3>...`). Entities are now selected only from the canvas using the Edit tool. Editing properties of the selected entity is preserved.
 
 ## [0.25.0] - 2026-06-09
 
 ### Removed
 
-- **AssetExplorer**: eliminado el panel `AssetExplorer.tsx` y su importación en `EditorShell.tsx`. Ahora la selección de elementos se realiza exclusivamente desde `ToolPanel.tsx`, que ya tiene la misma funcionalidad y apariencia.
+- **AssetExplorer**: removed the `AssetExplorer.tsx` panel and its import in `EditorShell.tsx`. Element selection is now done exclusively from `ToolPanel.tsx`, which already has the same functionality and appearance.
 
 ## [0.24.0] - 2026-06-09
 
 ### Changed
 
-- **ToolPanel rediseñado con grid de assets**: el panel de selección de elementos (`ToolPanel.tsx`) ahora tiene la misma apariencia que `AssetExplorer.tsx` — cuadrícula de 4 columnas con previsualización de sprites (24×24) y etiquetas en `text-[8px]`, mismos estilos de tarjeta oscura con hover/selected states en ámbar.
-- **ToolPanel.test.tsx**: actualizada aserción de clase seleccionada de `bg-slate-700` a `bg-amber-500/20` para coincidir con el nuevo estilo.
+- **ToolPanel redesigned with asset grid**: the element selection panel (`ToolPanel.tsx`) now has the same appearance as `AssetExplorer.tsx` — 4-column grid with sprite previews (24×24) and `text-[8px]` labels, same dark card styles with hover/selected amber states.
+- **ToolPanel.test.tsx**: updated selected class assertion from `bg-slate-700` to `bg-amber-500/20` to match the new style.
 
 ### Removed
 
-- **TileRow y EntityRow**: eliminados los componentes de fila individual (`TileRow`, `EntityRow`) y `SpritePreview`. Ahora los tiles y entidades se renderizan directamente como botones de cuadrícula dentro del panel.
+- **TileRow and EntityRow**: removed the individual row components (`TileRow`, `EntityRow`) and `SpritePreview`. Tiles and entities now render directly as grid buttons within the panel.
 
 ## [0.23.0] - 2026-06-08
 
 ### Added
 
-- **Movimiento de plataformas**: las plataformas ahora pueden configurarse en el inspector (modo editar) para moverse verticalmente (arriba-abajo) u horizontalmente (izquierda-derecha). Se pueden ajustar la velocidad y el rango de movimiento.
+- **Platform movement**: platforms can now be configured in the inspector (edit mode) to move vertically (Up-Down) or horizontally (Left-Right). Speed and movement range can be adjusted.
 
 ### Changed
 
-- **Pinchos sin dirección**: eliminado el `processCallback` direccional en la colisión entre el jugador y los pinchos. Ahora cualquier contacto con un pincho (independientemente del lado) mata al jugador. Ya no existe el "lado seguro" de la base.
-- **Propiedades en tiles**: añadido campo `properties?: Record<string, unknown>` a la interfaz `Tile` y al schema Zod, permitiendo almacenar datos por tile (consistente con la interfaz `Entity`).
-- **Acción `updateTileProperty`**: nueva acción en `editorStore` para modificar propiedades de un tile individual.
+- **Directionless spikes**: removed the directional `processCallback` in the player-spike collision. Any contact with a spike (regardless of side) now kills the player. The "safe side" of the base no longer exists.
+- **Tile properties**: added `properties?: Record<string, unknown>` field to the `Tile` interface and Zod schema, allowing per-tile data storage (consistent with the `Entity` interface).
+- **`updateTileProperty` action**: new action in `editorStore` to modify individual tile properties.
 
 ### Changed
 
-- `types/level.ts`: `Tile` ahora incluye `properties?: Record<string, unknown>`.
-- `types/level.schema.ts`: `tileSchema` acepta `properties` opcional con transform a objeto vacío.
-- `stores/editorStore.ts`: añadida acción `updateTileProperty(x, y, key, value)`.
-- `components/editor/InspectorPanel.tsx`: los tiles de tipo "platform" en modo editar ahora muestran controles de dirección (None/Up-Down/Left-Right), velocidad y rango.
-- `components/runtime/GameRuntime.tsx`: las plataformas con `moveAxis` distinto de "none" se crean en un grupo dinámico y se mueven en el bucle `update()` con velocidad y rango configurables.
+- `types/level.ts`: `Tile` now includes `properties?: Record<string, unknown>`.
+- `types/level.schema.ts`: `tileSchema` accepts optional `properties` with transform to empty object.
+- `stores/editorStore.ts`: added `updateTileProperty(x, y, key, value)` action.
+- `components/editor/InspectorPanel.tsx`: "platform" type tiles in edit mode now show direction controls (None/Up-Down/Left-Right), speed and range.
+- `components/runtime/GameRuntime.tsx`: platforms with `moveAxis` other than "none" are created in a dynamic group and move in the `update()` loop with configurable speed and range.
 
 ## [0.22.0] - 2026-06-08
 
 ### Added
 
-- **Herramienta Editar**: nuevo botón "Editar" en el panel de herramientas. Al activarlo, se puede hacer clic en cualquier tile o entidad del canvas para ver y modificar sus propiedades en el inspector.
-- **Inspector de elementos**: al seleccionar un elemento en modo edición, el inspector muestra su nombre (lectura), coordenadas (lectura) y un toggle de colisión (ON/OFF).
-- **Colisión por elemento**: los tiles ahora tienen una propiedad `solid` opcional que sobreescribe la solidez por defecto del tipo. Si se desactiva, el tile se renderiza sin física (decoración).
-- **Tile `solid?: boolean`**: añadido campo opcional a la interfaz `Tile` y al schema Zod.
+- **Edit tool**: new "Edit" button in the tool panel. When activated, clicking any tile or entity on the canvas shows and modifies its properties in the inspector.
+- **Element inspector**: when selecting an element in edit mode, the inspector shows its name (read-only), coordinates (read-only) and a collision toggle (ON/OFF).
+- **Per-element collision**: tiles now have an optional `solid` property that overrides the type's default solidity. If disabled, the tile renders without physics (decoration).
+- **Tile `solid?: boolean`**: added optional field to the `Tile` interface and Zod schema.
 
 ### Changed
 
-- `stores/selectionStore.ts`: añadido `"edit"` a `ToolMode`, nuevo tipo `EditTarget` y estado `selectedEditTarget`.
-- `stores/editorStore.ts`: añadida acción `updateTileSolid(x, y, solid)` para toggle de colisión por tile.
-- `components/editor/ToolPanel.tsx`: añadido botón "Editar" junto a "Borrar".
-- `components/editor/LevelCanvas.tsx`: en modo edición, el clic selecciona el elemento como edit target sin pintar/borrar. `GridCell` resalta en ámbar el elemento seleccionado para edición.
-- `components/editor/InspectorPanel.tsx`: nueva sección que muestra propiedades (nombre, coordenadas, colisión) del `selectedEditTarget`.
-- `components/runtime/GameRuntime.tsx`: la creación de tiles respeta `tile.solid` — si es `false`, se crea sin physics body (solo visual).
+- `stores/selectionStore.ts`: added `"edit"` to `ToolMode`, new `EditTarget` type and `selectedEditTarget` state.
+- `stores/editorStore.ts`: added `updateTileSolid(x, y, solid)` action for per-tile collision toggle.
+- `components/editor/ToolPanel.tsx`: added "Edit" button next to "Erase".
+- `components/editor/LevelCanvas.tsx`: in edit mode, clicking selects the element as an edit target without painting/erasing. `GridCell` highlights the element selected for editing in amber.
+- `components/editor/InspectorPanel.tsx`: new section showing properties (name, coordinates, collision) of `selectedEditTarget`.
+- `components/runtime/GameRuntime.tsx`: tile creation respects `tile.solid` — if `false`, it is created without a physics body (visual only).
 
 ## [0.21.0] - 2026-06-08
 
 ### Added
 
-- **Pantalla de victoria**: al alcanzar la meta (`goal`) aparece overlay "NIVEL COMPLETADO" con botones Retry (reinicia el nivel) y Stop (vuelve al editor).
-- **Pantalla de Game Over**: al perder todas las vidas aparece overlay "GAME OVER" con botones Retry y Stop.
-- **Física pausada en pantallas**: el mundo físico se pausa al mostrar victoria o Game Over (enemigos, gravedad y colisiones se detienen).
-- **Enemigos colisionan con puertas**: `enemyLayer` ahora también colisiona con `doorLayer`, los enemigos rebotan contra las puertas como con los tiles sólidos.
+- **Victory screen**: reaching the goal shows "LEVEL COMPLETE" overlay with Retry (restarts level) and Stop (returns to editor) buttons.
+- **Game Over screen**: losing all lives shows "GAME OVER" overlay with Retry and Stop buttons.
+- **Paused physics on screens**: the physics world pauses when showing victory or Game Over (enemies, gravity and collisions stop).
+- **Enemies collide with doors**: `enemyLayer` now also collides with `doorLayer`, enemies bounce off doors like solid tiles.
 
 ### Changed
 
-- `GameRuntime.tsx`: `onReachGoal` reemplazado por `showVictory()`. Añadido `showGameOver()` con overlay y botones interactivos. Añadido `this.physics.world.pause()` en ambas pantallas. Añadido collider entre `enemyLayer` y `doorLayer`.
+- `GameRuntime.tsx`: `onReachGoal` replaced by `showVictory()`. Added `showGameOver()` with overlay and interactive buttons. Added `this.physics.world.pause()` on both screens. Added collider between `enemyLayer` and `doorLayer`.
 
 ## [0.20.0] - 2026-06-08
 
 ### Added
 
-- **Sistema de 3 vidas**: el jugador comienza con 3 vidas. Cada muerte (pincho, enemigo, caída al vacío) resta 1 vida. Al llegar a 0, Game Over.
-- **Respawn al inicio**: al morir con vidas restantes, el jugador reaparece en su posición inicial del nivel, o en el checkpoint si lo ha activado.
-- **HUD de vidas**: indicador "♥ x3" en la esquina superior izquierda del runtime que se actualiza al perder vidas.
+- **3-lives system**: the player starts with 3 lives. Each death (spike, enemy, void fall) subtracts 1 life. At 0, Game Over.
+- **Respawn at start**: on death with remaining lives, the player respawns at the initial level position, or at the checkpoint if activated.
+- **Lives HUD**: "♥ x3" indicator in the top-left corner of the runtime that updates when losing lives.
 
 ### Changed
 
-- `GameRuntime.tsx`: refactor de `onHitSpike()` para gestionar vidas, respawn y Game Over. La muerte por caída al vacío ahora llama a `onHitSpike()` en lugar de mantener lógica duplicada.
-- `GameRuntime.tsx`: guardada la posición inicial del jugador (`spawnX`/`spawnY`) al crearlo.
+- `GameRuntime.tsx`: refactored `onHitSpike()` to manage lives, respawn and Game Over. Void fall death now calls `onHitSpike()` instead of maintaining duplicate logic.
+- `GameRuntime.tsx`: saved the player's initial position (`spawnX`/`spawnY`) on creation.
 
 ## [0.19.0] - 2026-06-08
 
 ### Added
 
-- **Door con colisión física**: la puerta (`door`) ahora usa `collider` en lugar de `overlap`, por lo que bloquea físicamente al jugador hasta que tenga la llave.
-- **Apertura de puerta con llave**: al tocar la puerta con `hasKey = true`, la puerta se destruye (liberando el paso) sin completar el nivel. El nivel solo se completa al alcanzar la entidad `goal`.
+- **Door with physical collision**: the door now uses `collider` instead of `overlap`, so it physically blocks the player until they have the key.
+- **Door opening with key**: touching the door with `hasKey = true` destroys the door (clearing the path) without completing the level. The level is only completed by reaching the `goal` entity.
 
 ### Changed
 
-- `GameRuntime.tsx`: `doorLayer` cambió de `this.physics.add.overlap` a `this.physics.add.collider`. El callback `onTryDoor` ahora recibe el objeto puerta y lo destruye al abrirse, sin reproducir sonido de victoria ni pausar la escena.
+- `GameRuntime.tsx`: `doorLayer` changed from `this.physics.add.overlap` to `this.physics.add.collider`. The `onTryDoor` callback now receives the door object and destroys it on opening, without playing victory sound or pausing the scene.
 
 ### Fixed
 
-- La puerta ya no es un obstáculo meramente visual — ahora detiene físicamente al jugador hasta obtener la llave.
-- Abrir la puerta con la llave ya no completa el nivel prematuramente; el jugador puede pasar y debe llegar a la meta (`goal`) para ganar.
+- The door is no longer merely a visual obstacle — it now physically stops the player until the key is obtained.
+- Opening the door with the key no longer prematurely completes the level; the player can pass through and must reach the `goal` to win.
 
 ## [0.18.1] - 2026-06-05
 
@@ -211,274 +219,274 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- **Asset Explorer**: nuevo panel lateral izquierdo que lista assets por categorías (Suelo, Pinchos, Jugador, Enemigos, Objetos) con previsualización de sprites y selección por clic. Categorizado para facilitar la navegación.
-- **Sistema de cámara del editor**: zoom (+/−/reset), pan con botón central/derecho del ratón. Almacén separado `cameraStore` con estado `zoom`, `panX`, `panY`. Hook `useEditorCamera` que maneja eventos wheel, mousedown/move/up y contextmenu.
-- **Navegación por teclado en lista de entidades**: las flechas ArrowUp/ArrowDown permiten navegar entre entidades en el InspectorPanel.
-- **Carpeta `features/`**: estructura de directorios según arquitectura de AGENTS.md (`features/editor/`, `features/runtime/`), preparada para futura migración de lógica desde `components/`.
-- **Tests**: `layerStore.test.ts` (8 tests, cobertura de toggle visibilidad, capa activa, reset), `cameraStore.test.ts` (8 tests, cobertura de zoom, pan, fitToMap, límites).
+- **Asset Explorer**: new left sidebar panel listing assets by category (Ground, Spikes, Player, Enemies, Objects) with sprite previews and click selection. Categorized for easy navigation.
+- **Editor camera system**: zoom (+/−/reset), pan with middle/right mouse button. Separate `cameraStore` with `zoom`, `panX`, `panY` state. `useEditorCamera` hook handling wheel, mousedown/move/up and contextmenu events.
+- **Keyboard navigation in entity list**: ArrowUp/ArrowDown keys allow navigating between entities in InspectorPanel.
+- **`features/` directory**: directory structure per AGENTS.md architecture (`features/editor/`, `features/runtime/`), prepared for future logic migration from `components/`.
+- **Tests**: `layerStore.test.ts` (8 tests, covering visibility toggle, active layer, reset), `cameraStore.test.ts` (8 tests, covering zoom, pan, fitToMap, limits).
 
 ### Changed
 
-- **EditorShell**: integra AssetExplorer en la barra lateral izquierda. `handleDragEnd` asigna `activeLayer` al colocar tiles vía drag & drop.
-- **LevelCanvas**: integra `useEditorCamera` con transform CSS `scale()` y `translate()` en el contenedor grid. Añadidos botones de zoom en el header del canvas. `getCellFromEvent` escala coordenadas por `zoom` para clicks en espacio vacío.
-- **InspectorPanel**: lista de entidades con `tabIndex={0}` y `onKeyDown` para navegación por teclado.
-- **`types/level.test.ts`**: actualizado para usar tipos correctos (`spike-up` en lugar de `spike`), añadidos tests para Layer system y nuevos entity types.
+- **EditorShell**: integrates AssetExplorer in the left sidebar. `handleDragEnd` assigns `activeLayer` when placing tiles via drag & drop.
+- **LevelCanvas**: integrates `useEditorCamera` with CSS `scale()` and `translate()` transform on the grid container. Added zoom buttons in the canvas header. `getCellFromEvent` scales coordinates by `zoom` for clicks in empty space.
+- **InspectorPanel**: entity list with `tabIndex={0}` and `onKeyDown` for keyboard navigation.
+- **`types/level.test.ts`**: updated to use correct types (`spike-up` instead of `spike`), added tests for Layer system and new entity types.
 - **`package.json`**: v0.17.0 → v0.18.0.
 
 ### Fixed
 
-- `getCellFromEvent` en LevelCanvas: ahora escala las coordenadas del rect por `zoom` cuando se usa la posición del bounding rect como fallback, evitando desajustes al hacer zoom.
-- `types/level.test.ts`: reemplazado tipo `'spike'` obsoleto por `'spike-up'` para coincidir con el union type actual.
+- `getCellFromEvent` in LevelCanvas: now scales rect coordinates by `zoom` when using the bounding rect position as fallback, avoiding misalignment when zoomed.
+- `types/level.test.ts`: replaced obsolete `'spike'` type with `'spike-up'` to match the current union type.
 
 ## [0.17.0] - 2026-06-05
 
 ### Added
 
-- Nuevos tiles: **brick** (ladrillo sólido, textura similar a ground pero marrón) y **platform** (plataforma sólida con textura metálica gris).
-- Nuevas entidades: **checkpoint** (punto de respawn), **door** (puerta que requiere llave), **key** (llave coleccionable para abrir la puerta).
-- Propiedades de entidad editables en el InspectorPanel. Al seleccionar una entidad (clic en el canvas o en la lista del inspector), se muestran sus propiedades `Record<string, unknown>` con campos editables y botón "+" para agregar nuevas.
-- Sistema de capas (Layers 0-5): barra de botones numerados sobre el canvas para ocultar/mostrar cada capa. Doble clic en un botón de capa la establece como activa. Las capas filtran qué tiles se renderizan en el canvas del editor.
-- Almacén `layerStore` (Zustand) con estado `activeLayer` y `visibleLayers`.
-- Sprites SVG: `brick.svg`, `platform.svg`, `checkpoint.svg`, `door.svg`, `key.svg`.
-- Texturas procedimentales en runtime para brick, platform, checkpoint, door, key.
-- Checkpoint resetea posición del jugador al morir (si se activó antes). Si no hay checkpoint, muestra Game Over.
-- Key coleccionable: se recoge al tocarla, muestra icono de llave en la UI del runtime, y permite abrir la puerta.
-- Puerta: si el jugador tiene la llave, la puerta se abre y completa el nivel; si no, muestra mensaje "Need a key!".
-- Respawn al caer fuera del mundo: si hay checkpoint activo, reaparece allí; si no, Game Over.
+- New tiles: **brick** (solid brick, texture similar to ground but brown) and **platform** (solid platform with gray metallic texture).
+- New entities: **checkpoint** (respawn point), **door** (requires key), **key** (collectible key to open the door).
+- Entity properties editable in InspectorPanel. When selecting an entity (click on canvas or in the inspector list), its `Record<string, unknown>` properties are shown with editable fields and a "+" button to add new ones.
+- Layer system (Layers 0-5): numbered button bar above the canvas to hide/show each layer. Double-click a layer button sets it as active. Layers filter which tiles render on the editor canvas.
+- `layerStore` (Zustand) with `activeLayer` and `visibleLayers` state.
+- SVG sprites: `brick.svg`, `platform.svg`, `checkpoint.svg`, `door.svg`, `key.svg`.
+- Procedural textures in runtime for brick, platform, checkpoint, door, key.
+- Checkpoint resets player position on death (if activated). If no checkpoint, shows Game Over.
+- Key collectible: picked up on touch, shows key icon in runtime UI, allows opening the door.
+- Door: if the player has the key, the door opens and completes the level; otherwise shows "Need a key!" message.
+- Respawn on fall out of world: if checkpoint active, respawns there; if not, Game Over.
 
 ### Changed
 
-- `types/level.ts`: Tile extendido con propiedad opcional `layer: Layer`. Añadidos tipos `Layer`, `LAYERS`, `LAYER_NAMES`, `LAYER_VISIBLE_DEFAULT`.
-- `types/level.schema.ts`: tileSchema ahora acepta `layer` opcional (0-5).
-- `stores/editorStore.ts`: PaintAction.tile ahora incluye `layer?: Layer`. `batchPaint` asigna capa al crear tiles. Añadida función `updateEntityProperty`.
-- `components/editor/LevelCanvas.tsx`: tileMap filtra por `visibleLayers`. Al colocar tile se usa `activeLayer`. Añadidos botones de capa en el header del canvas.
-- `components/editor/InspectorPanel.tsx`: añadida sección "Entities" con lista clicable y editor de propiedades por entidad seleccionada.
-- `components/editor/ToolPanel.tsx`: tileOptions incluye `brick`, `platform`. entityOptions incluye `checkpoint`, `door`, `key`.
-- `components/runtime/GameRuntime.tsx`: clase RuntimeScene extendida con `hasKey`, `keyIcon`, `checkpointLayer`, `doorLayer`, `keyLayer`. Nueva lógica en `update()` para respawn con checkpoint. Métodos `onCollectKey`, `onReachCheckpoint`, `onTryDoor`.
+- `types/level.ts`: Tile extended with optional `layer: Layer` property. Added `Layer`, `LAYERS`, `LAYER_NAMES`, `LAYER_VISIBLE_DEFAULT` types.
+- `types/level.schema.ts`: tileSchema now accepts optional `layer` (0-5).
+- `stores/editorStore.ts`: PaintAction.tile now includes `layer?: Layer`. `batchPaint` assigns layer when creating tiles. Added `updateEntityProperty` function.
+- `components/editor/LevelCanvas.tsx`: tileMap filters by `visibleLayers`. Uses `activeLayer` when placing tiles. Added layer buttons in canvas header.
+- `components/editor/InspectorPanel.tsx`: added "Entities" section with clickable list and property editor per selected entity.
+- `components/editor/ToolPanel.tsx`: tileOptions includes `brick`, `platform`. entityOptions includes `checkpoint`, `door`, `key`.
+- `components/runtime/GameRuntime.tsx`: RuntimeScene class extended with `hasKey`, `keyIcon`, `checkpointLayer`, `doorLayer`, `keyLayer`. New `update()` logic for checkpoint respawn. Methods `onCollectKey`, `onReachCheckpoint`, `onTryDoor`.
 - `package.json`: v0.16.0 → v0.17.0.
 
 ## [0.16.0] - 2026-06-05
 
 ### Added
 
-- Botón "Hitboxes ON/OFF" en el runtime que activa/desactiva la visualización de los bodies de física Arcade de Phaser (hitboxes de tiles, entidades y jugador). Al activarlo se llama `world.createDebugGraphic()` y `world.drawDebug = true`; al desactivarlo se limpia el gráfico y se deshabilita el dibujo.
+- "Hitboxes ON/OFF" button in the runtime toggles visibility of Phaser Arcade physics bodies (tile, entity and player hitboxes). When activated, calls `world.createDebugGraphic()` and `world.drawDebug = true`; when deactivated, clears the graphic and disables drawing.
 
 ### Fixed
 
-- Hitboxes de pinchos rotados desplazadas una celda: `refreshBody()` de Phaser posiciona incorrectamente el body estático cuando el sprite tiene `setAngle()` distinto de 0. Se reemplazó por asignación explícita de `body.x` / `body.y` usando la posición calculada del tile.
+- Rotated spike hitboxes offset by one cell: Phaser's `refreshBody()` incorrectly positions the static body when the sprite has `setAngle()` different from 0. Replaced with explicit `body.x` / `body.y` assignment using the calculated tile position.
 
 ### Changed
 
-- `GameRuntime.tsx`: añadidos `toggleDebugRef`, estado `showHitboxes` y botón toggle en la UI.
-- `GameRuntime.tsx`: ground y spikes ahora posicionan su body manualmente (`body.x = x - TILE_SIZE/2`) en lugar de llamar `refreshBody()`.
+- `GameRuntime.tsx`: added `toggleDebugRef`, `showHitboxes` state and toggle button in the UI.
+- `GameRuntime.tsx`: ground and spikes now position their body manually (`body.x = x - TILE_SIZE/2`) instead of calling `refreshBody()`.
 
 ## [0.15.1] - 2026-06-05
 
 ### Fixed
 
-- Colisión de pinchos direccionales: el `processCallback` ahora compara la posición del jugador contra el borde donde está la punta del triángulo (ej. `pBody.bottom > sBody.bottom` para spike-down). Así el jugador solo muere al alcanzar la punta del pincho, no al cruzar el centro del tile. Esto permite atravesar el pincho desde el lado seguro (base plana) sin morir antes de llegar a la punta.
+- Directional spike collision: the `processCallback` now compares the player's position against the edge where the triangle tip is (e.g. `pBody.bottom > sBody.bottom` for spike-down). The player only dies when reaching the spike tip, not when crossing the tile center. This allows traversing the spike from the safe side (flat base) without dying before reaching the tip.
 
 ### Changed
 
-- `GameRuntime.tsx`: eliminada la detección de dirección por centros. Ahora cada orientación compara contra el borde de la punta: `sBody.bottom` (spike-down), `sBody.top` (spike-up), `sBody.right` (spike-right), `sBody.left` (spike-left).
+- `GameRuntime.tsx`: removed center-based direction detection. Each orientation now compares against the tip edge: `sBody.bottom` (spike-down), `sBody.top` (spike-up), `sBody.right` (spike-right), `sBody.left` (spike-left).
 
 ## [0.15.0] - 2026-06-05
 
 ### Added
 
-- Cuatro variantes direccionales de pinchos en el panel de selección: `spike-up`, `spike-down`, `spike-left` y `spike-right`. Cada una se muestra con la orientación visual correcta (rotación CSS en ToolPanel y LevelCanvas, `setAngle()` en el runtime de Phaser).
-- Backward compatibility: el schema Zod transforma automáticamente el valor `"spike"` a `"spike-up"` al cargar niveles antiguos.
+- Four directional spike variants in the selection panel: `spike-up`, `spike-down`, `spike-left` and `spike-right`. Each displayed with the correct visual orientation (CSS rotation in ToolPanel and LevelCanvas, `setAngle()` in the Phaser runtime).
+- Backward compatibility: the Zod schema automatically transforms `"spike"` to `"spike-up"` when loading old levels.
 
 ### Changed
 
-- `TILE_REGISTRY` en `types/tile-definitions.ts`: reemplazada la entrada `spike` por cuatro entradas direccionales (`spike-up`, `spike-down`, `spike-left`, `spike-right`).
-- `ToolPanel.tsx`: el panel de tiles lista los 4 pinchos con su sprite rotado mediante CSS `transform: rotate()`.
-- `LevelCanvas.tsx`: `GridCell` aplica `transform: rotate()` a los pinchos según su dirección.
-- `GameRuntime.tsx`: los pinchos se rotan con `setAngle()` según dirección definida en `SPIKE_ANGLE`.
-- `types/level.ts`: `TileType` ahora incluye `"spike-up" | "spike-down" | "spike-left" | "spike-right"` en lugar de solo `"spike"`.
-- Tests actualizados para reflejar los nuevos nombres de tipo y etiquetas en el panel.
+- `TILE_REGISTRY` in `types/tile-definitions.ts`: replaced single `spike` entry with four directional entries (`spike-up`, `spike-down`, `spike-left`, `spike-right`).
+- `ToolPanel.tsx`: the tile panel lists all 4 spikes with rotated sprites via CSS `transform: rotate()`.
+- `LevelCanvas.tsx`: `GridCell` applies `transform: rotate()` to spikes according to their direction.
+- `GameRuntime.tsx`: spikes are rotated with `setAngle()` based on direction defined in `SPIKE_ANGLE`.
+- `types/level.ts`: `TileType` now includes `"spike-up" | "spike-down" | "spike-left" | "spike-right"` instead of just `"spike"`.
+- Tests updated to reflect the new type names and panel labels.
 
 ## [0.14.0] - 2026-06-05
 
 ### Added
 
-- Contador de monedas en la esquina superior derecha del runtime, con icono de moneda y número actualizable al recolectar.
+- Coin counter in the top-right corner of the runtime, with coin icon and updatable number on collection.
 
 ### Changed
 
-- Gravedad del mundo aumentada de 300 a 1800 para una caída más rápida.
-- Velocidad de salto del jugador aumentada de -320 a -800 para mantener altura de salto.
-- Velocidad horizontal del jugador aumentada de 160 a 300.
+- World gravity increased from 300 to 1800 for faster falling.
+- Player jump velocity increased from -320 to -800 to maintain jump height.
+- Player horizontal speed increased from 160 to 300.
 
 ## [0.13.0] - 2026-06-05
 
 ### Added
 
-- Efectos de sonido en el runtime de Phaser: salto (ascendente), moneda (ding brillante), daño/game over (zumbido grave) y nivel completado (arpegio ascendente). Los sonidos se generan mediante síntesis WAV y se cargan en el preload de la escena.
+- Sound effects in the Phaser runtime: jump (ascending), coin (bright ding), damage/game over (low buzz) and level complete (ascending arpeggio). Sounds are generated via WAV synthesis and loaded in the scene preload.
 
 ### Changed
 
-- `GameRuntime.tsx`: añadido método `preload()` para cargar audio, declaraciones de sonido (`soundJump`, `soundCoin`, `soundHit`, `soundGoal`) y llamadas a `.play()` en `onCollectCoin`, `onHitSpike`, `onReachGoal` y al saltar.
-- Version bump: nueva feature menor compatible hacia atrás.
+- `GameRuntime.tsx`: added `preload()` method to load audio, sound declarations (`soundJump`, `soundCoin`, `soundHit`, `soundGoal`) and `.play()` calls in `onCollectCoin`, `onHitSpike`, `onReachGoal` and on jump.
+- Version bump: new backward-compatible minor feature.
 
 ## [0.12.2] - 2026-06-05
 
 ### Fixed
 
-- Eliminada la palabra "GOAL" del sprite de meta (goal) tanto en el SVG como en el runtime de Phaser.
+- Removed "GOAL" text from the goal sprite in both SVG and Phaser runtime.
 
 ## [0.12.1] - 2026-06-05
 
 ### Fixed
 
-- Las imágenes de sprites en `LevelCanvas.tsx` ahora ocupan toda la celda (`background-size: cover` en lugar de `contain`), eliminando bordes vacíos alrededor del sprite.
-- Eliminada la etiqueta "P" que aparecía sobre el jugador durante la ejecución del juego en `GameRuntime.tsx`.
+- Sprite images in `LevelCanvas.tsx` now fill the entire cell (`background-size: cover` instead of `contain`), removing empty borders around the sprite.
+- Removed the "P" label that appeared above the player during game execution in `GameRuntime.tsx`.
 
 ## [0.12.0] - 2026-06-05
 
 ### Changed
 
-- Reemplazados los rectángulos de color sólido en el runtime de Phaser por sprites dibujados programáticamente con formas reconocibles: suelo con textura de ladrillos, pincho triangular, personaje azul, moneda circular, enemigo con ojos y meta con banderín.
-- Eliminada la interfaz `RuntimeTexture` y el bucle genérico de creación de texturas. Ahora cada sprite se dibuja con primitivas Phaser Graphics (`fillRect`, `fillCircle`, `fillTriangle`, `lineStyle`).
-- `ToolPanel.tsx`: los previews de tiles y entidades ahora muestran los sprites SVG desde `public/sprites/` en lugar de cuadros de color sólido con letras.
+- Replaced solid color rectangles in the Phaser runtime with programmatically drawn recognizable shapes: ground with brick texture, triangular spike, blue character, circular coin, enemy with eyes, and goal with flag.
+- Removed the `RuntimeTexture` interface and generic texture creation loop. Each sprite is now drawn with Phaser Graphics primitives (`fillRect`, `fillCircle`, `fillTriangle`, `lineStyle`).
+- `ToolPanel.tsx`: tile and entity previews now show SVG sprites from `public/sprites/` instead of solid color boxes with letters.
 
 ### Added
 
-- Sprites SVG en `public/sprites/` para cada tile (`ground.svg`, `spike.svg`) y entidad (`player.svg`, `coin.svg`, `enemy.svg`, `goal.svg`).
+- SVG sprites in `public/sprites/` for each tile (`ground.svg`, `spike.svg`) and entity (`player.svg`, `coin.svg`, `enemy.svg`, `goal.svg`).
 
 ## [0.11.0] - 2026-06-05
 
 ### Changed
 
-- Eliminado el drag & drag de tiles y entidades en `ToolPanel.tsx`. Cada fila ahora es un `div` clickeable con `role="button"` que selecciona el elemento al hacer clic. Se removieron `useDraggable`, `DragHandle`, `setNodeRef` y la dependencia `@dnd-kit/core` del componente.
-- `ToolPanel.test.tsx`: simplificado el wrapper de test (ya no requiere `DndContext`), actualizado selector de estado seleccionado para usar `getByRole('button')`.
+- Removed drag & drop of tiles and entities in `ToolPanel.tsx`. Each row is now a clickable `div` with `role="button"` that selects the element on click. Removed `useDraggable`, `DragHandle`, `setNodeRef` and the `@dnd-kit/core` dependency from the component.
+- `ToolPanel.test.tsx`: simplified test wrapper (no longer requires `DndContext`), updated selected state selector to use `getByRole('button')`.
 
 ### Removed
 
-- Funcionalidad de arrastrar elementos del panel de selección al canvas. La selección ahora es exclusivamente mediante clic.
+- Drag functionality from the selection panel to the canvas. Selection is now exclusively via click.
 
 ## [0.10.0] - 2026-06-04
 
 ### Added
 
-- Directorios `hooks/` y `lib/` con estructura inicial según convención de AGENTS.md.
-- `hooks/useTileBrush.ts`: hook para encapsular lógica de pintado con batch y RAF.
-- `lib/utils.ts`: utilidades compartidas (`makeId`, `clamp`, `isKeyOf`).
-- `types/tile-definitions.ts`: modelo de datos de tiles con `id`, `nombre`, `categoría`, `sprite` y `sólido` según especificación de AGENTS.md.
-- Entity `properties: Record<string, unknown>` para datos dinámicos por entidad.
+- `hooks/` and `lib/` directories with initial structure per AGENTS.md convention.
+- `hooks/useTileBrush.ts`: hook to encapsulate paint logic with batch and RAF.
+- `lib/utils.ts`: shared utilities (`makeId`, `clamp`, `isKeyOf`).
+- `types/tile-definitions.ts`: tile data model with `id`, `name`, `category`, `sprite` and `solid` per AGENTS.md specification.
+- Entity `properties: Record<string, unknown>` for dynamic per-entity data.
 
 ### Changed
 
-- `types/level.ts`: Entity ahora usa `position: { x, y }` en lugar de `x`, `y` planos, alineado con la interfaz definida en AGENTS.md.
-- `types/level.schema.ts`: actualizado esquema Zod para `position` anidado y `properties` opcional con transform a objeto vacío.
-- `stores/editorStore.ts`: actualizadas referencias a `entity.position.x`/`entity.position.y`.
-- `components/editor/LevelCanvas.tsx`: actualizadas referencias a `entity.position`.
-- `components/runtime/GameRuntime.tsx`: actualizadas referencias a `entity.position`.
-- Todos los tests actualizados para la nueva interfaz Entity.
+- `types/level.ts`: Entity now uses `position: { x, y }` instead of flat `x`, `y`, aligned with the interface defined in AGENTS.md.
+- `types/level.schema.ts`: updated Zod schema for nested `position` and optional `properties` with transform to empty object.
+- `stores/editorStore.ts`: updated references to `entity.position.x`/`entity.position.y`.
+- `components/editor/LevelCanvas.tsx`: updated references to `entity.position`.
+- `components/runtime/GameRuntime.tsx`: updated references to `entity.position`.
+- All tests updated for the new Entity interface.
 
 ## [0.9.2] - 2026-06-04
 
 ### Added
 
-- Documentación de excepciones Lighthouse en `docs/lighthouse-exceptions.md`.
-- Auditoría Lighthouse completa en escritorio, tablet y móvil usando Edge (Chromium v148).
+- Lighthouse exceptions documentation in `docs/lighthouse-exceptions.md`.
+- Full Lighthouse audit on desktop, tablet and mobile using Edge (Chromium v148).
 
 ### Changed
 
-- `ToolPanel.tsx`: headings `<h3>` → `<h2>` para jerarquía correcta (heading-order).
-- `ToolPanel.tsx`: `text-slate-500` → `text-slate-300` en descripciones de 10px para contraste suficiente (color-contrast).
-- `ToolPanel.tsx`: `aria-label` añadido a drag handles y botones de selección (aria-command-name).
-- `EditorShell.tsx`: `aria-label` en Play/Stop ahora incluye texto visible (label-content-name-mismatch).
-- `InspectorPanel.tsx`: `aria-label` actualizados para coincidir con texto visible.
-- `GameRuntime.tsx`: `aria-label` añadido al botón Detener.
-- `text-[10px]` → `text-[0.625rem]` y `text-[5px]` → `text-[0.3125rem]` para tamaños de fuente relativos.
+- `ToolPanel.tsx`: headings `<h3>` → `<h2>` for correct hierarchy (heading-order).
+- `ToolPanel.tsx`: `text-slate-500` → `text-slate-300` on 10px descriptions for sufficient contrast (color-contrast).
+- `ToolPanel.tsx`: `aria-label` added to drag handles and selection buttons (aria-command-name).
+- `EditorShell.tsx`: `aria-label` on Play/Stop now includes visible text (label-content-name-mismatch).
+- `InspectorPanel.tsx`: `aria-label` updated to match visible text.
+- `GameRuntime.tsx`: `aria-label` added to the Stop button.
+- `text-[10px]` → `text-[0.625rem]` and `text-[5px]` → `text-[0.3125rem]` for relative font sizes.
 
 ### Fixed
 
-- Contraste de color insuficiente en `text-[10px] text-slate-500` sobre fondo oscuro (2.17:1 → 6.81:1).
+- Insufficient color contrast on `text-[10px] text-slate-500` over dark background (2.17:1 → 6.81:1).
 
 ## [0.9.1] - 2026-06-04
 
 ### Added
 
-- Schema Zod para validación de LevelData en `types/level.schema.ts` (A03).
-- Tests de integración para rechazo de JSON inválido en InspectorPanel.
-- Documentación de seguridad OWASP en `docs/owasp-security.md`.
+- Zod schema for LevelData validation in `types/level.schema.ts` (A03).
+- Integration tests for invalid JSON rejection in InspectorPanel.
+- OWASP security documentation in `docs/owasp-security.md`.
 
 ### Changed
 
-- `InspectorPanel.handleLoad` ahora usa `levelDataSchema.safeParse()` en lugar de `JSON.parse` + casteo manual.
-- Error logging silenciado en `handleLoad` (A09).
+- `InspectorPanel.handleLoad` now uses `levelDataSchema.safeParse()` instead of `JSON.parse` + manual casting.
+- Error logging silenced in `handleLoad` (A09).
 
 ### Security
 
-- Validación estricta de tipos con Zod para todo input JSON de nivel (A03).
-- Eliminada exposición de datos de usuario en `console.error` (A09).
-- Ejecutado `npm audit` (A06): 2 vulnerabilidades moderadas en postcss (transitivas de Next.js).
+- Strict type validation with Zod for all level JSON input (A03).
+- Removed user data exposure in `console.error` (A09).
+- Ran `npm audit` (A06): 2 moderate vulnerabilities in postcss (transitive from Next.js).
 
 ## [0.9.0] - 2026-06-04
 
 ### Added
 
-- Stack de testing: Vitest (unitario), Testing Library (integración), Playwright (E2E).
-- `vitest.config.ts` con jsdom, plugin React y alias `@/`.
-- `playwright.config.ts` con tests en `e2e/`, servidor Next.js automático.
-- Scripts `test`, `test:run` y `test:e2e` en `package.json`.
-- `eslint.config.mjs` ignora `e2e/` y `*.test.{ts,tsx}`.
+- Testing stack: Vitest (unit), Testing Library (integration), Playwright (E2E).
+- `vitest.config.ts` with jsdom, React plugin and `@/` alias.
+- `playwright.config.ts` with tests in `e2e/`, automatic Next.js server.
+- `test`, `test:run` and `test:e2e` scripts in `package.json`.
+- `eslint.config.mjs` ignores `e2e/` and `*.test.{ts,tsx}`.
 
 ## [0.8.1] - 2026-06-03
 
 ### Added
 
-- Muerte al caer al vacío en el runtime. Se eliminó `setCollideWorldBounds(true)` del jugador. En `update()`, si `player.y > worldHeight + 64` se dispara `onHitSpike()` (Game Over + pausa).
+- Death on void fall in the runtime. Removed `setCollideWorldBounds(true)` from the player. In `update()`, if `player.y > worldHeight + 64` triggers `onHitSpike()` (Game Over + pause).
 
 ## [0.8.0] - 2026-06-03
 
 ### Changed
 
-- Selección unificada en `selectionStore`: `selectedTile` y `selectedEntity` ahora son mutuamente excluyentes. Al seleccionar un tile, se limpia `selectedEntity` y se activa el modo `"tile"`. Al seleccionar una entidad, se limpia `selectedTile` y se activa el modo `"entity"`. Los tipos cambiaron a `TileType | null` y `EntityType | null`.
-- `ToolPanel.tsx`: `TileRow` y `EntityRow` ya no llaman `setActiveTool` manualmente; el store lo maneja. El highlight de entidad ya no depende de `activeTool`.
+- Unified selection in `selectionStore`: `selectedTile` and `selectedEntity` are now mutually exclusive. Selecting a tile clears `selectedEntity` and activates `"tile"` mode. Selecting an entity clears `selectedTile` and activates `"entity"` mode. Types changed to `TileType | null` and `EntityType | null`.
+- `ToolPanel.tsx`: `TileRow` and `EntityRow` no longer call `setActiveTool` manually; the store handles it. Entity highlight no longer depends on `activeTool`.
 
 ### Added
 
-- `makeAction` en `LevelCanvas.tsx` retorna `null` si no hay tile o entidad seleccionada, evitando pintar acciones inválidas.
+- `makeAction` in `LevelCanvas.tsx` returns `null` if no tile or entity is selected, preventing invalid paint actions.
 
 ## [0.7.5] - 2026-06-03
 
 ### Changed
 
-- Eliminados los botones "Pincel de tiles" y "Entidad" del panel de herramientas en `ToolPanel.tsx`. Ahora el modo se selecciona implícitamente al hacer clic en una fila de tile o entidad. Solo se conserva el botón "Borrar" como herramienta explícita.
-- `TileRow` ahora también llama `setActiveTool("tile")` al hacer clic.
+- Removed "Tile brush" and "Entity" buttons from the tool panel in `ToolPanel.tsx`. The mode is now implicitly selected by clicking a tile or entity row. Only the "Erase" button is kept as an explicit tool.
+- `TileRow` now also calls `setActiveTool("tile")` on click.
 
 ## [0.7.4] - 2026-06-03
 
 ### Fixed
 
-- Los botones de selección en `ToolPanel.tsx` no funcionaban porque `useDraggable` consumía el evento de click. Se separó el activador de arrastre (preview visual) del `onClick` de selección (etiqueta). `listeners` van solo sobre el `DragHandle`, el `onClick` va sobre un `<button>` independiente.
+- Selection buttons in `ToolPanel.tsx` did not work because `useDraggable` consumed the click event. Separated the drag activator (visual preview) from the `onClick` selection (label). `listeners` only on `DragHandle`, `onClick` on a separate `<button>`.
 
 ## [0.7.3] - 2026-06-03
 
 ### Changed
 
-- Eliminados los botones "Arrastrar" independientes en `ToolPanel.tsx`. Ahora la fila completa de cada tile/entidad es a la vez seleccionable y arrastrable mediante `useDraggable`, con un único `<button>` que maneja ambas acciones.
+- Removed independent "Drag" buttons in `ToolPanel.tsx`. The full row of each tile/entity is now both selectable and draggable via `useDraggable`, with a single `<button>` handling both actions.
 
 ## [0.7.2] - 2026-06-03
 
 ### Fixed
 
-- `button` anidado en `ToolPanel.tsx`: el `DraggableItem` renderizaba un `<button>` dentro de otro `<button>` (fila seleccionable), lo cual es HTML inválido y causaba hydration error. Se cambió a `<div>` con `cursor-grab`.
+- Nested `button` in `ToolPanel.tsx`: `DraggableItem` rendered a `<button>` inside another `<button>` (selectable row), which is invalid HTML and caused a hydration error. Changed to `<div>` with `cursor-grab`.
 
 ## [0.7.1] - 2026-06-03
 
 ### Fixed
 
-- Hydration mismatch en `ToolPanel` causado por `useDraggable` (dnd-kit) generando atributos con IDs distintos entre servidor y cliente. Se cambió la importación directa a `next/dynamic` con `ssr: false` en `EditorShell.tsx`.
+- Hydration mismatch in `ToolPanel` caused by `useDraggable` (dnd-kit) generating attributes with different IDs between server and client. Changed direct import to `next/dynamic` with `ssr: false` in `EditorShell.tsx`.
 
 ## [0.7.0] - 2026-06-03
 
 ### Changed
 
-- Rediseñado el `ToolPanel` con previews visuales: cada tile y entidad muestra un cuadrado coloreado (mismos colores que el canvas y runtime), nombre legible en español, tipo técnico y un botón de arrastre con miniatura propia. La selección activa se resalta visualmente.
+- Redesigned `ToolPanel` with visual previews: each tile and entity shows a colored square (same colors as canvas and runtime), readable Spanish name, technical type and a drag button with its own thumbnail. Active selection is visually highlighted.
 
 ## [0.6.1] - 2026-06-03
 
@@ -501,8 +509,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Replaced full 64×64 DOM grid (4096 `<button>` elements) with virtual rendering: only cells containing tiles, entities, or the selected entity generate DOM nodes. Empty cells render as a CSS `background-image` grid pattern (linear-gradient). Celdas posicionadas con `position: absolute` en lugar de CSS Grid.
-- `getCellFromEvent` ahora calcula coordenadas desde la posición del mouse contra `getBoundingClientRect()` del grid cuando no se hace clic sobre un botón existente, permitiendo interactuar con celdas vacías sin elementos DOM.
+- Replaced full 64×64 DOM grid (4096 `<button>` elements) with virtual rendering: only cells containing tiles, entities, or the selected entity generate DOM nodes. Empty cells render as a CSS `background-image` grid pattern (linear-gradient). Cells positioned with `position: absolute` instead of CSS Grid.
+- `getCellFromEvent` now calculates coordinates from mouse position against `getBoundingClientRect()` of the grid when not clicking on an existing button, allowing interaction with empty cells without DOM elements.
 - Removed `useDroppable` from all 4096 individual `GridCell` components. Replaced with a single `useDroppable` on the grid container. Drag-and-drop now calculates the target cell from pointer coordinates (`activatorEvent + delta`) in `EditorShell`.
 
 ### Added
@@ -512,9 +520,9 @@ All notable changes to this project will be documented in this file.
 
 ### Performance
 
-- Reducción de ~99% de nodos DOM en nivel vacío (de 4096 a ~0).
-- Eliminadas 4096 llamadas a `useDroppable` (registro en dnd-kit).
-- Las actualizaciones durante pintado se bachean en una sola actualización de estado por frame.
+- ~99% DOM node reduction on empty level (from 4096 to ~0).
+- Removed 4096 `useDroppable` calls (dnd-kit registration).
+- Paint updates are batched into a single state update per frame.
 
 ## [0.4.0] - 2026-06-03
 

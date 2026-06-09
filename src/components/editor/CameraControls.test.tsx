@@ -34,16 +34,4 @@ describe("CameraControls", () => {
     await userEvent.click(screen.getByRole("button", { name: /reset zoom/i }));
     expect(resetZoom).toHaveBeenCalledOnce();
   });
-
-  it("calls onFitToMap when provided", async () => {
-    const onFitToMap = vi.fn();
-    render(<CameraControls zoom={1} zoomIn={vi.fn()} zoomOut={vi.fn()} resetZoom={vi.fn()} onFitToMap={onFitToMap} />);
-    await userEvent.click(screen.getByRole("button", { name: /fit map/i }));
-    expect(onFitToMap).toHaveBeenCalledOnce();
-  });
-
-  it("does not render fit-to-map button without callback", () => {
-    render(<CameraControls zoom={1} zoomIn={vi.fn()} zoomOut={vi.fn()} resetZoom={vi.fn()} />);
-    expect(screen.queryByRole("button", { name: /fit map/i })).toBeNull();
-  });
 });

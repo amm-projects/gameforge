@@ -4,12 +4,12 @@
 
 ### Changed
 
-- `selectionStore.ts`: `selectedTile` y `selectedEntity` ahora son mutuamente excluyentes.
-- `setSelectedTile` limpia `selectedEntity` y establece `activeTool = "tile"`.
-- `setSelectedEntity` limpia `selectedTile` y establece `activeTool = "entity"`.
-- `ToolPanel.tsx`: `TileRow` y `EntityRow` ya no necesitan llamar `setActiveTool` manualmente.
-- `LevelCanvas.tsx`: `makeAction` retorna `null` si no hay selección activa.
+- `selectionStore.ts`: `selectedTile` and `selectedEntity` are now mutually exclusive.
+- `setSelectedTile` clears `selectedEntity` and sets `activeTool = "tile"`.
+- `setSelectedEntity` clears `selectedTile` and sets `activeTool = "entity"`.
+- `ToolPanel.tsx`: `TileRow` and `EntityRow` no longer need to call `setActiveTool` manually.
+- `LevelCanvas.tsx`: `makeAction` returns `null` if there is no active selection.
 
 ### Motivation
 
-Antes se podía tener tile y entidad seleccionados simultáneamente, causando confusión en la UI. Con este cambio solo hay un elemento activo a la vez.
+Previously, a tile and entity could be selected simultaneously, causing confusion in the UI. With this change, only one element is active at a time.

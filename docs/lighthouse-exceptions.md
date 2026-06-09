@@ -1,43 +1,43 @@
-# Excepciones Lighthouse
+# Lighthouse Exceptions
 
-> Documentación obligatoria según AGENTS.md: si una restricción técnica impide el 100, documentar la excepción con plan de mitigación.
+> Mandatory documentation per AGENTS.md: if a technical constraint prevents scoring 100, document the exception with a mitigation plan.
 
 ## [0.29.0] - 2026-06-09
 
 ### Added
 
-- Resultados actuales de Lighthouse documentados.
+- Current Lighthouse results documented.
 
 ### Performance
 
-| Categoría | Escritorio | Tablet | Móvil |
+| Category | Desktop | Tablet | Mobile |
 |---|---|---|---|
-| Rendimiento | 100 | — | 56 |
-| Accesibilidad | 100 | — | 100 |
-| Buenas prácticas | 100 | — | 100 |
+| Performance | 100 | — | 56 |
+| Accessibility | 100 | — | 100 |
+| Best Practices | 100 | — | 100 |
 | SEO | 100 | — | 100 |
 
 ### Exceptions
 
-- **Escritorio (100/100)**: sin excepciones. Alcanza 100 tras lazy loading, virtual rendering y compresión HTTP.
-- **Móvil (56/100)**: TBT 1082ms, CLS 0 (corregido). Prioridad secundaria según AGENTS.md.
-- **Tablet**: no ejecutada (Lighthouse CLI error EPERM en Windows).
+- **Desktop (100/100)**: no exceptions. Achieves 100 after lazy loading, virtual rendering and HTTP compression.
+- **Mobile (56/100)**: TBT 1082ms, CLS 0 (fixed). Secondary priority per AGENTS.md.
+- **Tablet**: not run (Lighthouse CLI error EPERM on Windows).
 
 ### Mitigation plan (mobile)
 
-1. ⬜ `React.lazy` + Suspense para ToolPanel e InspectorPanel.
-2. ⬜ Dimensiones explícitas en contenedor del canvas.
-3. ⬜ Reducir bundle inicial.
-4. ⬜ Streaming de server components.
+1. ⬜ `React.lazy` + Suspense for ToolPanel and InspectorPanel.
+2. ⬜ Explicit dimensions on canvas container.
+3. ⬜ Reduce initial bundle.
+4. ⬜ Server component streaming.
 
 ## [0.28.0] - 2026-06-09
 
 ### Changed
 
-- Escritorio mejorado de 92 → 100/100/100/100.
+- Desktop improved from 92 → 100/100/100/100.
 
 ## [0.9.1-dev] - 2026-06-04
 
 ### Added
 
-- Primeros reportes Lighthouse: escritorio 100/100/100/100, tablet 0/100/100/100, móvil 56/100/100/100.
+- First Lighthouse reports: desktop 100/100/100/100, tablet 0/100/100/100, mobile 56/100/100/100.

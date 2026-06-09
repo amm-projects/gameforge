@@ -5,8 +5,6 @@ import { EditorShell } from './EditorShell';
 import { useEditorStore } from '@/stores/editorStore';
 import { useRuntimeStore } from '@/stores/runtimeStore';
 import { useSelectionStore } from '@/stores/selectionStore';
-import { useLayerStore } from '@/stores/layerStore';
-import { LAYERS } from '@/types/level';
 
 beforeEach(() => {
   Element.prototype.scrollIntoView = vi.fn();
@@ -23,10 +21,6 @@ beforeEach(() => {
     selectedTile: 'ground',
     selectedEntity: null,
     selectedEntityId: null,
-  });
-  useLayerStore.setState({
-    activeLayer: LAYERS.SOLID,
-    visibleLayers: new Set([LAYERS.BACKGROUND, LAYERS.DECORATION, LAYERS.SOLID, LAYERS.ENEMIES, LAYERS.OBJECTS, LAYERS.PLAYER]),
   });
 });
 

@@ -5,13 +5,11 @@ export function CameraControls({
   zoomIn,
   zoomOut,
   resetZoom,
-  onFitToMap,
 }: {
   zoom: number;
   zoomIn: () => void;
   zoomOut: () => void;
   resetZoom: () => void;
-  onFitToMap?: () => void;
 }) {
   return (
     <div className="flex items-center gap-1">
@@ -40,16 +38,6 @@ export function CameraControls({
       >
         ⊞
       </button>
-      {onFitToMap && (
-        <button
-          type="button"
-          onClick={onFitToMap}
-          aria-label="Fit map to viewport"
-          className="rounded-md bg-slate-800 px-2 py-0.5 text-[0.625rem] text-slate-400 transition hover:bg-slate-700"
-        >
-          ⊡
-        </button>
-      )}
     </div>
   );
 }

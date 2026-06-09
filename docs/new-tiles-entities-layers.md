@@ -6,43 +6,43 @@
 
 #### Tiles
 
-- **Brick** (`brick`): tile sólido con colisión completa, sprite `public/sprites/brick.svg`.
-- **Platform** (`platform`): tile sólido, sprite `public/sprites/platform.svg`. Uso: plataformas flotantes.
+- **Brick** (`brick`): solid tile with full collision, sprite `public/sprites/brick.svg`.
+- **Platform** (`platform`): solid tile, sprite `public/sprites/platform.svg`. Usage: floating platforms.
 
 #### Entities
 
-- **Checkpoint** (`checkpoint`): guarda posición del jugador al superponerse. Reaparición en muerte.
-- **Door** (`door`): obstáculo sólido. Bloquea al jugador hasta tener llave. Migrado de `overlap` a `collider` en v0.19.0.
-- **Key** (`key`): al recogerla establece `hasKey = true`, muestra icono en UI, se destruye.
+- **Checkpoint** (`checkpoint`): saves player position on overlap. Respawn on death.
+- **Door** (`door`): solid obstacle. Blocks the player until they have the key. Migrated from `overlap` to `collider` in v0.19.0.
+- **Key** (`key`): on pickup sets `hasKey = true`, shows icon in UI, self-destructs.
 
 #### Layer System
 
-- Sistema de 6 capas (0-5) para organizar tiles en el editor.
-- `layerStore.ts`: store Zustand con `activeLayer` y `visibleLayers` (Set).
-- Cada `Tile` puede tener propiedad opcional `layer: Layer` (0-5). Default: capa 2 (SOLID).
-- Barra de 6 botones en el header del canvas.
-- Clic: toggle visibilidad. Doble clic: capa activa.
-- El runtime ignora capas — todos los tiles sólidos se tratan igual.
+- 6-layer system (0-5) for organizing tiles in the editor.
+- `layerStore.ts`: Zustand store with `activeLayer` and `visibleLayers` (Set).
+- Each `Tile` can have optional `layer: Layer` property (0-5). Default: layer 2 (SOLID).
+- 6-button bar in the canvas header.
+- Click: toggle visibility. Double-click: set active layer.
+- Runtime ignores layers — all solid tiles are treated equally.
 
 ### Changed
 
-- `Tile` interface: añadida propiedad opcional `layer`.
+- `Tile` interface: added optional `layer` property.
 
 ## [0.19.0] - 2026-06-08
 
 ### Changed
 
-- Door migrada de `overlap` a `collider` para obstáculo físico real.
-- La apertura de puerta ya no dispara victoria.
+- Door migrated from `overlap` to `collider` for real physical obstacle.
+- Door opening no longer triggers victory.
 
 ## [0.16.0] - 2026-06-05
 
 ### Added
 
-- **Entity Property Editor** en InspectorPanel.
-- Sección "Entities" lista todas las entidades del nivel.
-- Clic en entidad la selecciona y muestra `properties: Record<string, unknown>`.
-- Cada propiedad como campo de texto editable.
-- Botón "+" para agregar propiedades clave/valor.
-- Entidad seleccionada se resalta en canvas.
-- `updateEntityProperty(id, key, value)` en editorStore.
+- **Entity Property Editor** in InspectorPanel.
+- "Entities" section lists all entities in the level.
+- Clicking an entity selects it and shows `properties: Record<string, unknown>`.
+- Each property as an editable text field.
+- "+" button to add key/value properties.
+- Selected entity is highlighted on canvas.
+- `updateEntityProperty(id, key, value)` in editorStore.

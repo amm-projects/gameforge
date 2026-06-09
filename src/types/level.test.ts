@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { TileType, EntityType, Tile, Entity, LevelData, Layer } from './level';
-import { LAYERS, LAYER_NAMES } from './level';
+import type { TileType, EntityType, Tile, Entity, LevelData } from './level';
 
 describe('TileType', () => {
   it('accepts valid tile types', () => {
@@ -28,24 +27,6 @@ describe('EntityType', () => {
   });
 });
 
-describe('Layer system', () => {
-  it('defines layers 0-5', () => {
-    expect(LAYERS.BACKGROUND).toBe(0);
-    expect(LAYERS.DECORATION).toBe(1);
-    expect(LAYERS.SOLID).toBe(2);
-    expect(LAYERS.ENEMIES).toBe(3);
-    expect(LAYERS.OBJECTS).toBe(4);
-    expect(LAYERS.PLAYER).toBe(5);
-  });
-
-  it('provides names for all layers', () => {
-    const layers: Layer[] = [0, 1, 2, 3, 4, 5];
-    for (const layer of layers) {
-      expect(LAYER_NAMES[layer]).toBeDefined();
-    }
-  });
-});
-
 describe('LevelData structure', () => {
   it('creates a valid LevelData object', () => {
     const tile: Tile = { x: 0, y: 0, type: 'ground' };
@@ -60,11 +41,6 @@ describe('LevelData structure', () => {
     expect(level.height).toBe(64);
     expect(level.tiles).toHaveLength(1);
     expect(level.entities).toHaveLength(1);
-  });
-
-  it('creates a Tile with optional layer', () => {
-    const tile: Tile = { x: 0, y: 0, type: 'ground', layer: 2 };
-    expect(tile.layer).toBe(2);
   });
 
   it('serializes and deserializes LevelData to JSON', () => {

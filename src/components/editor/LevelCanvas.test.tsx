@@ -34,11 +34,6 @@ describe('LevelCanvas', () => {
     expect(screen.getByText('Canvas del nivel')).toBeInTheDocument();
   });
 
-  it('shows grid dimensions badge', () => {
-    renderWithDnd();
-    expect(screen.getByText('64x64 grid')).toBeInTheDocument();
-  });
-
   it('renders the grid element', () => {
     renderWithDnd();
     const grid = document.getElementById('grid');

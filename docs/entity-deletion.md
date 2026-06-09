@@ -4,12 +4,12 @@
 
 ### Added
 
-- Tres formas de eliminar entidades del nivel:
-  1. **Erase tool**: al activar la herramienta de borrar y hacer clic en una celda, se eliminan tile y entidad en esa posición.
-  2. **Selección + tecla Delete**: al hacer clic sobre una entidad (con cualquier herramienta excepto erase), queda seleccionada y al presionar `Delete`/`Backspace` se elimina.
-  3. **Indicador visual**: la entidad seleccionada muestra borde cyan (`ring-2 ring-cyan-400/50`).
+- Three ways to delete entities from the level:
+  1. **Erase tool**: activate the Erase tool and click a cell; both tile and entity at that position are removed.
+  2. **Selection + Delete key**: click an entity (with any tool except Erase) to select it; pressing `Delete`/`Backspace` removes it.
+  3. **Visual indicator**: the selected entity shows a cyan border (`ring-2 ring-cyan-400/50`).
 
 ### Changed
 
-- `stores/selectionStore.ts`: añadido `selectedEntityId: string | null` y `setSelectedEntityId`.
-- `components/editor/LevelCanvas.tsx`: integrados `removeEntity`, lógica de selección al clic, listener de teclado para Delete/Backspace, indicador visual en `GridCell`.
+- `stores/selectionStore.ts`: added `selectedEntityId: string | null` and `setSelectedEntityId`.
+- `components/editor/LevelCanvas.tsx`: integrated `removeEntity`, click selection logic, keyboard listener for Delete/Backspace, visual indicator in `GridCell`.

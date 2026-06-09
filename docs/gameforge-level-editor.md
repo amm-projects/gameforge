@@ -2,24 +2,24 @@
 
 ## Overview
 
-Editor de niveles 2D con soporte para grid, tiles y entidades. Independiente del runtime, solo administra la creación y serialización de niveles.
+2D level editor with grid, tile and entity support. Independent from the runtime, it only manages level creation and serialization.
 
-### Componentes principales
+### Main components
 
-- `EditorShell`: componente central que combina panel de herramientas, canvas e inspector.
-- `ToolPanel`: selección de herramientas, tiles y entidades. Incluye drag-and-drop con `dnd-kit`.
-- `LevelCanvas`: cuadrícula de 32x32 para colocar tiles y entidades.
-- `InspectorPanel`: información del nivel, exportación e importación de JSON.
-- `GameRuntime`: ejecución del nivel con Phaser 3 usando datos serializados.
+- `EditorShell`: central component that combines the tool panel, canvas and inspector.
+- `ToolPanel`: tool, tile and entity selection. Includes drag-and-drop with `dnd-kit`.
+- `LevelCanvas`: 32x32 grid for placing tiles and entities.
+- `InspectorPanel`: level information, JSON export and import.
+- `GameRuntime`: level execution with Phaser 3 using serialized data.
 
 ### Stores
 
-- `editorStore`: estado del nivel, tiles y entidades.
-- `selectionStore`: herramienta activa y selección actual.
-- `projectStore`: texto JSON del proyecto.
-- `runtimeStore`: estado de ejecución del runtime.
+- `editorStore`: level state, tiles and entities.
+- `selectionStore`: active tool and current selection.
+- `projectStore`: project JSON text.
+- `runtimeStore`: runtime execution state.
 
-### Formato de nivel
+### Level format
 
 ```json
 {

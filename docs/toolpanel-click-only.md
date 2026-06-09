@@ -1,16 +1,16 @@
-# ToolPanel: selección solo por clic
+# ToolPanel: click-only selection
 
 ## [0.11.0] - 2026-06-05
 
 ### Changed
 
-- Eliminado drag & drop del panel de selección de elementos.
-- Cada fila de tile/entidad ahora es un `div` con `role="button"`, `tabIndex={0}` y `onClick`.
-- Eliminado `useDraggable` de `TileRow` y `EntityRow`.
-- Eliminado componente `DragHandle`.
-- Preview visual se mantiene sin cambios.
-- `ToolPanel.test.tsx` ya no necesita `DndContext` como wrapper.
+- Removed drag & drop from the element selection panel.
+- Each tile/entity row is now a `div` with `role="button"`, `tabIndex={0}` and `onClick`.
+- Removed `useDraggable` from `TileRow` and `EntityRow`.
+- Removed `DragHandle` component.
+- Visual preview remains unchanged.
+- `ToolPanel.test.tsx` no longer needs `DndContext` as a wrapper.
 
 ### Motivation
 
-Cada fila soportaba clic y arrastre, duplicando interacción y añadiendo complejidad (`useDraggable`, `DragHandle`, estado `isDragging`) sin valor significativo frente al flujo principal: seleccionar con clic y pintar en canvas.
+Each row supported both click and drag, duplicating interaction and adding complexity (`useDraggable`, `DragHandle`, `isDragging` state) without significant value over the main flow: click to select and paint on the canvas.

@@ -1,11 +1,11 @@
-# Pantalla de Victoria
+# Victory Screen
 
 ## [0.21.0] - 2026-06-08
 
 ### Added
 
-- Pantalla de victoria al llegar a la meta (`goal`).
-- Fondo oscuro con dos botones:
-  - **Retry**: reinicia el nivel desde el principio.
-  - **Stop**: cierra runtime y vuelve al editor.
-- El juego se pausa (enemigos, gravedad y colisiones) mientras la pantalla está visible.
+- Victory screen when reaching the goal.
+- Dark background with two buttons:
+  - **Retry**: restarts the level from the beginning.
+  - **Stop**: closes runtime and returns to editor.
+- The game pauses (enemies, gravity and collisions) while the screen is visible.

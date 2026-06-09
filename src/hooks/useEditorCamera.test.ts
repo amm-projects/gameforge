@@ -21,7 +21,6 @@ describe('useEditorCamera', () => {
     expect(typeof result.current.zoomOut).toBe('function');
     expect(typeof result.current.resetZoom).toBe('function');
     expect(typeof result.current.setPan).toBe('function');
-    expect(typeof result.current.fitToMap).toBe('function');
     expect(typeof result.current.centerView).toBe('function');
   });
 

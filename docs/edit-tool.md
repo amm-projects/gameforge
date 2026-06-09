@@ -1,26 +1,26 @@
-# Herramienta Editar
+# Edit Tool
 
 ## [0.22.0] - 2026-06-08
 
 ### Added
 
-- Herramienta **Editar** en el panel de herramientas (junto al botón Borrar).
-- Permite inspeccionar y modificar propiedades de tiles y entidades del nivel.
-- Al activarla, el botón se resalta en ámbar.
+- **Edit** tool in the tool panel (next to the Erase button).
+- Allows inspecting and modifying properties of tiles and entities in the level.
+- When activated, the button highlights in amber.
 
 ### Changed
 
-- Al hacer clic en un tile o entidad con la herramienta activa, el elemento se resalta con borde ámbar.
-- En el panel Inspector aparecen las propiedades del elemento seleccionado.
+- Clicking a tile or entity with the Edit tool active highlights the element with an amber border.
+- The Inspector panel shows the selected element's properties.
 
 ### Properties
 
-- **Name**: nombre del elemento (solo lectura). Ej: "Suelo", "Jugador", "Puerta"
-- **Position**: coordenadas (x, y) en la cuadrícula (solo lectura)
-- **Collision**: activar/desactivar colisión física del elemento
+- **Name**: element name (read-only). E.g. "Ground", "Player", "Door"
+- **Position**: grid coordinates (x, y) (read-only)
+- **Collision**: enable/disable physical collision for the element
 
 ### Technical details
 
-- Al desactivar la colisión de un tile, este se vuelve decorativo.
-- En entidades, la propiedad se guarda pero el comportamiento en runtime depende del tipo.
-- Al hacer clic en otra herramienta (Borrar, tile, entidad) el modo edición se desactiva.
+- When a tile's collision is disabled, it becomes decorative.
+- For entities, the property is saved but runtime behavior depends on the type.
+- Switching to another tool (Erase, tile, entity) deactivates Edit mode.

@@ -5,7 +5,6 @@ import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { CELL_SIZE } from "@/assets";
 import { useEditorStore } from "@/stores/editorStore";
 import { useRuntimeStore } from "@/stores/runtimeStore";
-import { useLayerStore } from "@/stores/layerStore";
 import { LevelCanvas } from "@/components/editor/LevelCanvas";
 import { ToolPanel } from "@/components/editor/ToolPanel";
 import { InspectorPanel } from "@/components/editor/InspectorPanel";
@@ -64,7 +63,7 @@ export function EditorShell() {
 
     const payload = active.data.current as { type: string; tileType?: string; entityType?: string };
     if (payload.type === "tile") {
-      setTile({ x, y, type: payload.tileType as TileType, layer: useLayerStore.getState().activeLayer });
+      setTile({ x, y, type: payload.tileType as TileType });
       return;
     }
 

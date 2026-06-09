@@ -2,7 +2,7 @@ import { useCallback, useRef, useEffect } from "react";
 import { useCameraStore } from "@/stores/cameraStore";
 
 export function useEditorCamera(containerRef: React.RefObject<HTMLDivElement | null>) {
-  const { zoom, panX, panY, zoomIn, zoomOut, resetZoom, setPan, fitToMap, centerView } = useCameraStore();
+  const { zoom, panX, panY, zoomIn, zoomOut, resetZoom, setPan, centerView } = useCameraStore();
   const isPanning = useRef(false);
   const lastMouse = useRef({ x: 0, y: 0 });
 
@@ -59,5 +59,5 @@ export function useEditorCamera(containerRef: React.RefObject<HTMLDivElement | n
     };
   }, [containerRef, handleWheel, handleMouseDown, handleMouseMove, handleMouseUp, handleContextMenu]);
 
-  return { zoom, panX, panY, zoomIn, zoomOut, resetZoom, setPan, fitToMap, centerView };
+  return { zoom, panX, panY, zoomIn, zoomOut, resetZoom, setPan, centerView };
 }

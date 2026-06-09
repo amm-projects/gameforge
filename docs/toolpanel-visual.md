@@ -4,21 +4,21 @@
 
 ### Changed
 
-- `ToolPanel.tsx`: reemplazados botones de texto plano por filas visuales con preview coloreado (32×32px), nombre en español, tipo técnico.
+- `ToolPanel.tsx`: replaced plain text buttons with visual rows featuring colored preview (32×32px), Spanish name, and technical type.
 
 ### Visual
 
-| Elemento | Color | Símbolo |
+| Element | Color | Symbol |
 |---|---|---|
-| Suelo | amber-700 | — |
-| Pinchos | rose-600 | `^` |
-| Jugador | blue-500 | `P` |
-| Moneda | yellow-400 | `C` |
-| Enemigo | red-600 | `E` |
-| Meta | green-500 | `G` |
+| Ground | amber-700 | — |
+| Spikes | rose-600 | `^` |
+| Player | blue-500 | `P` |
+| Coin | yellow-400 | `C` |
+| Enemy | red-600 | `E` |
+| Goal | green-500 | `G` |
 
 ### Technical details
 
-- Colores coinciden con `LevelCanvas.tsx` y `RuntimeScene.ts` para consistencia visual.
-- `TILE_VISUAL` y `ENTITY_VISUAL` con `bg`, `symbol` y `label` para cada tipo.
-- Layout: `flex flex-col gap-2` con botones de ancho completo.
+- Colors match `LevelCanvas.tsx` and `RuntimeScene.ts` for visual consistency.
+- `TILE_VISUAL` and `ENTITY_VISUAL` with `bg`, `symbol` and `label` for each type.
+- Layout: `flex flex-col gap-2` with full-width buttons.

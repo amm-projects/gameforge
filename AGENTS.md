@@ -1,28 +1,28 @@
 # AGENTS.md
 
-## Proyecto
+## Project
 
-GameForge (nombre provisional)
+GameForge (working title)
 
-Editor visual de juegos de plataformas 2D desarrollado con Next.js.
+2D platformer visual editor built with Next.js.
 
-Los usuarios pueden crear niveles colocando bloques, enemigos, monedas, decoraciones y objetos interactivos mediante una interfaz drag & drop, sin necesidad de programar.
+Users can create levels by placing blocks, enemies, coins, decorations and interactive objects through a drag & drop interface, without programming.
 
-El sistema debe permitir previsualizar y jugar el nivel directamente desde el navegador.
-
----
-
-# Objetivo principal
-
-Construir un creador de juegos de plataformas 2D similar a Mario Maker, pero completamente web.
-
-El editor debe generar una estructura de datos serializable (JSON) que posteriormente será interpretada por el motor del juego.
-
-La prioridad es la simplicidad, mantenibilidad y escalabilidad.
+The system must allow previewing and playing the level directly from the browser.
 
 ---
 
-# Stack tecnológico
+# Main goal
+
+Build a 2D platformer game creator similar to Mario Maker, but fully web-based.
+
+The editor must generate a serializable data structure (JSON) that will later be interpreted by the game engine.
+
+The priority is simplicity, maintainability and scalability.
+
+---
+
+# Tech stack
 
 ## Frontend
 
@@ -31,11 +31,11 @@ La prioridad es la simplicidad, mantenibilidad y escalabilidad.
 - TypeScript
 - Tailwind CSS
 
-## Estado global
+## State management
 
 - Zustand
 
-## Motor de juego
+## Game engine
 
 - Phaser 3
 
@@ -43,81 +43,81 @@ La prioridad es la simplicidad, mantenibilidad y escalabilidad.
 
 - dnd-kit
 
-## Validación
+## Validation
 
 - Zod
 
-## Base de datos futura
+## Future database
 
 - PostgreSQL
 - Prisma
 
 ---
 
-# Reglas generales
+# General rules
 
-## SIEMPRE
+## ALWAYS
 
-- Utilizar TypeScript estricto.
-- Utilizar componentes funcionales.
-- Mantener componentes pequeños.
-- Separar lógica de presentación.
-- Crear tipos reutilizables.
-- Utilizar nombres descriptivos.
-- Mantener el código simple.
-- Priorizar claridad sobre optimización prematura.
-- Seguir principios SOLID cuando sea razonable.
+- Use strict TypeScript.
+- Use functional components.
+- Keep components small.
+- Separate logic from presentation.
+- Create reusable types.
+- Use descriptive names.
+- Keep code simple.
+- Prioritize clarity over premature optimization.
+- Follow SOLID principles when reasonable.
 
-## NUNCA
+## NEVER
 
-- Usar JavaScript sin tipado.
-- Usar `any` salvo justificación explícita.
-- Duplicar lógica.
-- Crear componentes gigantes.
-- Mezclar lógica del editor con lógica del runtime.
-- Introducir dependencias sin necesidad.
-- Modificar arquitectura existente sin explicar el motivo.
+- Use JavaScript without types.
+- Use `any` unless explicitly justified.
+- Duplicate logic.
+- Create giant components.
+- Mix editor logic with runtime logic.
+- Introduce unnecessary dependencies.
+- Modify existing architecture without explaining why.
 
 ---
 
-# Filosofía de arquitectura
+# Architecture philosophy
 
-El proyecto se divide en dos mundos completamente separados.
+The project is divided into two completely separate worlds.
 
 ## Editor
 
-Permite construir niveles.
+Allows building levels.
 
-### Responsabilidades
+### Responsibilities
 
-- Dibujar tiles.
-- Colocar entidades.
-- Configurar propiedades.
-- Guardar niveles.
-- Cargar niveles.
+- Draw tiles.
+- Place entities.
+- Configure properties.
+- Save levels.
+- Load levels.
 
-El editor NO contiene lógica del juego.
+The editor does NOT contain game logic.
 
 ---
 
 ## Runtime
 
-Ejecuta niveles.
+Executes levels.
 
-### Responsabilidades
+### Responsibilities
 
-- Física.
-- Colisiones.
-- Movimiento.
-- IA de enemigos.
-- Recolección de monedas.
-- Condiciones de victoria.
+- Physics.
+- Collisions.
+- Movement.
+- Enemy AI.
+- Coin collection.
+- Victory conditions.
 
-El runtime NO contiene herramientas de edición.
+The runtime does NOT contain editing tools.
 
 ---
 
-# Estructura de carpetas
+# Folder structure
 
 ```text
 src/
@@ -136,28 +136,28 @@ src/
 
 ---
 
-# Sistema de Tiles
+# Tile System
 
-Los tiles son la base del escenario.
+Tiles are the foundation of the stage.
 
-Cada tile tiene:
+Each tile has:
 
 - id
-- nombre
-- categoría
+- name
+- category
 - sprite
-- sólido (boolean)
+- solid (boolean)
 
-Ejemplos:
+Examples:
 
 - Ground
 - Brick
 - Platform
 - Spike
 
-Los tiles se colocan sobre una cuadrícula.
+Tiles are placed on a grid.
 
-Tamaño inicial:
+Initial size:
 
 ```text
 32x32 px
@@ -165,11 +165,11 @@ Tamaño inicial:
 
 ---
 
-# Sistema de Entidades
+# Entity System
 
-Las entidades son objetos con comportamiento.
+Entities are objects with behavior.
 
-Ejemplos:
+Examples:
 
 - Player
 - Coin
@@ -179,7 +179,7 @@ Ejemplos:
 - Door
 - Key
 
-Todas las entidades deben compartir una estructura base.
+All entities must share a base structure.
 
 ```ts
 interface Entity {
@@ -195,213 +195,213 @@ interface Entity {
 
 ---
 
-# Formato de nivel
+# Level format
 
-Los niveles deben ser serializables a JSON.
+Levels must be serializable to JSON.
 
-El formato debe ser independiente de Phaser.
+The format must be independent of Phaser.
 
-Nunca almacenar objetos Phaser dentro de los datos.
+Never store Phaser objects inside the data.
 
 ---
 
-# Gestión del estado
+# State management
 
-Utilizar Zustand.
+Use Zustand.
 
-Separar stores por dominio:
+Separate stores by domain:
 
 - editorStore
 - projectStore
 - selectionStore
 - runtimeStore
 
-Evitar stores monolíticos.
+Avoid monolithic stores.
 
 ---
 
-# Rendimiento
+# Performance
 
-- Evitar renderizados innecesarios.
-- Utilizar memoización únicamente cuando exista una necesidad demostrable.
-- Mantener el editor fluido con mapas grandes.
-- Evitar cálculos pesados durante el render.
+- Avoid unnecessary re-renders.
+- Use memoization only when there is a demonstrated need.
+- Keep the editor smooth with large maps.
+- Avoid heavy computations during render.
 
 ---
 
 # Lighthouse
 
-El proyecto debe mantener puntuación **100 en todas las categorías** de Lighthouse:
+The project must maintain a score of **100 in all categories** of Lighthouse:
 
-| Categoría | Objetivo |
+| Category | Target |
 |---|---|
-| Rendimiento | 100 |
-| Accesibilidad | 100 |
-| Buenas prácticas | 100 |
+| Performance | 100 |
+| Accessibility | 100 |
+| Best Practices | 100 |
 | SEO | 100 |
 
-## Reglas
+## Rules
 
-- Auditar con Lighthouse en **escritorio**, **tablet** y **móvil** antes de cada release.
-- No introducir cambios que degraden ninguna puntuación por debajo de 100.
-- Si una restricción técnica impide el 100, documentar la excepción en `/docs` con plan de mitigación.
-- Priorizar etiquetas semánticas (`<header>`, `<main>`, `<section>`, `<button>`) y roles ARIA donde aplique.
-- Asegurar contraste de color suficiente en todos los temas.
-- Proporcionar textos alternativos (`alt`, `aria-label`) en todos los elementos interactivos y decorativos.
-- Usar tamaños de fuente relativos (`rem`/`em`) y media queries para adaptarse a tablet y móvil.
-- Optimizar imágenes y assets para cada viewport.
+- Audit with Lighthouse on **desktop**, **tablet** and **mobile** before each release.
+- Do not introduce changes that degrade any score below 100.
+- If a technical constraint prevents 100, document the exception in `/docs` with a mitigation plan.
+- Prioritize semantic tags (`<header>`, `<main>`, `<section>`, `<button>`) and ARIA roles where applicable.
+- Ensure sufficient color contrast in all themes.
+- Provide alternative text (`alt`, `aria-label`) on all interactive and decorative elements.
+- Use relative font sizes (`rem`/`em`) and media queries to adapt to tablet and mobile.
+- Optimize images and assets for each viewport.
 
 ---
 
-# Seguridad (OWASP Top 10)
+# Security (OWASP Top 10)
 
 ## A01:2021 – Broken Access Control
 
-- No exponer rutas de API internas sin validación.
-- Si se implementan roles (admin/editor/viewer), verificar permisos en cada operación.
-- No confiar en datos del cliente para decidir autorización.
+- Do not expose internal API routes without validation.
+- If roles are implemented (admin/editor/viewer), verify permissions on each operation.
+- Do not trust client data for authorization decisions.
 
 ## A02:2021 – Cryptographic Failures
 
-- No transmitir ni almacenar contraseñas sin cifrado (bcrypt/Argon2).
-- Usar HTTPS en producción.
-- No inventar algoritmos criptográficos propios.
+- Do not transmit or store passwords without encryption (bcrypt/Argon2).
+- Use HTTPS in production.
+- Do not invent your own cryptographic algorithms.
 
 ## A03:2021 – Injection
 
-- Validar y sanitizar todo JSON de nivel cargado por el usuario antes de parsearlo.
-- Nunca usar `eval()`, `new Function()` ni templates peligrosas.
-- Todo input del usuario (textareas, imports) debe pasar por validación estricta de tipos (Zod).
+- Validate and sanitize all level JSON loaded by the user before parsing.
+- Never use `eval()`, `new Function()` or dangerous templates.
+- All user input (textareas, imports) must pass strict type validation (Zod).
 
 ## A04:2021 – Insecure Design
 
-- Modelar amenazas antes de implementar features críticas (autenticación, pagos, APIs).
-- Establecer límites de tasa (rate limiting) en endpoints públicos futuros.
-- No asumir que el cliente es confiable; validar siempre en el servidor.
+- Model threats before implementing critical features (authentication, payments, APIs).
+- Establish rate limiting on future public endpoints.
+- Do not assume the client is trustworthy; always validate on the server.
 
 ## A05:2021 – Security Misconfiguration
 
-- No exponer información sensible en el lado del cliente (claves, URLs internas).
-- Mantener dependencias actualizadas.
-- Deshabilitar características innecesarias de Phaser/Next.js en producción.
+- Do not expose sensitive information on the client side (keys, internal URLs).
+- Keep dependencies up to date.
+- Disable unnecessary Phaser/Next.js features in production.
 
 ## A06:2021 – Vulnerable and Outdated Components
 
-- Revisar dependencias periódicamente con `npm audit`.
-- No introducir dependencias sin necesidad (ver reglas NUNCA).
+- Review dependencies periodically with `npm audit`.
+- Do not introduce unnecessary dependencies (see NEVER rules).
 
 ## A07:2021 – Identification and Authentication Failures
 
-- Si se implementa autenticación en el futuro, usar sesiones seguras (NextAuth).
-- No almacenar tokens ni credenciales en Zustand o localStorage sin cifrado.
+- If authentication is implemented in the future, use secure sessions (NextAuth).
+- Do not store tokens or credentials in Zustand or localStorage without encryption.
 
 ## A08:2021 – Software and Data Integrity Failures
 
-- Validar que los assets (sprites, JSON) cargados no contengan código malicioso.
-- Verificar integridad de niveles importados antes de cargarlos en el runtime.
+- Validate that loaded assets (sprites, JSON) do not contain malicious code.
+- Verify integrity of imported levels before loading them into the runtime.
 
 ## A09:2021 – Security Logging and Monitoring Failures
 
-- No imprimir datos sensibles en `console.log` / `console.error`.
-- Capturar errores de parseo JSON sin exponer el contenido completo.
+- Do not print sensitive data in `console.log` / `console.error`.
+- Capture JSON parse errors without exposing the full content.
 
 ## A10:2021 – Server-Side Request Forgery (SSRF)
 
-- Si se implementan APIs de importación/exportación, validar y restringir URLs.
-- No permitir fetch a destinos arbitrarios desde el servidor.
+- If import/export APIs are implemented, validate and restrict URLs.
+- Do not allow fetch to arbitrary destinations from the server.
 
 ---
 
 # UI
 
-Diseño inspirado en herramientas profesionales.
+Design inspired by professional tools.
 
-Paneles principales:
+Main panels:
 
-- Explorador de assets
-- Canvas central
+- Asset explorer
+- Central canvas
 - Inspector
-- Toolbar superior
+- Top toolbar
 
-La interfaz debe estar optimizada para escritorio.
+The interface must be optimized for desktop.
 
-Mobile será una prioridad secundaria.
+Mobile will be a secondary priority.
 
 ---
 
 # Testing
 
-## Stack de testing
+## Testing stack
 
-| Tipo | Herramienta | Propósito |
+| Type | Tool | Purpose |
 |---|---|---|
-| Unitario | Vitest | Lógica crítica, stores, utilidades, serialización |
-| Integración | Testing Library | Componentes React, interacciones de usuario |
-| E2E | Playwright | Flujos completos (editor, runtime, exportar/cargar) |
+| Unit | Vitest | Critical logic, stores, utilities, serialization |
+| Integration | Testing Library | React components, user interactions |
+| E2E | Playwright | Full flows (editor, runtime, export/import) |
 
-## Vitest (unitario)
+## Vitest (unit)
 
-- Los tests deben ubicarse junto al archivo que prueban con sufijo `.test.ts` o `.test.tsx`.
-- Cubrir: stores de Zustand, serialización/deserialización de niveles, lógica de pintado, herramientas del editor.
-- No mockear Phaser. Separar la lógica pura (tipos, transformaciones) para testearla sin Phaser.
+- Tests should be located next to the file they test with `.test.ts` or `.test.tsx` suffix.
+- Cover: Zustand stores, level serialization/deserialization, paint logic, editor tools.
+- Do not mock Phaser. Separate pure logic (types, transformations) to test without Phaser.
 
 ```ts
-// ejemplo: editorStore.test.ts
+// example: editorStore.test.ts
 import { describe, it, expect } from 'vitest';
 ```
 
-## Testing Library (integración)
+## Testing Library (integration)
 
-- Tests en archivos `.test.tsx` junto al componente.
-- Probar: renderizado de componentes, clics, drag & drop con dnd-kit simulado, selección de tiles/entidades, interacción con el canvas.
-- Usar `@testing-library/react`, `@testing-library/user-event`.
+- Tests in `.test.tsx` files next to the component.
+- Test: component rendering, clicks, simulated dnd-kit drag & drop, tile/entity selection, canvas interaction.
+- Use `@testing-library/react`, `@testing-library/user-event`.
 
 ```ts
-// ejemplo: ToolPanel.test.tsx
+// example: ToolPanel.test.tsx
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 ```
 
 ## Playwright (E2E)
 
-- Tests en `e2e/` con sufijo `.spec.ts`.
-- Cubrir: carga de la página, pintar tiles en el canvas, colocar entidades, borrar, exportar JSON, cargar JSON, abrir runtime y ver el juego funcionando.
-- Usar `@playwright/test`.
+- Tests in `e2e/` with `.spec.ts` suffix.
+- Cover: page load, painting tiles on canvas, placing entities, erasing, JSON export, JSON import, opening runtime and seeing the game working.
+- Use `@playwright/test`.
 
 ```ts
-// ejemplo: e2e/editor.spec.ts
+// example: e2e/editor.spec.ts
 import { test, expect } from '@playwright/test';
 ```
 
-## Comandos
+## Commands
 
 ```text
-npm run test        → Vitest (unitario + integración)
+npm run test        → Vitest (unit + integration)
 npm run test:e2e    → Playwright
-npm run test:run    → Vitest en modo CI (sin watch)
+npm run test:run    → CI Vitest (no watch)
 ```
 
-## Reglas
+## Rules
 
-- Seguir metodología TDD (Test Driven Development):
-  1. Escribir el test que falla primero.
-  2. Implementar el código mínimo para que pase.
-  3. Refactorizar manteniendo los tests verdes.
-- No commitea código sin test si la funcionalidad es testeable.
-- Mantener los tests rápidos (< 100ms por test unitario).
-- No testear implementación interna de Phaser. Testear solo lógica de la aplicación.
+- Follow TDD (Test Driven Development):
+  1. Write the failing test first.
+  2. Implement the minimum code to pass.
+  3. Refactor keeping tests green.
+- Do not commit code without tests if the functionality is testable.
+- Keep tests fast (< 100ms per unit test).
+- Do not test Phaser internal implementation. Test only application logic.
 
-## Verificación continua
+## Continuous verification
 
-- Después de cada feature: `npm run test:run && npm run build`
-- Después de cambios en flujos críticos: agregar `npm run test:e2e`
-- Al final: `npm run lint && npm run test:run && npm run build`
+- After each feature: `npm run test:run && npm run build`
+- After changes to critical flows: add `npm run test:e2e`
+- At the end: `npm run lint && npm run test:run && npm run build`
 
 ---
 
-# Convenciones
+# Conventions
 
-## Componentes
+## Components
 
 PascalCase
 
@@ -425,9 +425,9 @@ editorStore.ts
 projectStore.ts
 ```
 
-## Tipos
+## Types
 
-Todos los tipos compartidos deben ubicarse en:
+All shared types should be located in:
 
 ```text
 src/types
@@ -435,148 +435,148 @@ src/types
 
 ---
 
-# Sistema de Capas
+# Layer System
 
-El editor trabajará inicialmente con las siguientes capas:
+The editor will initially work with the following layers:
 
 ```text
-Layer 0 → Fondo
-Layer 1 → Decoración
-Layer 2 → Tiles sólidos
-Layer 3 → Enemigos
-Layer 4 → Objetos
-Layer 5 → Jugador
+Layer 0 → Background
+Layer 1 → Decoration
+Layer 2 → Solid tiles
+Layer 3 → Enemies
+Layer 4 → Objects
+Layer 5 → Player
 ```
 
-Las capas deben ser independientes y editables.
+Layers must be independent and editable.
 
 ---
 
-# Sistema de Cámara
+# Camera System
 
-La cámara del editor debe soportar:
+The editor camera must support:
 
 - Zoom
 - Pan
-- Centrado automático
-- Ajuste al mapa
+- Auto center
+- Fit to map
 
-El estado de cámara debe estar separado del estado del nivel.
+Camera state must be separated from level state.
 
 ---
 
-# Documentación obligatoria (MUY IMPORTANTE)
+# Mandatory documentation (VERY IMPORTANT)
 
-Cada acción relevante realizada por el asistente de IA debe ser documentada.
+Each relevant action performed by the AI assistant must be documented.
 
-## Regla principal
+## Main rule
 
-- Todo cambio funcional, arquitectónico o de feature debe generar documentación.
+- Every functional, architectural or feature change must generate documentation.
 
-## Carpeta de documentación
+## Documentation folder
 
 ```text
 /docs
 ```
 
-## Formato de documentación
+## Documentation format
 
-Los archivos deben ser Markdown (.md) y seguir la estructura definida en Keep a Changelog:
+Files must be Markdown (.md) and follow the structure defined in Keep a Changelog:
 https://keepachangelog.com/en/1.0.0/
 
-## Qué se debe documentar
+## What to document
 
-El asistente debe documentar siempre:
+The assistant must always document:
 
-- Nuevas features
-- Cambios en arquitectura
-- Nuevos sistemas
-- Decisiones técnicas importantes
-- Integraciones externas
-- Cambios en el formato JSON de niveles
-- Bugs relevantes y soluciones
+- New features
+- Architecture changes
+- New systems
+- Important technical decisions
+- External integrations
+- Changes to the level JSON format
+- Relevant bugs and solutions
 
 ---
 
-# Versionado obligatorio
+# Mandatory versioning
 
-Cada vez que el asistente realice un cambio en el código:
+Each time the assistant makes a change to the code:
 
-## 1. Versionado en package.json
+## 1. Versioning in package.json
 
-- Incrementar la versión siguiendo SemVer:
+- Increment the version following SemVer:
   - patch → bugfix
-  - minor → nuevas features compatibles
-  - major → cambios incompatibles
+  - minor → new compatible features
+  - major → incompatible changes
 
-## 2. CHANGELOG.md obligatorio
+## 2. CHANGELOG.md mandatory
 
-Cada cambio debe reflejarse en:
+Each change must be reflected in:
 
 ```text
 /CHANGELOG.md
 ```
 
-Debe seguir estrictamente el formato de:
+It must strictly follow the format of:
 
 https://keepachangelog.com/en/1.0.0/
 
-### Reglas del changelog
+### Changelog rules
 
-- Usar secciones:
+- Use sections:
   - Added
   - Changed
   - Fixed
   - Removed
   - Security
-- Cada entrada debe ser clara y técnica
-- Debe incluir fecha de cambio
-- Debe ser actualizado en cada modificación relevante
+- Each entry must be clear and technical
+- Must include change date
+- Must be updated on each relevant modification
 
 ---
 
-# Decisiones importantes
+# Important decisions
 
-Si existen varias soluciones posibles:
+If multiple solutions are possible:
 
-1. Elegir la más simple.
-2. Elegir la más mantenible.
-3. Elegir la más fácil de entender.
-4. Documentar la decisión.
-
----
-
-# Regla para asistentes IA
-
-Antes de generar código:
-
-1. Analizar la arquitectura existente.
-2. Reutilizar componentes existentes.
-3. Reutilizar tipos existentes.
-4. No crear archivos duplicados.
-5. Explicar brevemente decisiones importantes.
-6. Mantener consistencia con este documento.
-
-Si una petición contradice AGENTS.md:
-
-- No implementar inmediatamente.
-- Explicar primero el conflicto.
-- Proponer alternativas compatibles.
+1. Choose the simplest.
+2. Choose the most maintainable.
+3. Choose the easiest to understand.
+4. Document the decision.
 
 ---
 
-# Alcance del MVP
+# Rule for AI assistants
 
-La primera versión debe permitir:
+Before generating code:
 
-- Crear un nivel.
-- Dibujar tiles.
-- Colocar jugador.
-- Colocar enemigos.
-- Colocar monedas.
-- Guardar el nivel.
-- Cargar el nivel.
-- Probar el nivel en tiempo real.
+1. Analyze the existing architecture.
+2. Reuse existing components.
+3. Reuse existing types.
+4. Do not create duplicate files.
+5. Briefly explain important decisions.
+6. Maintain consistency with this document.
 
-Todo lo demás se considera funcionalidad futura.
+If a request contradicts AGENTS.md:
+
+- Do not implement immediately.
+- First explain the conflict.
+- Propose compatible alternatives.
+
+---
+
+# MVP Scope
+
+The first version must allow:
+
+- Creating a level.
+- Drawing tiles.
+- Placing player.
+- Placing enemies.
+- Placing coins.
+- Saving the level.
+- Loading the level.
+- Testing the level in real time.
+
+Everything else is considered future functionality.
 ```

@@ -1,7 +1,7 @@
-import type { TileType, EntityType, Tile, Entity, Layer } from "@/types/level";
+import type { TileType, EntityType, Tile, Entity } from "@/types/level";
 
 export type PaintAction =
-  | { kind: "tile"; x: number; y: number; tileType: TileType; layer?: Layer }
+  | { kind: "tile"; x: number; y: number; tileType: TileType }
   | { kind: "entity"; x: number; y: number; entityType: EntityType; entityId: string }
   | { kind: "erase"; x: number; y: number };
 
@@ -25,7 +25,7 @@ export function applyPaintActions(
       const removedEntity = newEntities.find((e) => e.position.x === action.x && e.position.y === action.y);
       if (removedEntity) seenTypes.delete(removedEntity.type);
       newEntities = newEntities.filter((e) => e.position.x !== action.x || e.position.y !== action.y);
-      newTiles.push({ x: action.x, y: action.y, type: action.tileType, layer: action.layer });
+      newTiles.push({ x: action.x, y: action.y, type: action.tileType });
     } else if (action.kind === "entity") {
       const isUnique = action.entityType !== "player" && action.entityType !== "goal";
       if (!isUnique && seenTypes.has(action.entityType)) continue;

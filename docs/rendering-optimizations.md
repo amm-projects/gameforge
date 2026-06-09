@@ -4,16 +4,16 @@
 
 ### Fixed
 
-- **4096 nodos DOM**: grid 64×64 renderizaba todas las celdas como `<button>`. Implementado virtual DOM grid: solo se crean nodos para celdas ocupadas. Vacías representadas con fondo CSS `background-image` linear-gradient. ~99% menos nodos DOM.
+- **4096 DOM nodes**: 64×64 grid rendered all cells as `<button>`. Implemented virtual DOM grid: only nodes for occupied cells are created. Empty cells rendered with CSS `background-image` linear-gradient. ~99% fewer DOM nodes.
 
-- **4096 `useDroppable` hooks**: cada celda registrada como droppable en dnd-kit. Reemplazado por un único droppable en el contenedor del grid.
+- **4096 `useDroppable` hooks**: each cell registered as droppable in dnd-kit. Replaced with a single droppable on the grid container.
 
-- **Actualizaciones individuales**: cada celda pintada disparaba actualización separada del store. Implementado `batchPaint` que aplica múltiples acciones en una sola actualización de estado.
+- **Individual updates**: each painted cell triggered a separate store update. Implemented `batchPaint` that applies multiple actions in a single state update.
 
-- **Sin React.memo**: todas las celdas se re-renderizaban al cambiar cualquier estado. `GridCell` envuelto en `React.memo` con selectores granulares.
+- **No React.memo**: all cells re-rendered on any state change. `GridCell` wrapped in `React.memo` with granular selectors.
 
 ### Changed
 
-- `stores/editorStore.ts`: nuevo `batchPaint`, exportado `PaintAction`.
-- `components/editor/LevelCanvas.tsx`: grid virtual, droppable único, batching, memo, selectores granulares.
-- `components/EditorShell.tsx`: cálculo de celda por coordenadas.
+- `stores/editorStore.ts`: new `batchPaint`, exported `PaintAction`.
+- `components/editor/LevelCanvas.tsx`: virtual grid, single droppable, batching, memo, granular selectors.
+- `components/EditorShell.tsx`: cell calculation by coordinates.

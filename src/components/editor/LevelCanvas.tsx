@@ -6,14 +6,12 @@ import { makeId } from "@/lib/utils";
 import { CELL_SIZE } from "@/assets";
 import { useEditorStore, type PaintAction } from "@/stores/editorStore";
 import { useSelectionStore } from "@/stores/selectionStore";
-import { useLayerStore } from "@/stores/layerStore";
 import { useEditorCamera } from "@/hooks/useEditorCamera";
 import { useTileBrush } from "@/hooks/useTileBrush";
 import { GridCell } from "@/components/editor/GridCell";
 import { CameraControls } from "@/components/editor/CameraControls";
-import { LayerBar } from "@/components/editor/LayerBar";
-import type { EntityType, TileType, Layer, BackgroundTheme } from "@/types/level";
-import { LAYERS, BACKGROUND_COLORS } from "@/types/level";
+import type { EntityType, TileType, BackgroundTheme } from "@/types/level";
+import { BACKGROUND_COLORS } from "@/types/level";
 
 export function LevelCanvas() {
   const width = useEditorStore((s) => s.width);
@@ -34,26 +32,15 @@ export function LevelCanvas() {
   const selectedEditTarget = useSelectionStore((s) => s.selectedEditTarget);
   const setSelectedEditTarget = useSelectionStore((s) => s.setSelectedEditTarget);
   const background = useEditorStore((s) => s.background);
-  const activeLayer = useLayerStore((s) => s.activeLayer);
-  const visibleLayers = useLayerStore((s) => s.visibleLayers);
-  const setActiveLayer = useLayerStore((s) => s.setActiveLayer);
-  const toggleLayerVisibility = useLayerStore((s) => s.toggleLayerVisibility);
-
   const { setNodeRef } = useDroppable({ id: "grid" });
   const cameraContainerRef = useRef<HTMLDivElement | null>(null);
-  const { zoom, panX, panY, zoomIn, zoomOut, resetZoom, fitToMap } = useEditorCamera(cameraContainerRef);
-
-  const handleFitToMap = useCallback(() => {
-    const parent = cameraContainerRef.current?.parentElement;
-    if (!parent) return;
-    fitToMap(width, height, parent.clientWidth, parent.clientHeight);
-  }, [width, height, fitToMap]);
+  const { zoom, panX, panY, zoomIn, zoomOut, resetZoom } = useEditorCamera(cameraContainerRef);
 
   const brush = useTileBrush();
 
   const tileMap = useMemo(
-    () => new Map(tiles.filter((tile) => visibleLayers.has((tile.layer ?? LAYERS.SOLID) as Layer)).map((tile) => [`${tile.x}-${tile.y}`, tile.type])),
-    [tiles, visibleLayers]
+    () => new Map(tiles.map((tile) => [`${tile.x}-${tile.y}`, tile.type])),
+    [tiles]
   );
 
   const entityLookup = useMemo(
@@ -141,12 +128,12 @@ export function LevelCanvas() {
       else setSelectedEntityId(null);
 
       if (activeTool === "tile" && selectedTile) {
-        setTile({ x, y, type: selectedTile, layer: activeLayer });
+        setTile({ x, y, type: selectedTile });
       } else if (activeTool === "entity" && selectedEntity) {
         addEntity(selectedEntity, x, y);
       }
     },
-    [activeTool, selectedTile, selectedEntity, removeTile, removeEntity, setSelectedEntityId, setTile, addEntity, activeLayer]
+    [activeTool, selectedTile, selectedEntity, removeTile, removeEntity, setSelectedEntityId, setTile, addEntity]
   );
 
   useEffect(() => {
@@ -245,11 +232,8 @@ export function LevelCanvas() {
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <CameraControls zoom={zoom} zoomIn={zoomIn} zoomOut={zoomOut} resetZoom={resetZoom} onFitToMap={handleFitToMap} />
-            <div className="mx-1 h-4 w-px bg-slate-800" />
-            <LayerBar activeLayer={activeLayer} visibleLayers={visibleLayers} setActiveLayer={setActiveLayer} toggleLayerVisibility={toggleLayerVisibility} />
+            <CameraControls zoom={zoom} zoomIn={zoomIn} zoomOut={zoomOut} resetZoom={resetZoom} />
           </div>
-          <div className="rounded-full bg-slate-900 px-3 py-1 text-xs uppercase tracking-[0.22em] text-slate-400">{width}x{height} grid</div>
         </div>
       </div>
       <div className="overflow-hidden select-none rounded-3xl border border-slate-900/80 bg-slate-950 p-2" ref={setNodeRef}>

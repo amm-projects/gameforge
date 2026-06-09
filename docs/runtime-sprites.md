@@ -1,25 +1,25 @@
-# Sprites en el runtime de Phaser
+# Sprites in the Phaser Runtime
 
 ## [0.12.0] - 2026-06-05
 
 ### Changed
 
-- Reemplazados rectángulos de color sólido por sprites dibujados programáticamente con Phaser Graphics.
-- Cada sprite se dibuja con `fillRect`, `fillCircle`, `fillTriangle` y `lineStyle`, convertido a textura con `generateTexture()`.
+- Replaced solid color rectangles with programmatically drawn sprites using Phaser Graphics.
+- Each sprite is drawn with `fillRect`, `fillCircle`, `fillTriangle` and `lineStyle`, then converted to a texture with `generateTexture()`.
 
 ### Sprites
 
-| Elemento | Tamaño | Descripción |
+| Element | Size | Description |
 |---|---|---|
-| Ground | 32×32 | Ladrillos marrones con variación de tono |
-| Spike | 32×32 | Triángulo rojo |
-| Player | 32×32 | Cabeza circular + cuerpo + piernas, azul, ojos blancos |
-| Coin | 32×32 | Círculo dorado con centro más claro |
-| Enemy | 32×32 | Círculo naranja con ojos blancos y pupilas negras |
-| Goal | 32×32 | Poste verde con banderín |
+| Ground | 32×32 | Brown bricks with tone variation |
+| Spike | 32×32 | Red triangle |
+| Player | 32×32 | Circular head + body + legs, blue, white eyes |
+| Coin | 32×32 | Golden circle with lighter center |
+| Enemy | 32×32 | Orange circle with white eyes and black pupils |
+| Goal | 32×32 | Green pole with flag |
 
 ### Technical details
 
-- Eliminado bucle genérico `textures.forEach()` e interfaz `RuntimeTexture`.
-- Añadido método auxiliar `createTexture(key, width, height, draw)` con callback de dibujo.
-- Sprites SVG en `public/sprites/` mantienen coherencia visual con sprites del runtime.
+- Removed generic `textures.forEach()` loop and `RuntimeTexture` interface.
+- Added helper method `createTexture(key, width, height, draw)` with drawing callback.
+- SVG sprites in `public/sprites/` maintain visual consistency with runtime sprites.

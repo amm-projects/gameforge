@@ -4,11 +4,11 @@
 
 ### Added
 
-- Muerte al caer al vacío en el runtime (`RuntimeScene.ts`).
-- Se eliminó `player.setCollideWorldBounds(true)` para permitir caer fuera del mundo.
-- En `update()`, se verifica `player.y > worldHeight + 64`. Si es cierto, se llama a `onHitSpike()`.
+- Void fall death in the runtime (`RuntimeScene.ts`).
+- Removed `player.setCollideWorldBounds(true)` to allow falling out of the world.
+- In `update()`, checks `player.y > worldHeight + 64`. If true, calls `onHitSpike()`.
 
 ### Technical details
 
-- Offset de 64px (2 tiles) para que el jugador desaparezca antes de activar la muerte.
-- Añadido `declare worldHeight: number` a `RuntimeScene` para tener altura del nivel disponible en `update()`.
+- 64px (2 tiles) offset so the player disappears before death triggers.
+- Added `declare worldHeight: number` to `RuntimeScene` to make level height available in `update()`.
