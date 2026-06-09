@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.26.0] - 2026-06-09
+
+### Removed
+
+- **Lista de entidades del Inspector**: eliminada la lista interactiva de entidades en `InspectorPanel.tsx` (`<div className="space-y-2"><h3>Entities</h3>...`). Las entidades solo se seleccionan desde el canvas mediante la herramienta Editar. La edición de propiedades de entidad seleccionada se conserva.
+
+## [0.25.0] - 2026-06-09
+
+### Removed
+
+- **AssetExplorer**: eliminado el panel `AssetExplorer.tsx` y su importación en `EditorShell.tsx`. Ahora la selección de elementos se realiza exclusivamente desde `ToolPanel.tsx`, que ya tiene la misma funcionalidad y apariencia.
+
+## [0.24.0] - 2026-06-09
+
+### Changed
+
+- **ToolPanel rediseñado con grid de assets**: el panel de selección de elementos (`ToolPanel.tsx`) ahora tiene la misma apariencia que `AssetExplorer.tsx` — cuadrícula de 4 columnas con previsualización de sprites (24×24) y etiquetas en `text-[8px]`, mismos estilos de tarjeta oscura con hover/selected states en ámbar.
+- **ToolPanel.test.tsx**: actualizada aserción de clase seleccionada de `bg-slate-700` a `bg-amber-500/20` para coincidir con el nuevo estilo.
+
+### Removed
+
+- **TileRow y EntityRow**: eliminados los componentes de fila individual (`TileRow`, `EntityRow`) y `SpritePreview`. Ahora los tiles y entidades se renderizan directamente como botones de cuadrícula dentro del panel.
+
 ## [0.23.0] - 2026-06-08
 
 ### Added

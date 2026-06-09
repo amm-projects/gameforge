@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState, useCallback, useRef } from "react";
+import { useMemo, useState } from "react";
 import { useEditorStore } from "@/stores/editorStore";
 import { useProjectStore } from "@/stores/projectStore";
 import { useRuntimeStore } from "@/stores/runtimeStore";
 import { levelDataSchema } from "@/types/level.schema";
 import { useSelectionStore } from "@/stores/selectionStore";
 import { getTileDefinition } from "@/types/tile-definitions";
-import type { TileType, EntityType } from "@/types/level";
+import type { EntityType } from "@/types/level";
 
 const ENTITY_NAMES: Record<EntityType, string> = {
   player: "Jugador",
@@ -23,10 +23,9 @@ export function InspectorPanel() {
   const { tiles, entities, width, height, loadLevel, resetLevel, updateEntityProperty, updateTileSolid, updateTileProperty } = useEditorStore();
   const { jsonText, setJsonText } = useProjectStore();
   const { setIsPlaying } = useRuntimeStore();
-  const { selectedEntityId, setSelectedEntityId, selectedEditTarget, setSelectedEditTarget } = useSelectionStore();
+  const { selectedEntityId, selectedEditTarget, setSelectedEditTarget } = useSelectionStore();
   const [newKey, setNewKey] = useState("");
   const [newValue, setNewValue] = useState("");
-  const entityListRef = useRef<HTMLDivElement | null>(null);
 
   const levelData = useMemo(
     () => ({ width, height, tiles, entities }),
@@ -36,23 +35,6 @@ export function InspectorPanel() {
   const selectedEntity = useMemo(
     () => entities.find((e) => e.id === selectedEntityId) ?? null,
     [entities, selectedEntityId]
-  );
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (entities.length === 0) return;
-      const idx = entities.findIndex((e) => e.id === selectedEntityId);
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        const next = (idx + 1) % entities.length;
-        setSelectedEntityId(entities[next].id);
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        const prev = (idx - 1 + entities.length) % entities.length;
-        setSelectedEntityId(entities[prev].id);
-      }
-    },
-    [entities, selectedEntityId, setSelectedEntityId]
   );
 
   const handleAddProperty = () => {
@@ -87,34 +69,6 @@ export function InspectorPanel() {
           <p>Dimensiones: {width} × {height}</p>
           <p>Tiles: {tiles.length}</p>
           <p>Entidades: {entities.length}</p>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Entities</h3>
-        <div className="max-h-40 space-y-1 overflow-y-auto" ref={entityListRef} tabIndex={0} onKeyDown={handleKeyDown}>
-          {entities.length === 0 && (
-            <p className="text-xs text-slate-600">No entities</p>
-          )}
-          {entities.map((entity) => (
-            <button
-              key={entity.id}
-              type="button"
-              onClick={() =>
-                setSelectedEntityId(
-                  selectedEntityId === entity.id ? null : entity.id
-                )
-              }
-              aria-label={`Select ${entity.type} entity`}
-              className={`w-full rounded-xl px-3 py-1.5 text-left text-xs transition ${
-                selectedEntityId === entity.id
-                  ? "bg-amber-500/20 text-amber-300"
-                  : "bg-slate-900 text-slate-400 hover:bg-slate-800"
-              }`}
-            >
-              {entity.type} ({entity.position.x}, {entity.position.y})
-            </button>
-          ))}
         </div>
       </div>
 

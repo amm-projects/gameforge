@@ -44,7 +44,7 @@ describe('ToolPanel', () => {
   it('has ground selected by default', () => {
     renderPanel();
     const ground = screen.getByRole('button', { name: /suelo: seleccionar tile ground/i });
-    expect(ground).toHaveClass('bg-slate-700');
+    expect(ground).toHaveClass('bg-amber-500/20');
   });
 
   it('selects spike-up tile on click', async () => {

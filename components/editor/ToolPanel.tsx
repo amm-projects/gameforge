@@ -27,75 +27,21 @@ const ENTITY_VISUAL: Record<EntityType, { sprite: string; label: string }> = {
   key: { sprite: "/sprites/key.svg", label: "Llave" },
 };
 
-function SpritePreview({ src, alt, rotate }: { src: string; alt: string; rotate?: string }) {
-  return (
-    <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-slate-950 ring-1 ring-slate-700/50">
-      <div style={rotate ? { transform: `rotate(${rotate})` } : undefined} className="h-full w-full">
-        <Image
-          src={src}
-          alt={alt}
-          width={32}
-          height={32}
-          className="h-full w-full object-contain"
-        />
-      </div>
-    </div>
-  );
-}
-
-function TileRow({ tile }: { tile: TileType }) {
-  const { selectedTile, setSelectedTile } = useSelectionStore();
-  const v = TILE_VISUAL[tile];
-
-  return (
-    <div
-      className={`flex cursor-pointer items-center gap-3 rounded-2xl border px-3 py-2.5 text-sm transition ${selectedTile === tile ? "border-slate-600 bg-slate-700 text-white" : "border-slate-800/80 bg-slate-900 text-slate-300 hover:bg-slate-800"}`}
-      onClick={() => setSelectedTile(tile)}
-      role="button"
-      tabIndex={0}
-      aria-label={`${v.label}: seleccionar tile ${tile}`}
-    >
-      <SpritePreview src={v.sprite} alt={v.label} rotate={v.rotate} />
-      <div className="flex-1">
-        <div className="font-medium">{v.label}</div>
-        <div className="text-[0.625rem] text-slate-300">{tile}</div>
-      </div>
-    </div>
-  );
-}
-
-function EntityRow({ entity }: { entity: EntityType }) {
-  const { selectedEntity, setSelectedEntity } = useSelectionStore();
-  const v = ENTITY_VISUAL[entity];
-
-  return (
-    <div
-      className={`flex cursor-pointer items-center gap-3 rounded-2xl border px-3 py-2.5 text-sm transition ${selectedEntity === entity ? "border-slate-600 bg-slate-700 text-white" : "border-slate-800/80 bg-slate-900 text-slate-300 hover:bg-slate-800"}`}
-      onClick={() => setSelectedEntity(entity)}
-      role="button"
-      tabIndex={0}
-      aria-label={`${v.label}: seleccionar entidad ${entity}`}
-    >
-      <SpritePreview src={v.sprite} alt={v.label} />
-      <div className="flex-1">
-        <div className="font-medium">{v.label}</div>
-        <div className="text-[0.625rem] text-slate-300">{entity}</div>
-      </div>
-    </div>
-  );
-}
-
 export function ToolPanel() {
-  const { activeTool, setActiveTool } = useSelectionStore();
+  const { activeTool, setActiveTool, selectedTile, selectedEntity, setSelectedTile, setSelectedEntity } = useSelectionStore();
 
   return (
-    <aside className="space-y-4 rounded-3xl border border-slate-800/80 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10">
-      <div className="flex gap-2">
+    <aside className="rounded-3xl border border-slate-800/80 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10">
+      <div className="mb-3 flex gap-2">
         <button
           type="button"
           onClick={() => setActiveTool("erase")}
           aria-label="Borrar: herramienta de borrado"
-          className={`flex-1 rounded-2xl px-3 py-2 text-sm transition ${activeTool === "erase" ? "bg-slate-700 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}
+          className={`flex-1 rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-[0.1em] transition ${
+            activeTool === "erase"
+              ? "bg-slate-700 text-white"
+              : "bg-slate-900 text-slate-400 hover:bg-slate-800"
+          }`}
         >
           Borrar
         </button>
@@ -103,23 +49,75 @@ export function ToolPanel() {
           type="button"
           onClick={() => setActiveTool("edit")}
           aria-label="Editar: seleccionar elemento para editar propiedades"
-          className={`flex-1 rounded-2xl px-3 py-2 text-sm transition ${activeTool === "edit" ? "bg-amber-500 text-slate-950" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}
+          className={`flex-1 rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-[0.1em] transition ${
+            activeTool === "edit"
+              ? "bg-amber-500/20 ring-1 ring-amber-500/50 text-amber-400"
+              : "bg-slate-900 text-slate-400 hover:bg-slate-800"
+          }`}
         >
           Editar
         </button>
       </div>
 
-      <div>
-        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Tiles</h2>
-        <div className="mt-3 flex flex-col gap-2">
-          {tileOptions.map((tile) => <TileRow key={tile} tile={tile} />)}
+      <div className="space-y-3">
+        <div>
+          <h3 className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-600">
+            Tiles
+          </h3>
+          <div className="grid grid-cols-4 gap-1">
+            {tileOptions.map((tile) => {
+              const v = TILE_VISUAL[tile];
+              return (
+                <button
+                  key={tile}
+                  type="button"
+                  onClick={() => setSelectedTile(tile)}
+                  aria-label={`${v.label}: seleccionar tile ${tile}`}
+                  className={`flex flex-col items-center gap-0.5 rounded-xl p-1.5 transition ${
+                    activeTool === "tile" && selectedTile === tile
+                      ? "bg-amber-500/20 ring-1 ring-amber-500/50"
+                      : "bg-slate-900 hover:bg-slate-800"
+                  }`}
+                >
+                  {v.rotate ? (
+                    <div style={{ transform: `rotate(${v.rotate})` }}>
+                      <Image src={v.sprite} alt={v.label} width={24} height={24} className="h-6 w-6" />
+                    </div>
+                  ) : (
+                    <Image src={v.sprite} alt={v.label} width={24} height={24} className="h-6 w-6" />
+                  )}
+                  <span className="text-[8px] text-slate-500">{v.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      <div>
-        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Entidades</h2>
-        <div className="mt-3 flex flex-col gap-2">
-          {entityOptions.map((entity) => <EntityRow key={entity} entity={entity} />)}
+        <div>
+          <h3 className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-600">
+            Entidades
+          </h3>
+          <div className="grid grid-cols-4 gap-1">
+            {entityOptions.map((entity) => {
+              const v = ENTITY_VISUAL[entity];
+              return (
+                <button
+                  key={entity}
+                  type="button"
+                  onClick={() => setSelectedEntity(entity)}
+                  aria-label={`${v.label}: seleccionar entidad ${entity}`}
+                  className={`flex flex-col items-center gap-0.5 rounded-xl p-1.5 transition ${
+                    activeTool === "entity" && selectedEntity === entity
+                      ? "bg-amber-500/20 ring-1 ring-amber-500/50"
+                      : "bg-slate-900 hover:bg-slate-800"
+                  }`}
+                >
+                  <Image src={v.sprite} alt={v.label} width={24} height={24} className="h-6 w-6" />
+                  <span className="text-[8px] text-slate-500">{v.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </aside>

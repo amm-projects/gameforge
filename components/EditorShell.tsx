@@ -8,7 +8,6 @@ import { useLayerStore } from "@/stores/layerStore";
 import { LevelCanvas } from "@/components/editor/LevelCanvas";
 import dynamic from "next/dynamic";
 const ToolPanel = dynamic(() => import("@/components/editor/ToolPanel").then((m) => m.ToolPanel), { ssr: false });
-const AssetExplorer = dynamic(() => import("@/components/editor/AssetExplorer").then((m) => m.AssetExplorer), { ssr: false });
 import { InspectorPanel } from "@/components/editor/InspectorPanel";
 import { GameRuntime } from "@/components/runtime/GameRuntime";
 import type { LevelData, TileType, EntityType } from "@/types/level";
@@ -115,7 +114,6 @@ export function EditorShell() {
       <DndContext onDragEnd={handleDragEnd}>
         <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-[1440px] flex-col gap-4 p-6 lg:flex-row">
           <div className="w-full max-w-sm lg:w-[320px] space-y-4">
-            <AssetExplorer />
             <ToolPanel />
           </div>
           <div className="flex-1">
