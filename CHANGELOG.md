@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 - **N/A**: no unreleased changes.
 
+## [0.40.9] - 2026-06-10
+
+### Changed
+
+- **Removed 2 sample levels**: `firstSteps` (redundant basic platform) and `dangerPass` (redundant spike level) removed from `sampleLevels` array and i18n.
+- **Treasure Tower now has a door + key puzzle**: added `door` entity at (6, 9) blocking the goal and `key` entity at (9, 23) on a mid-tower platform. Player must collect the key to open the door and reach the treasure.
+- **Added `doorAt()` and `keyAt()` helper functions** in `sampleLevels.ts` for concise entity creation.
+
+### Removed
+
+- **i18n entries for `firstSteps` and `dangerPass`** removed from translation dictionary.
+
 ## [0.40.8] - 2026-06-10
 
 ### Added

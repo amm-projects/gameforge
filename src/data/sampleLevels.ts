@@ -28,31 +28,20 @@ function spikeAt(x: number, y: number, dir: "up" | "down" | "left" | "right" = "
   return { x, y, type: `spike-${dir}` as const };
 }
 
+function doorAt(x: number, y: number): Entity {
+  return { id: makeId(), type: "door", position: { x, y }, properties: {} };
+}
+
+function keyAt(x: number, y: number): Entity {
+  return { id: makeId(), type: "key", position: { x, y }, properties: {} };
+}
+
 const empty: SampleLevel = {
   id: "empty",
   name: "Empty",
   description: "Start from scratch",
   level: { width: 64, height: 64, tiles: [], entities: [], background: "dark", music: "calm" },
-};
-
-const firstSteps: SampleLevel = {
-  id: "first-steps",
-  name: "First Steps",
-  description: "A simple platform to get started",
-  level: (() => {
-    const width = 30;
-    const height = 20;
-    const tiles: Tile[] = [
-      ...groundRow(19, 0, width - 1),
-      { x: 15, y: 15, type: "platform" },
-    ];
-    const entities: Entity[] = [
-      { id: makeId(), type: "player", position: { x: 2, y: 18 }, properties: {} },
-      { id: makeId(), type: "goal", position: { x: width - 3, y: 18 }, properties: {} },
-    ];
-    return { width, height, tiles, entities, background: "sky" as BackgroundTheme, music: "calm" as MusicTheme };
-  })(),
-};
+ };
 
 const coinRun: SampleLevel = {
   id: "coin-run",
@@ -81,42 +70,6 @@ const coinRun: SampleLevel = {
       enemyAt(25, 18),
     ];
     return { width, height, tiles, entities, background: "forest" as BackgroundTheme, music: "adventure" as MusicTheme };
-  })(),
-};
-
-const dangerPass: SampleLevel = {
-  id: "danger-pass",
-  name: "Danger Pass",
-  description: "Navigate through spikes and enemies",
-  level: (() => {
-    const width = 30;
-    const height = 20;
-    const tiles: Tile[] = [
-      ...groundRow(19, 0, width - 1),
-      spikeAt(6, 18),
-      spikeAt(7, 18),
-      spikeAt(8, 18),
-      { x: 12, y: 16, type: "platform" },
-      { x: 13, y: 16, type: "platform" },
-      spikeAt(14, 18),
-      spikeAt(15, 18),
-      spikeAt(16, 18),
-      { x: 20, y: 16, type: "platform" },
-      { x: 21, y: 16, type: "platform" },
-      spikeAt(22, 18),
-      spikeAt(23, 18),
-    ];
-    const entities: Entity[] = [
-      { id: makeId(), type: "player", position: { x: 2, y: 18 }, properties: {} },
-      { id: makeId(), type: "goal", position: { x: width - 3, y: 18 }, properties: {} },
-      enemyAt(4, 18),
-      enemyAt(10, 18),
-      enemyAt(18, 18),
-      coinAt(2, 14),
-      coinAt(12, 15),
-      coinAt(20, 15),
-    ];
-    return { width, height, tiles, entities, background: "desert" as BackgroundTheme, music: "adventure" as MusicTheme };
   })(),
 };
 
@@ -296,11 +249,11 @@ const treasureTower: SampleLevel = {
       coinAt(14, 33),
       coinAt(5, 27),
       coinAt(14, 27),
-      coinAt(9, 23),
       coinAt(5, 18),
       coinAt(14, 18),
       coinAt(9, 13),
-      //coinAt(6, 8),
+      doorAt(7, 8),
+      keyAt(9, 23),
     ];
     return { width, height, tiles, entities, background: "forest" as BackgroundTheme, music: "mystery" as MusicTheme };
   })(),
@@ -437,9 +390,7 @@ const verticalDescent: SampleLevel = {
 
 export const sampleLevels: SampleLevel[] = [
   empty,
-  firstSteps,
   coinRun,
-  dangerPass,
   skyFortress,
   underground,
   speedRun,
