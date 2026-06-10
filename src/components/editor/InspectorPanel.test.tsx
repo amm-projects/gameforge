@@ -20,7 +20,7 @@ describe('InspectorPanel', () => {
     render(<InspectorPanel />);
     expect(screen.getByText(/64 × 64/)).toBeInTheDocument();
     expect(screen.getByText(/Tiles: 0/)).toBeInTheDocument();
-    expect(screen.getByText(/Entidades: 0/)).toBeInTheDocument();
+    expect(screen.getByText(/Entities: 0/)).toBeInTheDocument();
   });
 
   it('shows correct tile count when tiles exist', () => {
@@ -34,7 +34,7 @@ describe('InspectorPanel', () => {
       entities: [{ id: '1', type: 'player', position: { x: 5, y: 5 }, properties: {} }],
     });
     render(<InspectorPanel />);
-    expect(screen.getByText(/Entidades: 1/)).toBeInTheDocument();
+    expect(screen.getByText(/Entities: 1/)).toBeInTheDocument();
   });
 
   it('exports level JSON on save button click', async () => {
@@ -46,7 +46,7 @@ describe('InspectorPanel', () => {
     });
     const user = userEvent.setup();
     render(<InspectorPanel />);
-    await user.click(screen.getByText('Exportar JSON'));
+    await user.click(screen.getByText('Export JSON'));
     const jsonText = useProjectStore.getState().jsonText;
     const parsed = JSON.parse(jsonText);
     expect(parsed.width).toBe(16);
@@ -58,11 +58,11 @@ describe('InspectorPanel', () => {
   it('loads level JSON and updates editor state', async () => {
     const user = userEvent.setup();
     render(<InspectorPanel />);
-    const textarea = screen.getByPlaceholderText('JSON del nivel aquí...');
+    const textarea = screen.getByPlaceholderText('Paste level JSON here...');
     const level = JSON.stringify({ width: 10, height: 8, tiles: [{ x: 2, y: 3, type: 'spike-up' }], entities: [] });
     await user.clear(textarea);
     await user.paste(level);
-    await user.click(screen.getByText('Cargar JSON'));
+    await user.click(screen.getByText('Load JSON'));
     const editorState = useEditorStore.getState();
     expect(editorState.width).toBe(10);
     expect(editorState.height).toBe(8);
@@ -78,7 +78,7 @@ describe('InspectorPanel', () => {
     });
     const user = userEvent.setup();
     render(<InspectorPanel />);
-    await user.click(screen.getByText('Limpiar nivel'));
+    await user.click(screen.getByText('Clear Level'));
     const state = useEditorStore.getState();
     expect(state.width).toBe(64);
     expect(state.height).toBe(64);
@@ -90,10 +90,10 @@ describe('InspectorPanel', () => {
     useEditorStore.setState({ width: 64, height: 64, tiles: [], entities: [] });
     const user = userEvent.setup();
     render(<InspectorPanel />);
-    const textarea = screen.getByPlaceholderText('JSON del nivel aquí...');
+    const textarea = screen.getByPlaceholderText('Paste level JSON here...');
     await user.clear(textarea);
     await user.paste(JSON.stringify({ width: 'bad', height: null }));
-    await user.click(screen.getByText('Cargar JSON'));
+    await user.click(screen.getByText('Load JSON'));
     const state = useEditorStore.getState();
     expect(state.width).toBe(64);
     expect(state.height).toBe(64);
@@ -103,11 +103,11 @@ describe('InspectorPanel', () => {
     useEditorStore.setState({ width: 64, height: 64, tiles: [], entities: [] });
     const user = userEvent.setup();
     render(<InspectorPanel />);
-    const textarea = screen.getByPlaceholderText('JSON del nivel aquí...');
+    const textarea = screen.getByPlaceholderText('Paste level JSON here...');
     const invalid = JSON.stringify({ width: 10, height: 10, tiles: [{ x: 0, y: 0, type: 'invalid' }], entities: [] });
     await user.clear(textarea);
     await user.paste(invalid);
-    await user.click(screen.getByText('Cargar JSON'));
+    await user.click(screen.getByText('Load JSON'));
     const state = useEditorStore.getState();
     expect(state.tiles).toHaveLength(0);
   });
@@ -115,7 +115,7 @@ describe('InspectorPanel', () => {
   it('updates textarea when jsonText changes', async () => {
     const user = userEvent.setup();
     render(<InspectorPanel />);
-    const textarea = screen.getByPlaceholderText('JSON del nivel aquí...');
+    const textarea = screen.getByPlaceholderText('Paste level JSON here...');
     await user.clear(textarea);
     await user.paste('{"test":true}');
     expect(useProjectStore.getState().jsonText).toBe('{"test":true}');

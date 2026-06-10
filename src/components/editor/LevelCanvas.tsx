@@ -8,6 +8,7 @@ import { useEditorStore, type PaintAction } from "@/stores/editorStore";
 import { useSelectionStore } from "@/stores/selectionStore";
 import { useEditorCamera } from "@/hooks/useEditorCamera";
 import { useTileBrush } from "@/hooks/useTileBrush";
+import { useT } from "@/hooks/useTranslate";
 import { GridCell } from "@/components/editor/GridCell";
 import { CameraControls } from "@/components/editor/CameraControls";
 import type { EntityType, TileType, BackgroundTheme } from "@/types/level";
@@ -33,6 +34,7 @@ export function LevelCanvas() {
   const setSelectedEditTarget = useSelectionStore((s) => s.setSelectedEditTarget);
   const background = useEditorStore((s) => s.background);
   const { setNodeRef } = useDroppable({ id: "grid" });
+  const t = useT();
   const cameraContainerRef = useRef<HTMLDivElement | null>(null);
   const { zoom, panX, panY, zoomIn, zoomOut, resetZoom } = useEditorCamera(cameraContainerRef);
 
@@ -227,8 +229,8 @@ export function LevelCanvas() {
     <section className="rounded-3xl border border-slate-800/90 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10 min-h-[200px]">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-white">Canvas del nivel</h2>
-          <p className="text-sm text-slate-400">Haz clic o arrastra un objeto para colocar elementos.</p>
+          <h2 className="text-base font-semibold text-white">{t("levelCanvas.title")}</h2>
+          <p className="text-sm text-slate-400">{t("levelCanvas.description")}</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">

@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/hooks/useTranslate";
+
 export function CameraControls({
   zoom,
   zoomIn,
@@ -11,12 +13,13 @@ export function CameraControls({
   zoomOut: () => void;
   resetZoom: () => void;
 }) {
+  const t = useT();
   return (
     <div className="flex items-center gap-1">
       <button
         type="button"
         onClick={zoomOut}
-        aria-label="Zoom out"
+        aria-label={t("camera.zoomOutAria")}
         className="rounded-md bg-slate-800 px-2 py-0.5 text-xs text-slate-300 transition hover:bg-slate-700"
       >
         −
@@ -25,7 +28,7 @@ export function CameraControls({
       <button
         type="button"
         onClick={zoomIn}
-        aria-label="Zoom in"
+        aria-label={t("camera.zoomInAria")}
         className="rounded-md bg-slate-800 px-2 py-0.5 text-xs text-slate-300 transition hover:bg-slate-700"
       >
         +
@@ -33,7 +36,7 @@ export function CameraControls({
       <button
         type="button"
         onClick={resetZoom}
-        aria-label="Reset zoom"
+        aria-label={t("camera.resetZoomAria")}
         className="rounded-md bg-slate-800 px-2 py-0.5 text-[0.625rem] text-slate-400 transition hover:bg-slate-700"
       >
         ⊞

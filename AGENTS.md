@@ -67,6 +67,7 @@ The priority is simplicity, maintainability and scalability.
 - Keep code simple.
 - Prioritize clarity over premature optimization.
 - Follow SOLID principles when reasonable.
+- Review the project to see if everything is correct.
 
 ## NEVER
 

@@ -28,19 +28,19 @@ describe('EditorShell', () => {
   it('renders header with brand name and title', () => {
     render(<EditorShell />);
     expect(screen.getByText('GameForge')).toBeInTheDocument();
-    expect(screen.getByText('Editor de niveles 2D')).toBeInTheDocument();
+    expect(screen.getByText('2D Level Editor')).toBeInTheDocument();
   });
 
   it('shows editor active status by default', () => {
     render(<EditorShell />);
-    expect(screen.getByText('Editor activo')).toBeInTheDocument();
+    expect(screen.getByText('Editor active')).toBeInTheDocument();
   });
 
   it('shows runtime active status after clicking play', async () => {
     const user = userEvent.setup();
     render(<EditorShell />);
     await user.click(screen.getByRole('button', { name: /^play:/i }));
-    expect(screen.getByText('Runtime activo')).toBeInTheDocument();
+    expect(screen.getByText('Runtime active')).toBeInTheDocument();
   });
 
   it('returns to editor status after stopping', async () => {
@@ -48,18 +48,18 @@ describe('EditorShell', () => {
     render(<EditorShell />);
     await user.click(screen.getByRole('button', { name: /^play:/i }));
     await user.click(screen.getByRole('button', { name: /^stop:/i }));
-    expect(screen.getByText('Editor activo')).toBeInTheDocument();
+    expect(screen.getByText('Editor active')).toBeInTheDocument();
   });
 
   it('renders ToolPanel with tile and entity sections', () => {
     render(<EditorShell />);
     expect(screen.getByText('Tiles')).toBeInTheDocument();
-    expect(screen.getByText('Entidades')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeInTheDocument();
   });
 
   it('renders LevelCanvas section', () => {
     render(<EditorShell />);
-    expect(screen.getByText('Canvas del nivel')).toBeInTheDocument();
+    expect(screen.getByText('Level Canvas')).toBeInTheDocument();
   });
 
   it('renders InspectorPanel section', () => {

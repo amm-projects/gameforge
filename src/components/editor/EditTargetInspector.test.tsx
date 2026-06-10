@@ -27,7 +27,7 @@ describe("EditTargetInspector", () => {
   it("displays tile name from definition", () => {
     const target: EditTarget = { kind: "tile", type: "ground", x: 0, y: 0 };
     render(<EditTargetInspector editTarget={target} {...baseProps} />);
-    expect(screen.getByText("Suelo")).toBeDefined();
+    expect(screen.getByText("Ground")).toBeDefined();
   });
 
   it("displays tile position", () => {
@@ -39,7 +39,7 @@ describe("EditTargetInspector", () => {
   it("displays entity name", () => {
     const target: EditTarget = { kind: "entity", type: "player", x: 1, y: 1 };
     render(<EditTargetInspector editTarget={target} {...baseProps} />);
-    expect(screen.getByText("Jugador")).toBeDefined();
+    expect(screen.getByText("Player")).toBeDefined();
   });
 
   it("displays entity position", () => {

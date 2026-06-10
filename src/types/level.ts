@@ -30,15 +30,6 @@ export const BACKGROUND_COLORS: Record<BackgroundTheme, string> = {
   purple: "#4c1d95",
 };
 
-export const BACKGROUND_LABELS: Record<BackgroundTheme, string> = {
-  dark: "Oscuro",
-  sky: "Cielo",
-  forest: "Bosque",
-  desert: "Desierto",
-  sunset: "Atardecer",
-  purple: "Púrpura",
-};
-
 export interface LevelData {
   width: number;
   height: number;

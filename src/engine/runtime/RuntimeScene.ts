@@ -1,8 +1,11 @@
 import type Phaser from "phaser";
 import type { LevelData, Tile, Entity, BackgroundTheme } from "@/types/level";
 import { BACKGROUND_COLORS } from "@/types/level";
+import { translations } from "@/lib/i18n";
 
 const TILE_SIZE = 32;
+
+type Locale = "en" | "es";
 
 type ArcadePhysicsObject =
   | Phaser.Physics.Arcade.Body
@@ -13,6 +16,7 @@ type ArcadePhysicsObject =
 export interface RuntimeSceneContext {
   onStop: () => void;
   setShowHitboxes: (visible: boolean) => void;
+  locale: Locale;
 }
 
 export interface ToggleDebugRef {
@@ -22,6 +26,7 @@ export interface ToggleDebugRef {
 export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneContext, toggleDebugRef: ToggleDebugRef) {
   return class RuntimeScene extends PhaserLib.Scene {
     declare level: LevelData;
+    declare locale: Locale;
     declare cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     declare player?: Phaser.Physics.Arcade.Sprite;
     declare statusText?: Phaser.GameObjects.Text;
@@ -48,8 +53,20 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       super({ key: "runtime" });
     }
 
-    init(data: { level: LevelData }) {
+    private t(key: string, params?: Record<string, string | number>): string {
+      let text = translations[key]?.[this.locale];
+      if (text === undefined) return key;
+      if (params) {
+        for (const [k, v] of Object.entries(params)) {
+          text = text.replace(`{{${k}}}`, String(v));
+        }
+      }
+      return text;
+    }
+
+    init(data: { level: LevelData; locale: Locale }) {
       this.level = data.level;
+      this.locale = data.locale;
     }
 
     preload() {
@@ -376,7 +393,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       this.physics.world.drawDebug = false;
 
       if (!this.player) {
-        this.add.text(16, 16, "Place a player to start", { fontSize: "18px", color: "#ffffff" });
+        this.add.text(16, 16, this.t("runtimeScene.placePlayer"), { fontSize: "18px", color: "#ffffff" });
       }
 
       if (this.player) {
@@ -438,6 +455,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
           undefined,
           this
         );
+        this.cameras.main.centerOn(this.player.x, this.player.y);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
         this.input.keyboard?.addCapture(["LEFT", "RIGHT", "UP"]);
       }
@@ -482,7 +500,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       this.lives = 3;
       this.gameOver = false;
       this.livesText = this.add
-        .text(16, 16, "♥ x 3", {
+        .text(16, 16, this.t("runtimeScene.lives", { count: 3 }), {
           fontSize: "16px",
           color: "#ef4444",
           fontStyle: "bold",
@@ -594,19 +612,19 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       this.player.setData("checkpointX", cpX);
       this.player.setData("checkpointY", cpY);
       if (this.statusText) {
-        this.statusText.setText("Checkpoint!");
+        this.statusText.setText(this.t("runtimeScene.checkpoint"));
       }
     }
 
     private onTryDoor(door: ArcadePhysicsObject) {
       if (!this.hasKey) {
         if (this.statusText) {
-          this.statusText.setText("Need a key!");
+          this.statusText.setText(this.t("runtimeScene.needKey"));
         }
         return;
       }
       if (this.statusText) {
-        this.statusText.setText("Door opened!");
+        this.statusText.setText(this.t("runtimeScene.doorOpened"));
       }
       if ("gameObject" in door) {
         door.gameObject.destroy();
@@ -620,7 +638,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
     private onHitSpike() {
       this.lives--;
       this.soundHit.play();
-      this.livesText.setText(`♥ x ${this.lives}`);
+      this.livesText.setText(this.t("runtimeScene.lives", { count: this.lives }));
 
       if (this.lives <= 0) {
         this.showGameOver();
@@ -638,7 +656,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       const body = this.player.body as Phaser.Physics.Arcade.Body;
       body.setVelocity(0, 0);
       if (this.statusText) {
-        this.statusText.setText("Respawn");
+        this.statusText.setText(this.t("runtimeScene.respawn"));
       }
     }
 
@@ -654,7 +672,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         .setScrollFactor(0)
         .setDepth(200);
 
-      this.add.text(cx, cy - 80, "GAME OVER", {
+      this.add.text(cx, cy - 80, this.t("runtimeScene.gameOver"), {
         fontSize: "48px",
         color: "#ef4444",
         fontStyle: "bold",
@@ -665,7 +683,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         .setScrollFactor(0)
         .setDepth(201);
 
-      this.add.text(cx, cy + 10, "Retry", {
+      this.add.text(cx, cy + 10, this.t("runtimeScene.retry"), {
         fontSize: "28px",
         color: "#22c55e",
         fontStyle: "bold",
@@ -680,7 +698,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         .setInteractive({ useHandCursor: true })
         .on("pointerdown", () => { this.scene.restart(); });
 
-      this.add.text(cx, cy + 80, "Stop", {
+      this.add.text(cx, cy + 80, this.t("runtimeScene.stop"), {
         fontSize: "28px",
         color: "#94a3b8",
         fontStyle: "bold",
@@ -709,7 +727,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         .setScrollFactor(0)
         .setDepth(200);
 
-      this.add.text(cx, cy - 80, "NIVEL COMPLETADO", {
+      this.add.text(cx, cy - 80, this.t("runtimeScene.levelComplete"), {
         fontSize: "40px",
         color: "#fbbf24",
         fontStyle: "bold",
@@ -720,7 +738,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         .setScrollFactor(0)
         .setDepth(201);
 
-      this.add.text(cx, cy + 10, "Retry", {
+      this.add.text(cx, cy + 10, this.t("runtimeScene.retry"), {
         fontSize: "28px",
         color: "#22c55e",
         fontStyle: "bold",
@@ -735,7 +753,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         .setInteractive({ useHandCursor: true })
         .on("pointerdown", () => { this.scene.restart(); });
 
-      this.add.text(cx, cy + 80, "Stop", {
+      this.add.text(cx, cy + 80, this.t("runtimeScene.stop"), {
         fontSize: "28px",
         color: "#94a3b8",
         fontStyle: "bold",

@@ -4,10 +4,14 @@ import userEvent from '@testing-library/user-event';
 import { SampleLevels } from './SampleLevels';
 import { useEditorStore } from '@/stores/editorStore';
 import { sampleLevels } from '@/data/sampleLevels';
+import { translations } from '@/lib/i18n';
+import { useLocaleStore } from '@/stores/localeStore';
 
 function renderLevels() {
   return render(<SampleLevels />);
 }
+
+const t = (key: string) => translations[key]?.es ?? key;
 
 beforeEach(() => {
   useEditorStore.setState({
@@ -17,6 +21,7 @@ beforeEach(() => {
     entities: [],
     background: 'dark',
   });
+  useLocaleStore.setState({ locale: 'es' });
 });
 
 describe('SampleLevels', () => {
@@ -28,15 +33,16 @@ describe('SampleLevels', () => {
   it('renders all sample level buttons', () => {
     renderLevels();
     for (const sl of sampleLevels) {
-      expect(screen.getByRole('button', { name: `Load level: ${sl.name}` })).toBeInTheDocument();
+      const name = t(`sampleLevel.${sl.id}.name`);
+      expect(screen.getByRole('button', { name: `Load level: ${name}` })).toBeInTheDocument();
     }
   });
 
   it('renders level names and descriptions', () => {
     renderLevels();
     for (const sl of sampleLevels) {
-      expect(screen.getByText(sl.name)).toBeInTheDocument();
-      expect(screen.getByText(sl.description)).toBeInTheDocument();
+      expect(screen.getByText(t(`sampleLevel.${sl.id}.name`))).toBeInTheDocument();
+      expect(screen.getByText(t(`sampleLevel.${sl.id}.description`))).toBeInTheDocument();
     }
   });
 
@@ -44,7 +50,8 @@ describe('SampleLevels', () => {
     const user = userEvent.setup();
     renderLevels();
     const target = sampleLevels[1];
-    await user.click(screen.getByRole('button', { name: `Load level: ${target.name}` }));
+    const name = t(`sampleLevel.${target.id}.name`);
+    await user.click(screen.getByRole('button', { name: `Load level: ${name}` }));
     const state = useEditorStore.getState();
     expect(state.width).toBe(target.level.width);
     expect(state.height).toBe(target.level.height);
@@ -55,7 +62,8 @@ describe('SampleLevels', () => {
     const user = userEvent.setup();
     renderLevels();
     const target = sampleLevels[2];
-    await user.click(screen.getByRole('button', { name: `Load level: ${target.name}` }));
+    const name = t(`sampleLevel.${target.id}.name`);
+    await user.click(screen.getByRole('button', { name: `Load level: ${name}` }));
     const state = useEditorStore.getState();
     expect(state.tiles).toEqual(target.level.tiles);
     expect(state.entities.map((e) => ({ type: e.type, position: e.position, properties: e.properties }))).toEqual(
@@ -73,7 +81,7 @@ describe('SampleLevels', () => {
       background: 'sky',
     });
     renderLevels();
-    await user.click(screen.getByRole('button', { name: 'Load level: Empty' }));
+    await user.click(screen.getByRole('button', { name: 'Load level: Vacío' }));
     const state = useEditorStore.getState();
     expect(state.width).toBe(64);
     expect(state.height).toBe(64);

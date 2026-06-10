@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { SPRITE_PATHS } from "@/assets";
+import { useT } from "@/hooks/useTranslate";
 import type { TileType, EntityType } from "@/types/level";
 
 const CELL_SIZE = 10;
@@ -28,6 +29,7 @@ export const GridCell = memo(function GridCell({
   isSelected: boolean;
   isEditTarget: boolean;
 }) {
+  const t = useT();
   const spriteKey = tileType ?? entityType;
   const sprite = spriteKey ? SPRITE_PATHS[spriteKey] : null;
   const rotate = tileType ? SPIKE_ROTATE[tileType] : undefined;
@@ -45,7 +47,7 @@ export const GridCell = memo(function GridCell({
       type="button"
       data-x={x}
       data-y={y}
-      aria-label={`Celda ${x},${y}${tileType ? ` ${tileType}` : ""}${entityType ? ` ${entityType}` : ""}`}
+      aria-label={t("gridCell.ariaLabel", { x, y, tile: tileType ? ` ${tileType}` : "", entity: entityType ? ` ${entityType}` : "" })}
       className={`absolute z-10 border ${border}`}
       style={{
         left: x * CELL_SIZE,

@@ -6,11 +6,13 @@ import { useProjectStore } from "@/stores/projectStore";
 import { useRuntimeStore } from "@/stores/runtimeStore";
 import { levelDataSchema } from "@/types/level.schema";
 import { useSelectionStore } from "@/stores/selectionStore";
+import { useT } from "@/hooks/useTranslate";
 import { BackgroundPicker } from "@/components/editor/BackgroundPicker";
 import { EntityProperties } from "@/components/editor/EntityProperties";
 import { EditTargetInspector } from "@/components/editor/EditTargetInspector";
 
 export function InspectorPanel() {
+  const t = useT();
   const { tiles, entities, width, height, loadLevel, resetLevel, updateEntityProperty, updateTileSolid, updateTileProperty } = useEditorStore();
   const { jsonText, setJsonText } = useProjectStore();
   const { setIsPlaying } = useRuntimeStore();
@@ -46,11 +48,11 @@ export function InspectorPanel() {
   return (
     <aside className="space-y-4 rounded-3xl border border-slate-800/80 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10">
       <div>
-        <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">Inspector</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">{t("inspector.title")}</h2>
         <div className="mt-3 space-y-2 text-sm text-slate-300">
-          <p>Dimensiones: {width} × {height}</p>
-          <p>Tiles: {tiles.length}</p>
-          <p>Entidades: {entities.length}</p>
+          <p>{t("inspector.dimensions", { width, height })}</p>
+          <p>{t("inspector.tileCount", { count: tiles.length })}</p>
+          <p>{t("inspector.entityCount", { count: entities.length })}</p>
         </div>
       </div>
 
@@ -74,18 +76,18 @@ export function InspectorPanel() {
         <button
           type="button"
           onClick={handleSave}
-          aria-label="Exportar JSON"
+          aria-label={t("inspector.exportJson")}
           className="rounded-2xl bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-amber-400"
         >
-          Exportar JSON
+          {t("inspector.exportJson")}
         </button>
         <button
           type="button"
           onClick={handleLoad}
-          aria-label="Cargar JSON"
+          aria-label={t("inspector.loadJson")}
           className="rounded-2xl bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-slate-600"
         >
-          Cargar JSON
+          {t("inspector.loadJson")}
         </button>
         <button
           type="button"
@@ -93,19 +95,19 @@ export function InspectorPanel() {
             resetLevel();
             setIsPlaying(false);
           }}
-          aria-label="Limpiar nivel"
+          aria-label={t("inspector.clearLevel")}
           className="rounded-2xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-slate-500"
         >
-          Limpiar nivel
+          {t("inspector.clearLevel")}
         </button>
       </div>
 
       <textarea
         value={jsonText}
         onChange={(event) => setJsonText(event.target.value)}
-        aria-label="Editor de JSON del nivel"
+        aria-label={t("inspector.jsonEditorAria")}
         className="h-72 w-full resize-none rounded-3xl border border-slate-800/80 bg-slate-950 p-3 text-xs text-slate-200 outline-none focus:border-amber-500"
-        placeholder="JSON del nivel aquí..."
+        placeholder={t("inspector.jsonPlaceholder")}
       />
     </aside>
   );

@@ -1,10 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
+import { preloadPhaser } from "@/lib/phaser";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { CELL_SIZE } from "@/assets";
 import { useEditorStore } from "@/stores/editorStore";
 import { useRuntimeStore } from "@/stores/runtimeStore";
+import { useLocaleStore } from "@/stores/localeStore";
+import { useT } from "@/hooks/useTranslate";
 import { LevelCanvas } from "@/components/editor/LevelCanvas";
 import { ToolPanel } from "@/components/editor/ToolPanel";
 import { SampleLevels } from "@/components/editor/SampleLevels";
@@ -16,6 +19,8 @@ import type { LevelData, TileType, EntityType } from "@/types/level";
 export function EditorShell() {
   const { width, height, tiles, entities, background, setTile, addEntity } = useEditorStore();
   const { isPlaying, setIsPlaying } = useRuntimeStore();
+  const { locale, setLocale } = useLocaleStore();
+  const t = useT();
 
   const levelData: LevelData = useMemo(
     () => ({
@@ -31,9 +36,19 @@ export function EditorShell() {
   const runtimeRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    preloadPhaser();
+  }, []);
+
+  useEffect(() => {
     if (isPlaying && runtimeRef.current) {
-      runtimeRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      runtimeRef.current.scrollIntoView({ block: "center" });
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
     }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isPlaying]);
 
   const handleStop = useCallback(() => {
@@ -79,27 +94,35 @@ export function EditorShell() {
         <div className="mx-auto flex max-w-[1440px] flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-amber-400">GameForge</p>
-            <h1 className="mt-2 text-3xl font-semibold text-white">Editor de niveles 2D</h1>
+            <h1 className="mt-2 text-3xl font-semibold text-white">{t("editor.title")}</h1>
           </div>
           <div className="flex flex-wrap items-center gap-3 text-sm">
             <button
               type="button"
+              onClick={() => setLocale(locale === "en" ? "es" : "en")}
+              aria-label={t("editor.play")}
+              className="rounded-2xl border border-slate-700 px-3 py-2 text-xs font-semibold text-slate-400 transition hover:border-slate-500"
+            >
+              {locale === "en" ? "ES" : "EN"}
+            </button>
+            <button
+              type="button"
               onClick={() => setIsPlaying(true)}
-              aria-label="Play: iniciar runtime del nivel"
+              aria-label={t("editor.playAria")}
               className="rounded-2xl bg-amber-500 px-4 py-2 font-semibold text-slate-950 transition hover:bg-amber-400"
             >
-              Play
+              {t("editor.play")}
             </button>
             <button
               type="button"
               onClick={() => setIsPlaying(false)}
-              aria-label="Stop: detener runtime del nivel"
+              aria-label={t("editor.stopAria")}
               className="rounded-2xl border border-slate-700 px-4 py-2 text-slate-100 transition hover:border-slate-500"
             >
-              Stop
+              {t("editor.stop")}
             </button>
             <span role="status" className="rounded-2xl bg-slate-800 px-3 py-2 text-xs uppercase tracking-[0.22em] text-slate-400">
-              {isPlaying ? "Runtime activo" : "Editor activo"}
+              {isPlaying ? t("editor.statusRuntime") : t("editor.statusEditor")}
             </span>
           </div>
         </div>
@@ -111,20 +134,22 @@ export function EditorShell() {
         </div>
       )}
 
-      <DndContext onDragEnd={handleDragEnd}>
-        <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-[1440px] flex-col gap-4 p-6 lg:flex-row">
-          <div className="w-full max-w-sm lg:w-[320px] space-y-4 min-h-[300px]">
-            <ToolPanel />
-            <SampleLevels />
+      {!isPlaying && (
+        <DndContext onDragEnd={handleDragEnd}>
+          <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-[1440px] flex-col gap-4 p-6 lg:flex-row">
+            <div className="w-full max-w-sm lg:w-[320px] space-y-4 min-h-[300px]">
+              <ToolPanel />
+              <SampleLevels />
+            </div>
+            <div className="flex-1 min-h-[400px]">
+              <LevelCanvas />
+            </div>
+            <div className="w-full max-w-lg lg:w-[420px]">
+              <InspectorPanel />
+            </div>
           </div>
-          <div className="flex-1 min-h-[400px]">
-            <LevelCanvas />
-          </div>
-          <div className="w-full max-w-lg lg:w-[420px]">
-            <InspectorPanel />
-          </div>
-        </div>
-      </DndContext>
+        </DndContext>
+      )}
     </main>
   );
 }

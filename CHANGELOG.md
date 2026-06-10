@@ -4,6 +4,60 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - xxxx-xx-xx
 
+## [0.39.2] - 2026-06-10
+
+### Changed
+
+- **Phaser preloading**: Phaser now starts loading immediately when the editor mounts (via `EditorShell`'s `useEffect`), rather than waiting for the user to click Play. In `GameRuntime`, replaced `await import("phaser")` with `await preloadPhaser()` which uses a cached module-level promise, so subsequent plays resolve instantly.
+- **Renderer switched to AUTO**: Changed `PhaserLib.CANVAS` to `PhaserLib.AUTO` — Phaser will use WebGL when available (hardware-accelerated, much faster) and fall back to Canvas otherwise.
+
+### Fixed
+
+- **Camera no longer lags when centering on the player**: added `this.cameras.main.centerOn(this.player.x, this.player.y)` before `startFollow()` in `RuntimeScene.create()`. Previously the camera defaulted to (0,0) and slowly slid to the player over ~0.5s due to lerp 0.08; now it snaps to the player instantly on scene start.
+- **Runtime section centers instantly in viewport**: replaced `scrollIntoView({ behavior: "smooth", block: "start" })` with `scrollIntoView({ block: "center" })`. The smooth scroll animation was causing an artificial delay, and `block: "start"` aligned the runtime to the top of the viewport instead of centering it. Now the runtime section snaps to vertical center immediately on Play.
+- **Canvas no longer overshoots height on initialization**: replaced `min-h-[480px]` on the Phaser container div with `style={{ height: canvasHeight }}` computed from the level dimensions (`Math.min(level.height * 32, 720)`). Previously the container defaulted to 480px, and the canvas (often smaller) would slowly shrink to its correct size during WebGL initialization. Now the container is exactly the canvas height from the first render, with no visual adjustment.
+
+### Added
+
+- **`src/lib/phaser.ts`**: new preloader module. Exports `preloadPhaser()` which starts `import("phaser")` on first call and caches the resulting promise.
+
+## [0.39.1] - 2026-06-10
+
+### Fixed
+
+- **Runtime performance: page no longer lags when scrolling during gameplay**. Editor panels (`ToolPanel`, `LevelCanvas`, `InspectorPanel`) and `DndContext` are no longer rendered when `isPlaying` is `true`, eliminating the cost of compositing thousands of dnd-kit grid cells alongside the Phaser canvas. Body overflow is locked during runtime to prevent accidental page scroll.
+
+## [0.39.0] - 2026-06-10
+
+### Added
+
+- **Phaser runtime i18n**: all user-facing strings in the game runtime (`RuntimeScene.ts`) now use the locale system. "GAME OVER", "LEVEL COMPLETE"/"NIVEL COMPLETADO", "Retry"/"Reintentar", "Stop"/"Detener", "Checkpoint!", "Need a key!", "Door opened!", "Place a player to start" and lives counter all switch between English and Spanish according to the selected locale.
+
+### Changed
+
+- **Default locale changed to English**: `localeStore` default changed from `"es"` to `"en"`. The `<html lang>` attribute in `layout.tsx` defaults to `"en"`. Page metadata (title, description, keywords, Open Graph) updated to English.
+  - `createRuntimeScene()` now receives `locale` via context and passes it to scene `init()`.
+  - `RuntimeScene` stores `this.locale` and provides a `this.t()` method backed by the shared `translations` dictionary in `lib/i18n.ts`.
+  - Added 11 new translation keys under `runtimeScene.*` in `lib/i18n.ts`.
+
+### Fixed
+
+- **Sample level translations now work**: i18n keys in `lib/i18n.ts` used camelCase (`firstSteps`, `coinRun`) but level IDs in `data/sampleLevels.ts` use kebab-case (`first-steps`, `coin-run`). Changed 16 translation keys to match the actual kebab-case IDs, so sample level names and descriptions now switch language correctly.
+- **Fixed typo in Spanish description**: "estrella" → "estrecha" for the Underground level description.
+- **`<html lang>` attribute now dynamic**: new `LangSetter` client component reads the Zustand locale store and updates `document.documentElement.lang` on change, fixing accessibility (screen readers now get the correct language).
+- **Dead code removed**: removed unused `BACKGROUND_LABELS` constant from `types/level.ts` and unused `SPRITE_LABELS` constant from `assets/index.ts`, both of which contained hardcoded Spanish strings not used anywhere in the UI.
+
+## [0.38.0] - 2026-06-10
+
+### Added
+
+- **Internationalization (i18n)**: the editor now supports switching between English and Spanish. A new language toggle button (EN/ES) in the header switches all UI text dynamically.
+  - `lib/i18n.ts`: centralized translation dictionary with ~100 keys covering all visible text in the editor and runtime.
+  - `stores/localeStore.ts`: Zustand store with `locale` state and `setLocale` action.
+  - `hooks/useTranslate.ts`: `useT()` hook that returns a `t(key, params?)` function with `{{param}}` interpolation.
+  - Updated all components (`EditorShell`, `ToolPanel`, `LevelCanvas`, `InspectorPanel`, `BackgroundPicker`, `EditTargetInspector`, `EntityProperties`, `SampleLevels`, `GridCell`, `CameraControls`, `GameRuntime`) to consume translations via `useT()`.
+  - Default locale remains `"es"` (Spanish) so no existing tests are affected.
+
 ## [0.37.0] - 2026-06-09
 
 ### Added

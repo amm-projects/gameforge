@@ -31,7 +31,7 @@ beforeEach(() => {
 describe('LevelCanvas', () => {
   it('renders the canvas section with title', () => {
     renderWithDnd();
-    expect(screen.getByText('Canvas del nivel')).toBeInTheDocument();
+    expect(screen.getByText('Level Canvas')).toBeInTheDocument();
   });
 
   it('renders the grid element', () => {

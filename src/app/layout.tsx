@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { LangSetter } from "@/components/LangSetter";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,13 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GameForge - Editor de niveles 2D",
-  description: "Editor visual de juegos de plataformas 2D. Crea niveles con drag & drop, coloca tiles, enemigos, monedas y juega directamente en el navegador.",
-  keywords: ["editor de niveles", "creador de juegos", "plataformas 2D", "game maker", "Mario Maker"],
+  title: "GameForge - 2D Level Editor",
+  description: "Visual 2D platformer game editor. Create levels with drag & drop, place tiles, enemies, coins and play directly in the browser.",
+  keywords: ["level editor", "game creator", "2D platformer", "game maker", "Mario Maker"],
   authors: [{ name: "GameForge" }],
   openGraph: {
-    title: "GameForge - Editor de niveles 2D",
-    description: "Creador de juegos de plataformas 2D similar a Mario Maker, completamente web.",
+    title: "GameForge - 2D Level Editor",
+    description: "2D platformer game creator similar to Mario Maker, fully web-based.",
     type: "website",
   },
 };
@@ -31,9 +32,10 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="es"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <LangSetter />
       <body className="min-h-full bg-slate-950 text-slate-100">{children}</body>
     </html>
   );
