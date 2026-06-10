@@ -4,6 +4,147 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - xxxx-xx-xx
 
+### Changed
+
+- **N/A**: no unreleased changes.
+
+## [0.40.8] - 2026-06-10
+
+### Added
+
+- **`makeLegato` now supports `cycleLength` parameter**: when provided, the last note in the sequence is extended to `cycleLength - lastNote.beat + overlapBeats` instead of just `lastNote.dur + overlapBeats`.
+- **`docs/music-system.md`**: comprehensive documentation of the music generation system covering architecture, synthesis, ADSR envelopes, sequencer/reverb, 16-beat cycle structure, harmonic progressions, unresolved endings, percussion patterns, and version history.
+
+### Changed
+
+- **All 5 themes now have harmonically unresolved endings**: the last note of each melody is no longer the tonic (resolved), but a non-chord tone or leading tone that creates tension — tension that resolves when the loop restarts to the first note. This creates a true continuous-loop effect where the ear demands the cycle to repeat.
+  - `calm`: last note C4 → D4 (supertonic, 9th of Cmaj7, resolves to E4 at beat 0)
+  - `adventure`: last note C4 → B3 (leading tone, resolves to C4 at beat 0)
+  - `retro`: last note G4 → B4 (leading tone of C major, resolves to C5 at beat 0)
+  - `mystery`: last note C4 → F4 (subdominant of Cm, resolves to G4 at beat 0)
+  - `boss`: last note C4 → G4 (dominant of Cm, resolves to C4 at beat 0)
+
+- **All 5 themes restructured as true 16-beat cyclic patterns**: every layer (chords, melody, bass, drone) spans exactly 16 beats with its last note/chord extending to overlap into beat 0 of the next cycle. This ensures the musical material is continuous at the loop point without relying on the 50ms crossfade to mask gaps.
+  - Chords: last chord dur changed to 4.5 (was 5) to end at beat 16.5
+  - Percussion extends to cycle boundary (extra beat at beat 16/17)
+
+- **All 5 WAV files regenerated**: lengths slightly adjusted for exact 16-beat cycles:
+  - calm: 12.82s → 12.78s
+  - adventure: 8.52s → 8.49s
+  - retro: 5.11s → 5.17s
+  - mystery: 17.16s → 17.16s (unchanged)
+  - boss: 7.32s → 7.37s
+
+## [0.40.7] - 2026-06-10
+
+### Fixed
+
+- **All WAVs had trailing silence making loops uneven**: `reverb()` used a hardcoded 0.5s extra padding (`Math.floor(SR * 0.5)`), adding unnecessary silence after every theme. Changed to dynamic padding (`Math.floor(SR * 0.005) + maxEcho`) based on actual delay line length, so the reverb tail ends naturally at the last audible sample.
+
+### Added
+
+- **`makeLoopable(signal, fadeSec, noiseFloor)` function**: trims all trailing samples below a noise floor threshold (0.001, ≈32 at 16-bit) plus a 5ms safety margin, then applies a linear crossfade from the last `fadeSec` (50ms) into the first `fadeSec` of the audio. This ensures seamless looping — when Phaser jumps from the end of the WAV back to the beginning, the waveform is continuous with no pop or click.
+  - Applied to all 5 themes in the main generation loop.
+  - All WAVs now have 100% non-zero samples (mystery: 99.9% due to intentional sparse ambient pauses).
+
+### Changed
+
+- **All 5 WAV files regenerated**: each is now trimmed to its natural loop point with a crossfaded transition. File sizes reduced proportionally to removed silence (e.g., boss: 7.8s → 7.32s, mystery: 17.6s → 17.16s).
+
+## [0.40.6] - 2026-06-10
+
+### Fixed
+
+- **Boss music no longer has silent zones**: `NaN` propagation caused by undefined note frequencies (`Ab3`, `Eb2`, `Eb3`, `Bb3`) in the pitch map `scripts/generate-music.mjs:247`. When the boss theme referenced these notes (beats 1-3: `Ab3`; beats 4-12: `Eb2`/`Eb3`/`Bb3`), `Math.sin(2 * PI * undefined * t)` produced `NaN`, which spread through `mix()` and was written as zero-samples by `Buffer.writeInt16LE(NaN)` → 3.48s of total silence (0.43-0.92s and 1.72-5.19s). Now audio is 93.5% non-zero vs previously 43%.
+
+- **Mystery music also had silent zones from the same `NaN` bug**: `F.Eb5` (beat 4) and `F.Eb6` (beat 9.5) were undefined in the pitch map, used by the eerie highs layer. Each caused ~1.68s of total silence (4.00-5.68s and 9.50-11.18s). Non-zero went from 78.5% → 97.6%.
+
+- **Percussion always silent**: `percSequence()` wrapped beats as `{ f: 0, ... }` and passed them to `sequence()`, which called `voiceFn(n.f, dur, n.vel * velScale)`. Since `kick` and `snare` used their first parameter as velocity, they received `freq=0` as `vel`, multiplying output by zero. Fixed by adding unused `_f, _dur` parameters to `kick()` and `snare()`.
+
+### Changed
+
+- **Missing note frequencies added**: `Ab3: 207.65`, `Eb2: 77.78`, `Eb3: 155.56`, `Bb3: 233.08`, `Eb5: 622.26`, `Eb6: 1244.52` added to the `F` map in `scripts/generate-music.mjs`. All 37 referenced frequencies now have entries.
+
+## [0.40.5] - 2026-06-10
+
+### Changed
+
+- **Mystery theme completely redesigned**: replaced the ultra-slow `etherealPad` (1.5s attack / 2s release) with a warmer `stringPad` (0.3s attack / 0.5s release) with detuned harmonics for richness. Added a continuous slow-moving triangle melody that never goes silent (11 notes covering all 16 beats). Doubled the high eerie note density (from 6 to 9 notes). Increased wind texture volume and drone volume. All layers now overlap continuously with no gaps between chords or phrases.
+
+- **Boss theme fixed**: power chord riff was using `half = tempo / 2` as its timebase, producing a 14.6s output array while the melody/bass/drums only lasted ~7s. The last 7.7s had only the riff playing, then silence. Changed the riff to use the same `tempo` as all other layers, so every layer ends at roughly the same time (~7.5s) and the loop transition is seamless. Reduced file size from 1304 KB to 676 KB.
+
+- **Removed unused `etherealPad` function**: replaced by `stringPad`.
+
+- **Final silence padding reduced**: `sequence()` and `chordSequence()` padding reduced from `+ 0.05` to 50ms (previously `+ 1` = 1 second in v0.40.3 and earlier). All 5 WAV files regenerated with zero trailing silence.
+
+## [0.40.4] - 2026-06-10
+
+### Fixed
+
+- **No more silence gap at end of music loops**: `sequence()` and `chordSequence()` in `scripts/generate-music.mjs` added a full 1 second of silent padding (`+ 1`) to the total duration, plus `reverb()` added another 0.5s tail. When Phaser looped the WAV, ~1s of silence played between each repeat. Reduced to `+ 0.05` (50ms) — just enough to avoid clipping, while the reverb tail provides the natural fade. All 5 WAV files regenerated ~1s shorter.
+
+## [0.40.3] - 2026-06-10
+
+### Fixed
+
+- **Player no longer clips through ground on respawn**: when the player dies and respawns at the initial spawn point or checkpoint, the Y position is now offset by `-TILE_SIZE` (one cell up, -32px). Previously the player was placed at the exact tile center, which could embed them inside the ground tile, causing physics clipping. Now the player appears one tile above the ground and falls naturally onto it.
+  - `engine/runtime/RuntimeScene.ts`: `onHitSpike()` respawn offset applied to both checkpoint and initial spawn position.
+
+## [0.40.2] - 2026-06-10
+
+### Changed
+
+- **All 5 music themes now play continuously with no silent gaps**: every theme now includes a constant low-frequency drone (C2 sine) that sustains through the entire loop, ensuring sound is always audible. Chord pads and bass lines use overlapping durations (extended by 0.5 beats) to eliminate gaps between chord changes. Melody lines use a new `makeLegato()` helper that extends each note's duration to overlap with the next note by 0.03 beats, creating a seamless legato flow across all melodic phrases. Previously, phrases were separated by brief silences and chords had 0-beat transitions; now all layers interlock continuously.
+  - `scripts/generate-music.mjs`: added `makeLegato(notes, overlapBeats)` function.
+  - `scripts/generate-music.mjs`: calm, adventure, retro, mystery, and boss all updated with drone layer, legato melodies, and overlapping harmonic durations.
+
+## [0.40.1] - 2026-06-10
+
+### Changed
+
+- **Music system replaced: programmatic synthesis → pre-generated WAV files**. The 5 music tracks are now actual WAV audio files generated by `scripts/generate-music.mjs` and loaded from `/sounds/music/*.wav`, instead of being synthesized at runtime via Web Audio API oscillators. Each track now has layered chord progressions, proper mixing, and sounds like real music rather than beeps.
+- **Melodies completely rewritten**: all 5 themes now use proper musical arrangements with:
+  - Full chord progressions (Cmaj7, Am7, Fmaj7, etc.) via stacked sine voices with detuning
+  - Dedicated instrument voices: warm pad (detuned sine stacks), triangle lead, bass (sine + sub-octave), kick drum (sine sweep + noise), snare drum (noise + sine)
+  - ADSR envelopes on every voice for natural attack/decay
+  - Dynamic velocity variation per note for expression
+  - Built-in delay-based reverb for spatial depth
+  - Percussion elements (kick + snare patterns) for rhythm in adventure, retro, and boss
+  - Proper tempo-based timing grid
+
+### Fixed
+
+- **Mystery theme redesigned**: replaced harsh Cm(add#4) cluster chord with a smoother jazz-influenced harmonic progression (Dm9 → G13sus4 → Cm9). Added slow tremolo pulsing on the pad for unease, wind texture (filtered noise with LFO), ethereal high notes with very slow attack, and deeper reverb.
+- **Boss theme redesigned**: replaced complex chord changes with a static C power-chord riff (C5 - Eb5 - F5 - G5) for relentless drive. Added pounding sawtooth+bass hybrid on every 8th note for intensity. Simplified melody to a chromatic descent pattern. Both kick (every beat) and snare (2,4) for constant percussive energy. Includes a chromatic descending run (C4→Db4→D4→Eb4→C4) as a tension-building figure.
+  - `scripts/generate-music.mjs`: new build-time script that generates multi-layered WAV files with chords, pads, bass lines, and percussion-like elements for each theme.
+  - `public/sounds/music/`: contains calm.wav, adventure.wav, retro.wav, mystery.wav, boss.wav.
+  - `engine/runtime/RuntimeScene.ts`: `setupMusic()` now loads and plays the WAV file as a Phaser sound loop. Removed the `generateMusicBuffer` import.
+  - `engine/runtime/music-generator.ts`: **deleted** — replaced by pre-generated WAV files.
+  - `engine/runtime/index.ts`: removed `generateMusicBuffer` export.
+
+### Fixed
+
+- Background music no longer sounds like raw oscillator beeps. Each theme now has proper harmonies, dynamic range, and musical structure.
+- **Music theme now actually passes through to runtime**: `EditorShell.tsx` was not destructuring `music` from `editorStore`, nor including it in the `levelData` object passed to `GameRuntime`. The runtime always fell back to `"calm"`. Added `music` to destructuring, memoized object, and dependency array.
+
+## [0.40.0] - 2026-06-10
+
+### Added
+
+- **Background music system**: levels now support a `music` field (MusicTheme) with 5 selectable tracks. Tracks are generated programmatically via Web Audio API in `engine/runtime/music-generator.ts`.
+  - `types/level.ts`: added `MusicTheme` type (`"calm" | "adventure" | "retro" | "mystery" | "boss"`) and `music?: MusicTheme` field to `LevelData`.
+  - `types/level.schema.ts`: added `music` field with `z.enum([...]).optional().default("calm")`.
+  - `stores/editorStore.ts`: added `music` state, `setMusic` action, `music` in `loadLevel`/`resetLevel`.
+  - `components/editor/MusicPicker.tsx`: new UI component in the Inspector (below BackgroundPicker) with 5 colored buttons with musical symbols, following the same pattern as `BackgroundPicker`.
+  - `lib/i18n.ts`: 12 new translation keys (`music.title`, `music.calm`, `music.adventure`, `music.retro`, `music.mystery`, `music.boss`, `music.setAria`) in EN/ES.
+  - `engine/runtime/music-generator.ts`: new module that generates AudioBuffer melodies for each theme using Web Audio API with distinct waveforms, harmonies, and registers. Calm uses sine+triangle legato arpeggios; Adventure uses square-wave march with bass fifths; Retro uses fast 8-bit square arpeggios; Mystery uses triangle drones with vibrato and eerie intervals; Boss uses aggressive sawtooth+square riff.
+  - `engine/runtime/RuntimeScene.ts`: calls `setupMusic()` in `create()` which generates and plays the loop. Music stops on game over, victory, or scene shutdown.
+  - `data/sampleLevels.ts`: all 10 sample levels have an assigned music theme.
+
+### Changed
+
+- `package.json`: version 0.39.2 → 0.40.0.
+
 ## [0.39.2] - 2026-06-10
 
 ### Changed

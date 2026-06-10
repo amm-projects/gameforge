@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { LevelData, Tile, EntityType, BackgroundTheme } from "@/types/level";
+import type { LevelData, Tile, EntityType, BackgroundTheme, MusicTheme } from "@/types/level";
 import { makeId, applyPaintActions, isUniqueEntity } from "@/engine/editor";
 import type { PaintAction } from "@/engine/editor";
 
@@ -12,6 +12,7 @@ interface EditorState extends LevelData {
   updateTileSolid: (x: number, y: number, solid: boolean) => void;
   updateTileProperty: (x: number, y: number, key: string, value: unknown) => void;
   setBackground: (background: BackgroundTheme) => void;
+  setMusic: (music: MusicTheme) => void;
   loadLevel: (level: LevelData) => void;
   resetLevel: () => void;
   batchPaint: (actions: PaintAction[]) => void;
@@ -23,6 +24,7 @@ export const useEditorStore = create<EditorState>((set) => ({
   tiles: [],
   entities: [],
   background: "dark",
+  music: "calm",
 
   setTile: (tile) =>
     set((state) => {
@@ -88,6 +90,8 @@ export const useEditorStore = create<EditorState>((set) => ({
 
   setBackground: (background) => set({ background }),
 
+  setMusic: (music) => set({ music }),
+
   batchPaint: (actions) =>
     set((state) => {
       const { tiles, entities } = applyPaintActions(state.tiles, state.entities, actions);
@@ -101,6 +105,7 @@ export const useEditorStore = create<EditorState>((set) => ({
       tiles: [...level.tiles],
       entities: [...level.entities],
       background: level.background ?? "dark",
+      music: level.music ?? "calm",
     })),
 
   resetLevel: () =>
@@ -110,6 +115,7 @@ export const useEditorStore = create<EditorState>((set) => ({
       tiles: [],
       entities: [],
       background: "dark",
+      music: "calm",
     })),
 }));
 

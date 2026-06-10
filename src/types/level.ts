@@ -30,10 +30,21 @@ export const BACKGROUND_COLORS: Record<BackgroundTheme, string> = {
   purple: "#4c1d95",
 };
 
+export type MusicTheme = "calm" | "adventure" | "retro" | "mystery" | "boss";
+
+export const MUSIC_THEMES: Record<MusicTheme, string> = {
+  calm: "calm",
+  adventure: "adventure",
+  retro: "retro",
+  mystery: "mystery",
+  boss: "boss",
+};
+
 export interface LevelData {
   width: number;
   height: number;
   tiles: Tile[];
   entities: Entity[];
   background?: BackgroundTheme;
+  music?: MusicTheme;
 }

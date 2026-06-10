@@ -103,6 +103,47 @@ describe("level.schema", () => {
       expect(result.success).toBe(false);
     });
 
+    it("applies default music", () => {
+      const data = {
+        width: 64,
+        height: 64,
+        tiles: [],
+        entities: [],
+      };
+      const result = levelDataSchema.safeParse(data);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.music).toBe("calm");
+      }
+    });
+
+    it("accepts explicit music", () => {
+      const data = {
+        width: 64,
+        height: 64,
+        tiles: [],
+        entities: [],
+        music: "adventure",
+      };
+      const result = levelDataSchema.safeParse(data);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.music).toBe("adventure");
+      }
+    });
+
+    it("rejects invalid music", () => {
+      const data = {
+        width: 64,
+        height: 64,
+        tiles: [],
+        entities: [],
+        music: "invalid",
+      };
+      const result = levelDataSchema.safeParse(data);
+      expect(result.success).toBe(false);
+    });
+
     it("transforms missing properties to empty object on tiles", () => {
       const data = {
         width: 64,

@@ -1,7 +1,8 @@
 import type Phaser from "phaser";
-import type { LevelData, Tile, Entity, BackgroundTheme } from "@/types/level";
+import type { LevelData, Tile, Entity, BackgroundTheme, MusicTheme } from "@/types/level";
 import { BACKGROUND_COLORS } from "@/types/level";
 import { translations } from "@/lib/i18n";
+
 
 const TILE_SIZE = 32;
 
@@ -48,6 +49,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
     declare spawnY: number;
     declare gameOver: boolean;
     declare ridingPlatform: Phaser.Physics.Arcade.Sprite | null;
+    declare musicSource: Phaser.Sound.BaseSound | null;
 
     constructor() {
       super({ key: "runtime" });
@@ -74,6 +76,11 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       this.load.audio("sfx-coin", "/sounds/coin.wav");
       this.load.audio("sfx-hit", "/sounds/hit.wav");
       this.load.audio("sfx-goal", "/sounds/goal.wav");
+      this.load.audio("music-calm", "/sounds/music/calm.wav");
+      this.load.audio("music-adventure", "/sounds/music/adventure.wav");
+      this.load.audio("music-retro", "/sounds/music/retro.wav");
+      this.load.audio("music-mystery", "/sounds/music/mystery.wav");
+      this.load.audio("music-boss", "/sounds/music/boss.wav");
     }
 
     private createRuntimeTextures() {
@@ -514,6 +521,19 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       this.statusText = this.add
         .text(16, worldHeight + 16, "", { fontSize: "16px", color: "#ffffff" })
         .setScrollFactor(0);
+
+      this.events.on("shutdown", () => { this.stopMusic(); });
+
+      this.setupMusic();
+    }
+
+    private setupMusic() {
+      const theme = (this.level.music ?? "calm") as MusicTheme;
+      const key = `music-${theme}`;
+      if (this.cache.audio.exists(key)) {
+        this.musicSource = this.sound.add(key, { loop: true, volume: 0.4 });
+        this.musicSource.play();
+      }
     }
 
     update() {
@@ -648,10 +668,11 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       if (!this.player) return;
       const cpX = this.player.getData("checkpointX") as number | undefined;
       const cpY = this.player.getData("checkpointY") as number | undefined;
+      const offsetY = -TILE_SIZE;
       if (cpX !== undefined && cpY !== undefined) {
-        this.player.setPosition(cpX, cpY);
+        this.player.setPosition(cpX, cpY + offsetY);
       } else {
-        this.player.setPosition(this.spawnX, this.spawnY);
+        this.player.setPosition(this.spawnX, this.spawnY + offsetY);
       }
       const body = this.player.body as Phaser.Physics.Arcade.Body;
       body.setVelocity(0, 0);
@@ -660,9 +681,18 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       }
     }
 
+    private stopMusic() {
+      if (this.musicSource) {
+        this.musicSource.stop();
+        this.musicSource.destroy();
+        this.musicSource = null;
+      }
+    }
+
     private showGameOver() {
       if (this.gameOver) return;
       this.gameOver = true;
+      this.stopMusic();
       this.physics.world.pause();
 
       const cx = this.cameras.main.centerX;
@@ -717,6 +747,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
     private showVictory() {
       if (this.gameOver) return;
       this.gameOver = true;
+      this.stopMusic();
       this.soundGoal.play();
       this.physics.world.pause();
 

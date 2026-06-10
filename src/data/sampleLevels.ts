@@ -1,5 +1,5 @@
 import { makeId } from "@/lib/utils";
-import type { LevelData, Tile, Entity, BackgroundTheme } from "@/types/level";
+import type { LevelData, Tile, Entity, BackgroundTheme, MusicTheme } from "@/types/level";
 
 interface SampleLevel {
   id: string;
@@ -32,7 +32,7 @@ const empty: SampleLevel = {
   id: "empty",
   name: "Empty",
   description: "Start from scratch",
-  level: { width: 64, height: 64, tiles: [], entities: [], background: "dark" },
+  level: { width: 64, height: 64, tiles: [], entities: [], background: "dark", music: "calm" },
 };
 
 const firstSteps: SampleLevel = {
@@ -50,7 +50,7 @@ const firstSteps: SampleLevel = {
       { id: makeId(), type: "player", position: { x: 2, y: 18 }, properties: {} },
       { id: makeId(), type: "goal", position: { x: width - 3, y: 18 }, properties: {} },
     ];
-    return { width, height, tiles, entities, background: "sky" as BackgroundTheme };
+    return { width, height, tiles, entities, background: "sky" as BackgroundTheme, music: "calm" as MusicTheme };
   })(),
 };
 
@@ -80,7 +80,7 @@ const coinRun: SampleLevel = {
       enemyAt(8, 18),
       enemyAt(25, 18),
     ];
-    return { width, height, tiles, entities, background: "forest" as BackgroundTheme };
+    return { width, height, tiles, entities, background: "forest" as BackgroundTheme, music: "adventure" as MusicTheme };
   })(),
 };
 
@@ -116,7 +116,7 @@ const dangerPass: SampleLevel = {
       coinAt(12, 15),
       coinAt(20, 15),
     ];
-    return { width, height, tiles, entities, background: "desert" as BackgroundTheme };
+    return { width, height, tiles, entities, background: "desert" as BackgroundTheme, music: "adventure" as MusicTheme };
   })(),
 };
 
@@ -156,7 +156,7 @@ const skyFortress: SampleLevel = {
       coinAt(24, 15),
       coinAt(30, 12),
     ];
-    return { width, height, tiles, entities, background: "sunset" as BackgroundTheme };
+    return { width, height, tiles, entities, background: "sunset" as BackgroundTheme, music: "adventure" as MusicTheme };
   })(),
 };
 
@@ -206,7 +206,7 @@ const underground: SampleLevel = {
       coinAt(26, 6),
       coinAt(15, 4),
     ];
-    return { width, height, tiles, entities, background: "purple" as BackgroundTheme };
+    return { width, height, tiles, entities, background: "purple" as BackgroundTheme, music: "mystery" as MusicTheme };
   })(),
 };
 
@@ -246,7 +246,7 @@ const speedRun: SampleLevel = {
       coinAt(31, 9),
       coinAt(38, 8),
     ];
-    return { width, height, tiles, entities, background: "desert" as BackgroundTheme };
+    return { width, height, tiles, entities, background: "desert" as BackgroundTheme, music: "retro" as MusicTheme };
   })(),
 };
 
@@ -302,7 +302,7 @@ const treasureTower: SampleLevel = {
       coinAt(9, 13),
       //coinAt(6, 8),
     ];
-    return { width, height, tiles, entities, background: "forest" as BackgroundTheme };
+    return { width, height, tiles, entities, background: "forest" as BackgroundTheme, music: "mystery" as MusicTheme };
   })(),
 };
 
@@ -372,7 +372,7 @@ const bridgeOfSpikes: SampleLevel = {
       coinAt(23, 12),
       coinAt(27, 14),
     ];
-    return { width, height, tiles, entities, background: "dark" as BackgroundTheme };
+    return { width, height, tiles, entities, background: "dark" as BackgroundTheme, music: "boss" as MusicTheme };
   })(),
 };
 
@@ -431,7 +431,7 @@ const verticalDescent: SampleLevel = {
       coinAt(7, 7),
       coinAt(5, 3),
     ];
-    return { width, height, tiles, entities, background: "sky" as BackgroundTheme };
+    return { width, height, tiles, entities, background: "sky" as BackgroundTheme, music: "boss" as MusicTheme };
   })(),
 };
 

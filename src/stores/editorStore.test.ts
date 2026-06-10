@@ -10,6 +10,7 @@ beforeEach(() => {
     height: initialHeight,
     tiles: [],
     entities: [],
+    music: "calm",
   });
 });
 
@@ -20,6 +21,25 @@ describe('editorStore', () => {
     expect(state.height).toBe(64);
     expect(state.tiles).toHaveLength(0);
     expect(state.entities).toHaveLength(0);
+    expect(state.music).toBe('calm');
+  });
+
+  describe('setMusic', () => {
+    it('changes the music theme', () => {
+      useEditorStore.getState().setMusic('adventure');
+      expect(useEditorStore.getState().music).toBe('adventure');
+    });
+
+    it('can change to any valid theme', () => {
+      useEditorStore.getState().setMusic('retro');
+      expect(useEditorStore.getState().music).toBe('retro');
+      useEditorStore.getState().setMusic('mystery');
+      expect(useEditorStore.getState().music).toBe('mystery');
+      useEditorStore.getState().setMusic('boss');
+      expect(useEditorStore.getState().music).toBe('boss');
+      useEditorStore.getState().setMusic('calm');
+      expect(useEditorStore.getState().music).toBe('calm');
+    });
   });
 
   describe('setTile', () => {
@@ -194,6 +214,38 @@ describe('editorStore', () => {
       const state = useEditorStore.getState();
       expect(state.tiles).toHaveLength(0);
       expect(state.entities).toHaveLength(0);
+    });
+
+    it('loads level with music theme', () => {
+      useEditorStore.getState().loadLevel({
+        width: 10,
+        height: 10,
+        tiles: [],
+        entities: [],
+        music: 'boss',
+      });
+      expect(useEditorStore.getState().music).toBe('boss');
+    });
+
+    it('defaults music to calm when not provided', () => {
+      useEditorStore.getState().loadLevel({
+        width: 64,
+        height: 64,
+        tiles: [],
+        entities: [],
+      });
+      expect(useEditorStore.getState().music).toBe('calm');
+    });
+
+    it('preserves calm after reset', () => {
+      useEditorStore.getState().loadLevel({
+        width: 64,
+        height: 64,
+        tiles: [],
+        entities: [],
+        music: 'adventure',
+      });
+      expect(useEditorStore.getState().music).toBe('adventure');
     });
   });
 

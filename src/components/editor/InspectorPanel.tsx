@@ -8,6 +8,7 @@ import { levelDataSchema } from "@/types/level.schema";
 import { useSelectionStore } from "@/stores/selectionStore";
 import { useT } from "@/hooks/useTranslate";
 import { BackgroundPicker } from "@/components/editor/BackgroundPicker";
+import { MusicPicker } from "@/components/editor/MusicPicker";
 import { EntityProperties } from "@/components/editor/EntityProperties";
 import { EditTargetInspector } from "@/components/editor/EditTargetInspector";
 
@@ -18,6 +19,8 @@ export function InspectorPanel() {
   const { setIsPlaying } = useRuntimeStore();
   const background = useEditorStore((s) => s.background);
   const setBackground = useEditorStore((s) => s.setBackground);
+  const music = useEditorStore((s) => s.music);
+  const setMusic = useEditorStore((s) => s.setMusic);
   const { selectedEntityId, selectedEditTarget, setSelectedEditTarget } = useSelectionStore();
 
   const levelData = useMemo(
@@ -57,6 +60,8 @@ export function InspectorPanel() {
       </div>
 
       <BackgroundPicker background={background ?? "dark"} setBackground={setBackground} />
+
+      <MusicPicker music={music ?? "calm"} setMusic={setMusic} />
 
       {selectedEntity && (
         <EntityProperties entity={selectedEntity} updateEntityProperty={updateEntityProperty} />

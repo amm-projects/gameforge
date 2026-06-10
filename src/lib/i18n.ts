@@ -65,6 +65,15 @@ export const translations: TranslationDict = {
   "background.purple": { en: "Purple", es: "Púrpura" },
   "background.setAria": { en: "Set background to {{label}}", es: "Set background to {{label}}" },
 
+  /* MusicPicker */
+  "music.title": { en: "Music", es: "Música" },
+  "music.calm": { en: "Calm", es: "Tranquila" },
+  "music.adventure": { en: "Adventure", es: "Aventura" },
+  "music.retro": { en: "Retro", es: "Retro" },
+  "music.mystery": { en: "Mystery", es: "Misterio" },
+  "music.boss": { en: "Boss", es: "Jefe" },
+  "music.setAria": { en: "Set music to {{label}}", es: "Establecer música a {{label}}" },
+
   /* EditTargetInspector */
   "editTarget.tile": { en: "Tile", es: "Tile" },
   "editTarget.entity": { en: "Entity", es: "Entity" },

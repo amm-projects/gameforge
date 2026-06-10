@@ -17,7 +17,7 @@ const GameRuntime = dynamic(() => import("@/components/runtime/GameRuntime").the
 import type { LevelData, TileType, EntityType } from "@/types/level";
 
 export function EditorShell() {
-  const { width, height, tiles, entities, background, setTile, addEntity } = useEditorStore();
+  const { width, height, tiles, entities, background, music, setTile, addEntity } = useEditorStore();
   const { isPlaying, setIsPlaying } = useRuntimeStore();
   const { locale, setLocale } = useLocaleStore();
   const t = useT();
@@ -29,8 +29,9 @@ export function EditorShell() {
       tiles,
       entities,
       background,
+      music,
     }),
-    [width, height, tiles, entities, background]
+    [width, height, tiles, entities, background, music]
   );
 
   const runtimeRef = useRef<HTMLDivElement | null>(null);

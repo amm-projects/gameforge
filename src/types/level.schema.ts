@@ -26,4 +26,5 @@ export const levelDataSchema = z.object({
   tiles: z.array(tileSchema),
   entities: z.array(entitySchema),
   background: z.enum(["dark", "sky", "forest", "desert", "sunset", "purple"]).optional().default("dark"),
+  music: z.enum(["calm", "adventure", "retro", "mystery", "boss"]).optional().default("calm"),
 });

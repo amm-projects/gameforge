@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { TileType, EntityType, Tile, Entity, LevelData } from './level';
+import type { TileType, EntityType, Tile, Entity, LevelData, MusicTheme } from './level';
 
 describe('TileType', () => {
   it('accepts valid tile types', () => {
@@ -27,6 +27,13 @@ describe('EntityType', () => {
   });
 });
 
+describe('MusicTheme', () => {
+  it('accepts valid music themes', () => {
+    const themes: MusicTheme[] = ['calm', 'adventure', 'retro', 'mystery', 'boss'];
+    expect(themes).toHaveLength(5);
+  });
+});
+
 describe('LevelData structure', () => {
   it('creates a valid LevelData object', () => {
     const tile: Tile = { x: 0, y: 0, type: 'ground' };
@@ -41,6 +48,17 @@ describe('LevelData structure', () => {
     expect(level.height).toBe(64);
     expect(level.tiles).toHaveLength(1);
     expect(level.entities).toHaveLength(1);
+  });
+
+  it('includes optional music field', () => {
+    const level: LevelData = {
+      width: 64,
+      height: 64,
+      tiles: [],
+      entities: [],
+      music: 'adventure',
+    };
+    expect(level.music).toBe('adventure');
   });
 
   it('serializes and deserializes LevelData to JSON', () => {
