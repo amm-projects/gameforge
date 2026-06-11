@@ -113,10 +113,10 @@ export function ToolPanel() {
                 >
                   {rotate ? (
                     <div style={{ transform: `rotate(${rotate})` }}>
-                      <img src={sprite} alt={label} width={24} height={24} className="h-6 w-6" loading="lazy" />
+                      <img src={sprite} alt={label} width={24} height={24} className="h-6 w-6" loading="lazy" style={{ imageRendering: "pixelated" }} />
                     </div>
                   ) : (
-                    <img src={sprite} alt={label} width={24} height={24} className="h-6 w-6" loading="lazy" />
+                    <img src={sprite} alt={label} width={24} height={24} className="h-6 w-6" loading="lazy" style={{ imageRendering: "pixelated" }} />
                   )}
                   <span className="text-[0.5rem] text-slate-400">{label}</span>
                 </button>
@@ -144,7 +144,7 @@ export function ToolPanel() {
                       : "bg-slate-900 hover:bg-slate-800"
                   }`}
                 >
-                  <img src={ENTITY_SPRITE[entity]} alt={label} width={24} height={24} className="h-6 w-6" loading="lazy" />
+                  <img src={ENTITY_SPRITE[entity]} alt={label} width={24} height={24} className="h-6 w-6" loading="lazy" style={{ imageRendering: "pixelated" }} />
                   <span className="text-[0.5rem] text-slate-400">{label}</span>
                 </button>
               );

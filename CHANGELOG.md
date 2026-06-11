@@ -6,7 +6,50 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- **N/A**: no unreleased changes.
+- **platform.svg**: recolored from gray to red (red-600 body, red-500 highlight, red-700 shadow, red-800 details).
+- **RuntimeScene.ts**: updated `runtime-platform` texture to match new red color scheme.
+- **spike.svg**: recolored from red to gray (gray-400 triangle, gray-500 shadow, gray-600 dark accents, gray-700 base).
+- **RuntimeScene.ts**: updated `runtime-spike` texture to match new gray color scheme.
+
+### Added
+
+- **RuntimeScene.ts**: enemies now collide with spikes as solid ground, allowing them to walk over spike tiles without dying.
+
+## [0.44.0] - 2026-06-11
+
+### Changed
+
+- **spike.svg**: redesigned as a single centered triangular spike (8-bit, square 4px blocks) with right-side shadow for 3D depth.
+- **RuntimeScene.ts**: updated `runtime-spike` texture to match new single-triangle design.
+- **package.json**: bump version to 0.44.0.
+
+## [0.43.0] - 2026-06-11
+
+### Changed
+
+- **spike.svg**: redesigned with 4 triangular spike points (bright red with dark shading) and textured base block.
+- **ground.svg**: converted to square 4px pixel blocks — horizontal bands and scattered rocks now use multiples of 4px.
+- **brick.svg**: converted to square 4px pixel blocks — running bond pattern with 12×8px bricks and 4px mortar gaps.
+- **RuntimeScene.ts**: updated `runtime-ground`, `runtime-spike`, and `runtime-brick` textures to match new SVGs.
+- **package.json**: bump version to 0.43.0.
+
+## [0.42.0] - 2026-06-11
+
+### Changed
+
+- **player.svg**: redesigned player sprite with improved Mario+Mega Man hybrid pixel art (wider cap, prominent helmet ear pieces, cleaner body proportions, better cannon design, taller boots).
+- **RuntimeScene.ts**: updated `runtime-player` texture to match new SVG design.
+- **package.json**: bump version to 0.42.0.
+
+## [0.41.0] - 2026-06-11
+
+### Changed
+
+- **All sprites are now 8-bit pixel art**: SVGs in `public/sprites/` and runtime textures in `RuntimeScene.ts` redesigned with blocky pixel art style. Replaced smooth shapes (`fillCircle`, `fillTriangle`, `fillCircle`, `rx` rounded corners, line strokes) with sharp `fillRect`-based pixel art using 4px granularity on an 8×8 grid per 32×32 tile.
+  - `public/sprites/*.svg`: 11 SVG files rewritten with `<rect>`-based pixel art (no circles, no rounded corners, no smooth curves).
+  - `engine/runtime/RuntimeScene.ts`: `createRuntimeTextures()` rewritten — all `fillCircle`/`fillTriangle`/`lineStyle`/`strokeRect` calls replaced by `fillRect` pixel blocks matching the SVG pixel art.
+  - `components/editor/GridCell.tsx`: added `imageRendering: "pixelated"` to sprite style for crisp pixel display in the editor canvas.
+  - `components/editor/ToolPanel.tsx`: added `imageRendering: "pixelated"` to all tile and entity preview images.
 
 ## [0.40.9] - 2026-06-10
 

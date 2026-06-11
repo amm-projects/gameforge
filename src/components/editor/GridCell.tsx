@@ -54,7 +54,7 @@ export const GridCell = memo(function GridCell({
         top: y * CELL_SIZE,
         width: CELL_SIZE,
         height: CELL_SIZE,
-        ...(sprite ? { backgroundImage: `url(${sprite})`, backgroundSize: "100% 100%", backgroundPosition: "center", backgroundRepeat: "no-repeat", transform: rotate ? `rotate(${rotate})` : undefined } : {}),
+        ...(sprite ? { backgroundImage: `url(${sprite})`, backgroundSize: "100% 100%", backgroundPosition: "center", backgroundRepeat: "no-repeat", imageRendering: "pixelated", transform: rotate ? `rotate(${rotate})` : undefined } : {}),
       }}
     />
   );
