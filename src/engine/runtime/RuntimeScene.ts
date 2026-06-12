@@ -124,7 +124,8 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         g.fillRect(16, 12, 16, 8);
       });
 
-      this.createTexture("runtime-player", TILE_SIZE, TILE_SIZE, (g) => {
+      if (!this.textures.exists("runtime-player")) {
+        const g = this.add.graphics();
         g.fillStyle(0xE53935);
         g.fillRect(8, 0, 16, 4);
         g.fillRect(4, 4, 24, 8);
@@ -156,7 +157,45 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         g.fillStyle(0x6D4C41);
         g.fillRect(4, 28, 8, 4);
         g.fillRect(20, 28, 8, 4);
-      });
+        const dy = -4;
+        const fx = 32;
+        g.fillStyle(0xE53935);
+        g.fillRect(fx + 8, dy + 0, 16, 4);
+        g.fillRect(fx + 4, dy + 4, 24, 8);
+        g.fillStyle(0x1565C0);
+        g.fillRect(fx + 0, dy + 12, 4, 8);
+        g.fillRect(fx + 28, dy + 12, 4, 8);
+        g.fillStyle(0xFFCC80);
+        g.fillRect(fx + 8, dy + 12, 16, 8);
+        g.fillStyle(0xFFFFFF);
+        g.fillRect(fx + 8, dy + 12, 4, 4);
+        g.fillRect(fx + 20, dy + 12, 4, 4);
+        g.fillStyle(0x000000);
+        g.fillRect(fx + 8, dy + 16, 4, 4);
+        g.fillRect(fx + 20, dy + 16, 4, 4);
+        g.fillStyle(0x5D4037);
+        g.fillRect(fx + 12, dy + 16, 8, 4);
+        g.fillStyle(0x1565C0);
+        g.fillRect(fx + 4, dy + 20, 24, 4);
+        g.fillRect(fx + 0, dy + 24, 8, 4);
+        g.fillRect(fx + 8, dy + 24, 16, 4);
+        g.fillStyle(0x1E88E5);
+        g.fillRect(fx + 24, dy + 24, 8, 4);
+        g.fillStyle(0x0D47A1);
+        g.fillRect(fx + 28, dy + 28, 4, 4);
+        g.fillStyle(0xFDD835);
+        g.fillRect(fx + 8, dy + 28, 16, 4);
+        g.fillStyle(0xF9A825);
+        g.fillRect(fx + 12, dy + 28, 8, 4);
+        g.fillStyle(0x6D4C41);
+        g.fillRect(fx + 4, dy + 28, 8, 4);
+        g.fillRect(fx + 20, dy + 28, 8, 4);
+        g.generateTexture("runtime-player", 64, 32);
+        g.destroy();
+        const tex = this.textures.get("runtime-player");
+        tex.add("0", 0, 0, 0, 32, 32);
+        tex.add("1", 0, 32, 0, 32, 32);
+      }
 
       this.createTexture("runtime-coin", TILE_SIZE, TILE_SIZE, (g) => {
         g.fillStyle(0xD97706);
@@ -179,7 +218,122 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         g.fillRect(12, 20, 8, 4);
       });
 
-      this.createTexture("runtime-enemy", TILE_SIZE, TILE_SIZE, (g) => {
+      if (!this.textures.exists("runtime-patrol")) {
+        const g = this.add.graphics();
+        g.fillStyle(0x0EA5E9);
+        g.fillRect(8, 0, 16, 4);
+        g.fillStyle(0x0284C7);
+        g.fillRect(4, 0, 4, 20);
+        g.fillRect(24, 0, 4, 20);
+        g.fillStyle(0x0EA5E9);
+        g.fillRect(4, 4, 24, 16);
+        g.fillStyle(0x0284C7);
+        g.fillRect(4, 20, 24, 4);
+        g.fillStyle(0xFFFFFF);
+        g.fillRect(8, 8, 4, 4);
+        g.fillRect(20, 8, 4, 4);
+        g.fillStyle(0x000000);
+        g.fillRect(8, 12, 4, 4);
+        g.fillRect(20, 12, 4, 4);
+        g.fillStyle(0x7DD3FC);
+        g.fillRect(12, 16, 8, 4);
+        g.fillStyle(0x0284C7);
+        g.fillRect(0, 24, 8, 8);
+        g.fillRect(24, 24, 8, 8);
+        g.fillStyle(0x0369A1);
+        g.fillRect(0, 28, 8, 4);
+        g.fillRect(24, 28, 8, 4);
+        g.fillStyle(0x38BDF8);
+        g.fillRect(12, 4, 8, 4);
+        const dy = -4;
+        const fx = 32;
+        g.fillStyle(0x0EA5E9);
+        g.fillRect(fx + 8, dy + 0, 16, 4);
+        g.fillStyle(0x0284C7);
+        g.fillRect(fx + 4, dy + 0, 4, 20);
+        g.fillRect(fx + 24, dy + 0, 4, 20);
+        g.fillStyle(0x0EA5E9);
+        g.fillRect(fx + 4, dy + 4, 24, 16);
+        g.fillStyle(0x0284C7);
+        g.fillRect(fx + 4, dy + 20, 24, 4);
+        g.fillStyle(0xFFFFFF);
+        g.fillRect(fx + 8, dy + 8, 4, 4);
+        g.fillRect(fx + 20, dy + 8, 4, 4);
+        g.fillStyle(0x000000);
+        g.fillRect(fx + 8, dy + 12, 4, 4);
+        g.fillRect(fx + 20, dy + 12, 4, 4);
+        g.fillStyle(0x7DD3FC);
+        g.fillRect(fx + 12, dy + 16, 8, 4);
+        g.fillStyle(0x0284C7);
+        g.fillRect(fx + 0, dy + 24, 8, 8);
+        g.fillRect(fx + 24, dy + 24, 8, 8);
+        g.fillStyle(0x0369A1);
+        g.fillRect(fx + 0, dy + 28, 8, 4);
+        g.fillRect(fx + 24, dy + 28, 8, 4);
+        g.fillStyle(0x38BDF8);
+        g.fillRect(fx + 12, dy + 4, 8, 4);
+        g.generateTexture("runtime-patrol", 64, 32);
+        g.destroy();
+        const tex = this.textures.get("runtime-patrol");
+        tex.add("0", 0, 0, 0, 32, 32);
+        tex.add("1", 0, 32, 0, 32, 32);
+      }
+
+      if (!this.textures.exists("runtime-jumper")) {
+        const g = this.add.graphics();
+        g.fillStyle(0x9333EA);
+        g.fillRect(8, 0, 16, 4);
+        g.fillStyle(0xA855F7);
+        g.fillRect(4, 4, 24, 16);
+        g.fillStyle(0x7E22CE);
+        g.fillRect(12, 0, 8, 4);
+        g.fillRect(4, 20, 24, 4);
+        g.fillStyle(0xFFFFFF);
+        g.fillRect(8, 8, 4, 4);
+        g.fillRect(20, 8, 4, 4);
+        g.fillStyle(0x000000);
+        g.fillRect(8, 12, 4, 4);
+        g.fillRect(20, 12, 4, 4);
+        g.fillStyle(0xD8B4FE);
+        g.fillRect(12, 16, 8, 4);
+        g.fillStyle(0xA855F7);
+        g.fillRect(4, 24, 8, 8);
+        g.fillRect(20, 24, 8, 8);
+        g.fillStyle(0x7E22CE);
+        g.fillRect(4, 28, 8, 4);
+        g.fillRect(20, 28, 8, 4);
+        const dy = -4;
+        const fx = 32;
+        g.fillStyle(0x9333EA);
+        g.fillRect(fx + 8, dy + 0, 16, 4);
+        g.fillStyle(0xA855F7);
+        g.fillRect(fx + 4, dy + 4, 24, 16);
+        g.fillStyle(0x7E22CE);
+        g.fillRect(fx + 12, dy + 0, 8, 4);
+        g.fillRect(fx + 4, dy + 20, 24, 4);
+        g.fillStyle(0xFFFFFF);
+        g.fillRect(fx + 8, dy + 8, 4, 4);
+        g.fillRect(fx + 20, dy + 8, 4, 4);
+        g.fillStyle(0x000000);
+        g.fillRect(fx + 8, dy + 12, 4, 4);
+        g.fillRect(fx + 20, dy + 12, 4, 4);
+        g.fillStyle(0xD8B4FE);
+        g.fillRect(fx + 12, dy + 16, 8, 4);
+        g.fillStyle(0xA855F7);
+        g.fillRect(fx + 4, dy + 24, 8, 8);
+        g.fillRect(fx + 20, dy + 24, 8, 8);
+        g.fillStyle(0x7E22CE);
+        g.fillRect(fx + 4, dy + 28, 8, 4);
+        g.fillRect(fx + 20, dy + 28, 8, 4);
+        g.generateTexture("runtime-jumper", 64, 32);
+        g.destroy();
+        const tex = this.textures.get("runtime-jumper");
+        tex.add("0", 0, 0, 0, 32, 32);
+        tex.add("1", 0, 32, 0, 32, 32);
+      }
+
+      if (!this.textures.exists("runtime-enemy")) {
+        const g = this.add.graphics();
         g.fillStyle(0xEA580C);
         g.fillRect(8, 0, 16, 4);
         g.fillRect(4, 4, 24, 20);
@@ -200,7 +354,34 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         g.fillStyle(0x9A3412);
         g.fillRect(0, 28, 8, 4);
         g.fillRect(24, 28, 8, 4);
-      });
+        const dy = -4;
+        const fx = 32;
+        g.fillStyle(0xEA580C);
+        g.fillRect(fx + 8, dy + 0, 16, 4);
+        g.fillRect(fx + 4, dy + 4, 24, 20);
+        g.fillStyle(0xC2410C);
+        g.fillRect(fx + 12, dy + 0, 8, 4);
+        g.fillRect(fx + 4, dy + 20, 24, 4);
+        g.fillStyle(0xFFFFFF);
+        g.fillRect(fx + 8, dy + 8, 4, 4);
+        g.fillRect(fx + 20, dy + 8, 4, 4);
+        g.fillStyle(0x000000);
+        g.fillRect(fx + 8, dy + 12, 4, 4);
+        g.fillRect(fx + 20, dy + 12, 4, 4);
+        g.fillStyle(0xFFFFFF);
+        g.fillRect(fx + 12, dy + 16, 8, 4);
+        g.fillStyle(0xC2410C);
+        g.fillRect(fx + 0, dy + 24, 8, 8);
+        g.fillRect(fx + 24, dy + 24, 8, 8);
+        g.fillStyle(0x9A3412);
+        g.fillRect(fx + 0, dy + 28, 8, 4);
+        g.fillRect(fx + 24, dy + 28, 8, 4);
+        g.generateTexture("runtime-enemy", 64, 32);
+        g.destroy();
+        const tex = this.textures.get("runtime-enemy");
+        tex.add("0", 0, 0, 0, 32, 32);
+        tex.add("1", 0, 32, 0, 32, 32);
+      }
 
       this.createTexture("runtime-goal", TILE_SIZE, TILE_SIZE, (g) => {
         g.fillStyle(0x15803D);
@@ -333,6 +514,42 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       });
     }
 
+    private createAnimations() {
+      this.anims.create({
+        key: "player-idle",
+        frames: this.anims.generateFrameNumbers("runtime-player", { start: 0, end: 1 }),
+        frameRate: 2,
+        repeat: -1,
+      });
+      this.anims.create({
+        key: "enemy-walk",
+        frames: [
+          { key: "runtime-enemy", frame: "0" },
+          { key: "runtime-enemy", frame: "1" },
+        ],
+        frameRate: 3,
+        repeat: -1,
+      });
+      this.anims.create({
+        key: "patrol-walk",
+        frames: [
+          { key: "runtime-patrol", frame: "0" },
+          { key: "runtime-patrol", frame: "1" },
+        ],
+        frameRate: 3,
+        repeat: -1,
+      });
+      this.anims.create({
+        key: "jumper-walk",
+        frames: [
+          { key: "runtime-jumper", frame: "0" },
+          { key: "runtime-jumper", frame: "1" },
+        ],
+        frameRate: 3,
+        repeat: -1,
+      });
+    }
+
     private createTexture(
       key: string,
       width: number,
@@ -353,6 +570,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       this.worldHeight = worldHeight;
 
       this.createRuntimeTextures();
+      this.createAnimations();
 
       this.movingPlatforms = [];
       this.ridingPlatform = null;
@@ -388,7 +606,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       tiles.forEach((tile: Tile) => {
         const x = tile.x * TILE_SIZE + TILE_SIZE / 2;
         const y = tile.y * TILE_SIZE + TILE_SIZE / 2;
-        const isSolid = tile.solid ?? true;
+        const isSolid = tile.collision ?? tile.solid ?? true;
         if (tile.type === "ground" || tile.type === "brick" || tile.type === "platform") {
           const texKey = tile.type === "ground" ? "runtime-ground" : tile.type === "brick" ? "runtime-brick" : "runtime-platform";
           if (tile.type === "platform" && isSolid && tile.properties?.moveAxis && tile.properties.moveAxis !== "none") {
@@ -447,6 +665,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
           body.setAllowGravity(true);
           body.setDrag(0.99, 0);
           player.setDepth(10);
+          player.play("player-idle");
           this.player = player;
           this.spawnX = x;
           this.spawnY = y;
@@ -469,7 +688,8 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         }
 
         if (entity.type === "enemy") {
-          const enemy = this.physics.add.sprite(x, y, "runtime-enemy").setOrigin(0.5);
+          const enemy = this.physics.add.sprite(x, y, "runtime-enemy", "0").setOrigin(0.5);
+          enemy.play("enemy-walk");
           enemy.setVelocityX(80);
           const enemyBody = enemy.body as Phaser.Physics.Arcade.Body;
           enemyBody.setSize(22, 26, true);
@@ -477,6 +697,33 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
           enemyBody.setCollideWorldBounds(true);
           enemyLayer.add(enemy);
           this.enemies.push(enemy);
+        }
+
+        if (entity.type === "patrol") {
+          const patrol = this.physics.add.sprite(x, y, "runtime-patrol", "0").setOrigin(0.5);
+          patrol.play("patrol-walk");
+          patrol.setVelocityX(60);
+          patrol.setData("type", "patrol");
+          patrol.setData("onGround", true);
+          const pb = patrol.body as Phaser.Physics.Arcade.Body;
+          pb.setSize(22, 26, true);
+          pb.setAllowGravity(true);
+          pb.setCollideWorldBounds(false);
+          enemyLayer.add(patrol);
+          this.enemies.push(patrol);
+        }
+
+        if (entity.type === "jumper") {
+          const jumper = this.physics.add.sprite(x, y, "runtime-jumper", "0").setOrigin(0.5);
+          jumper.play("jumper-walk");
+          jumper.setVelocityX(70);
+          jumper.setData("type", "jumper");
+          const jb = jumper.body as Phaser.Physics.Arcade.Body;
+          jb.setSize(22, 26, true);
+          jb.setAllowGravity(true);
+          jb.setCollideWorldBounds(false);
+          enemyLayer.add(jumper);
+          this.enemies.push(jumper);
         }
 
         if (entity.type === "checkpoint") {
@@ -682,7 +929,8 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
 
       for (const enemy of this.enemies) {
         const body = enemy.body as Phaser.Physics.Arcade.Body;
-        const speed = 80;
+        const enemyType = enemy.getData("type") as string | undefined;
+        const speed = enemyType === "patrol" ? 60 : enemyType === "jumper" ? 70 : 80;
 
         if (body.velocity.x === 0) {
           enemy.setVelocityX(speed);
@@ -692,6 +940,19 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
           enemy.setVelocityX(speed);
         } else if (body.blocked.right) {
           enemy.setVelocityX(-speed);
+        }
+
+        if (enemyType === "patrol") {
+          const wasOnGround = enemy.getData("onGround") ?? false;
+          const isOnGround = body.blocked.down;
+          if (wasOnGround && !isOnGround && Math.abs(body.velocity.x) > 0) {
+            enemy.setVelocityX(-body.velocity.x);
+          }
+          enemy.setData("onGround", isOnGround);
+        }
+
+        if (enemyType === "jumper" && body.blocked.down) {
+          body.setVelocityY(-600);
         }
       }
 

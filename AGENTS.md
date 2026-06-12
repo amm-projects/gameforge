@@ -580,4 +580,18 @@ The first version must allow:
 - Testing the level in real time.
 
 Everything else is considered future functionality.
+
+---
+
+# Level design rules for sample levels
+
+1. **No enclosures**: Neither the player nor enemies may be trapped in enclosed spaces. All characters must have freedom of movement. Level boundaries (x=0, x=63, y=0, y=63) count as walls — the player must not be able to escape by jumping or falling outside the level boundaries.
+2. **Dimensions and feel**: All sample levels must be 64×64, labyrinthine (maze-like corridors and interconnected paths), varied (each level feels distinct), and fun to play.
+3. **Reachable platforms**: Any platform placed at a certain height must be reachable by the player via jumping or stair-like progression. The maximum jump height is ~5.5 tiles.
+4. **Enemy fall prevention at level boundaries**: For enemies that can fall off platforms (regular `enemy` type, `jumper`), ensure they cannot fall outside the level boundaries (x=0, x=63). Solid blocks at platform edges are not required — enemies may fall off platforms within the level.
+5. **Key placement**: The key must NOT be near the door. It must be located in a different section of the level, requiring exploration to find.
+6. **Reachable coins**: Coins must be placed on solid ground, on platforms, or along paths the player can actually traverse. Coins floating in unreachable positions are not allowed.
+7. **Door rooms**: Rooms protected by a door must not be bypassable. The only way to enter must be by opening the door with the key.
+8. **Door placement**: The door must be positioned at the entrance to a room or area, giving access to a distinct space (e.g., the goal room). It cannot be placed alone in isolation without leading anywhere.
+9. **Self-testing**: After designing or modifying a level, the AI must test it by running the runtime and attempting to complete it from start to goal. If the AI cannot complete the level (unreachable platforms, dead ends, impossible jumps, player/enemy trapped, etc.), it must make changes and retest until the level is completable.
 ```

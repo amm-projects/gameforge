@@ -2,18 +2,50 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - xxxx-xx-xx
+## [0.52.0] - 2026-06-12
 
 ### Changed
 
-- **platform.svg**: recolored from gray to red (red-600 body, red-500 highlight, red-700 shadow, red-800 details).
-- **RuntimeScene.ts**: updated `runtime-platform` texture to match new red color scheme.
-- **spike.svg**: recolored from red to gray (gray-400 triangle, gray-500 shadow, gray-600 dark accents, gray-700 base).
-- **RuntimeScene.ts**: updated `runtime-spike` texture to match new gray color scheme.
+- **Treasure Tower completely redesigned**: the level now complies with all AGENTS.md level design rules (see AGENTS.md "Level design rules for sample levels"). The tower uses a modular section-and-shaft layout (4 floor sections separated by 3 shafts) where each of the 5 floors has a different combination of missing sections, forcing the player to explore and choose between multiple vertical routes (shafts A, B, C). Key changes:
+
+  - **Maze-like layout**: sections S0(x=1-6), S1(x=11-22), S2(x=27-38), S3(x=43-62) with shafts A(x=7-10), B(x=23-26), C(x=39-42). Each floor has a unique section pattern (e.g., Floor 3 has S1,S2,S3; Floor 4 has S0,S2,S3), forcing the player to navigate through different shafts to progress.
+  - **Sky bridges**: horizontal passage platforms added at midY=43 (S1 section, x=11-22) and midY=33 (S2 section, x=27-38), creating alternative routes between shafts at intermediate levels.
+  - **Key moved deeper**: relocated from Floor 2 (y=48, S1) to Floor 4 (y=28, S0) — the most remote section on that floor — requiring exploration across 3+ floors and multiple shaft transitions to find.
+  - **All coins on traversable paths**: 16 coins placed exclusively on solid floors, platforms, or intermediate shaft platforms that the player must visit.
+  - **Enemy boundary safety verified**: all 8 enemies (2 ground, 3 patrol, 3 jumper) are placed on solid sections with no risk of falling outside the level boundaries (x=0, x=63).
+  - **Goal room** remains at Floor 5 (y=18, S2) behind a key door at (30, 19), guarding a distinct room space with the goal at (34, 20).
+  - **Removed entry steps**: no longer needed since ground-to-floor jumps are ≤ 5.5 tiles directly.
+
+- **export-levels.mjs**: `buildTreasureTower` rewritten with data-driven floor section system (`floorDefs` array mapping y-coordinates to active section indices) and `sectionRanges` lookup table, replacing the previous pillar-blocking approach.
+
+## [0.51.0] - 2026-06-12
 
 ### Added
 
-- **RuntimeScene.ts**: enemies now collide with spikes as solid ground, allowing them to walk over spike tiles without dying.
+- **Tile `collision` field**: tiles now support a top-level `collision?: boolean` field alongside the legacy `solid`. The runtime prefers `collision ?? solid ?? true` — `collision` is written by the editor collision toggle, and `solid` is preserved for backward compatibility with existing JSON levels.
+- **`TileProperties` typed interface**: `properties` on Tile is now typed as `TileProperties` instead of `Record<string, unknown>`, with explicit fields `moveAxis?: MoveAxis`, `moveSpeed?: number`, `moveRange?: number`. The Zod schema (`level.schema.ts`) validates these fields via `tilePropertiesSchema`.
+- **Moving platforms in sample levels**: Sky Fortress (horizontal platforms at x=24, y=56, range 64px, speed 60), Underground (vertical platform at x=36, y=55, range 48px, speed 50), Treasure Tower (vertical platform at x=25, y=53, range 64px, speed 40). These demonstrate the moving platform feature in real level contexts.
+
+### Changed
+
+- **level.schema.ts**: `tileSchema` now accepts optional `collision` boolean and uses `tilePropertiesSchema` with `moveAxis`/`moveSpeed`/`moveRange` fields instead of `Record<string, unknown>`.
+- **RuntimeScene.ts**: moving platform logic uses the typed `TileProperties` values; tile solidity resolved via `collision ?? solid ?? true`.
+- **editorStore.ts**: `updateTileSolid` now sets both `collision` and `solid` on the tile, ensuring new levels serialise with `collision` instead of `solid`.
+- **EditTargetInspector.tsx**: reads `collision ?? solid ?? defaultSolid` for the collision toggle display value.
+- **export-levels.mjs**: generates `properties` with `moveAxis`/`moveSpeed`/`moveRange` for moving platforms in the sample levels. JSON files regenerated.
+
+## [0.50.0] - 2026-06-12
+
+### Changed
+
+- **Sample levels now serialized as standalone JSON files**: levels are generated via `scripts/export-levels.mjs` and stored in `src/data/levels/*.json` and `public/levels/*.json`. The TypeScript source `sampleLevels.ts` now imports from JSON instead of generating levels inline. This ensures the level format is decoupled from TypeScript/Phaser, aligned with AGENTS.md.
+- **Treasure Tower tower entries**: added stepped platforms at y=60 inside each tower section (left, middle-left, middle-right, right) so the player has clear ground-level entry points into every tower section.
+
+### Fixed
+
+- **RuntimeScene.ts**: patrol and jumper `tex.add()` calls now use string keys `"0"` and `"1"` instead of numeric keys, preventing Phaser from falling back to `__BASE` frame which showed the full sprite sheet as a single frame.
+- **RuntimeScene.ts**: patrol and jumper frame 1 now shifts ALL child elements by `dy=-4` (not just body elements), keeping relative positions consistent and preventing visual overlap/merge artifacts between frames.
+- **RuntimeScene.ts**: patrol and jumper frame `"1"` registered with correct `width=32` instead of `width=64` (was reading beyond the 64px-wide texture).
 
 ## [0.44.0] - 2026-06-11
 

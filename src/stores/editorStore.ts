@@ -75,7 +75,7 @@ export const useEditorStore = create<EditorState>((set) => ({
   updateTileSolid: (x, y, solid) =>
     set((state) => ({
       tiles: state.tiles.map((tile) =>
-        tile.x === x && tile.y === y ? { ...tile, solid } : tile
+        tile.x === x && tile.y === y ? { ...tile, collision: solid, solid } : tile
       ),
     })),
 

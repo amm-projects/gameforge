@@ -1,0 +1,13 @@
+{
+  "id": "empty",
+  "name": "Empty",
+  "description": "Start from scratch",
+  "level": {
+    "width": 64,
+    "height": 64,
+    "tiles": [],
+    "entities": [],
+    "background": "dark",
+    "music": "calm"
+  }
+}

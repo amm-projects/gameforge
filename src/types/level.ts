@@ -1,12 +1,20 @@
 export type TileType = "ground" | "brick" | "platform" | "spike-up" | "spike-down" | "spike-left" | "spike-right";
-export type EntityType = "player" | "coin" | "enemy" | "goal" | "checkpoint" | "door" | "key";
+export type EntityType = "player" | "coin" | "enemy" | "goal" | "checkpoint" | "door" | "key" | "patrol" | "jumper";
+export type MoveAxis = "none" | "horizontal" | "vertical";
+
+export interface TileProperties {
+  moveAxis?: MoveAxis;
+  moveSpeed?: number;
+  moveRange?: number;
+}
 
 export interface Tile {
   x: number;
   y: number;
   type: TileType;
   solid?: boolean;
-  properties?: Record<string, unknown>;
+  collision?: boolean;
+  properties?: TileProperties;
 }
 
 export interface Entity {

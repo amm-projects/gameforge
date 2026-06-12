@@ -7,7 +7,7 @@ import { useT } from "@/hooks/useTranslate";
 import type { TileType, EntityType } from "@/types/level";
 
 const TILE_TYPES: TileType[] = ["ground", "brick", "platform", "spike-up", "spike-down", "spike-left", "spike-right"];
-const ENTITY_TYPES: EntityType[] = ["player", "coin", "enemy", "goal", "checkpoint", "door", "key"];
+const ENTITY_TYPES: EntityType[] = ["player", "coin", "enemy", "patrol", "jumper", "goal", "checkpoint", "door", "key"];
 
 const TILE_SPRITE: Record<TileType, string> = {
   ground: "/sprites/ground.svg",
@@ -30,6 +30,8 @@ const ENTITY_SPRITE: Record<EntityType, string> = {
   player: "/sprites/player.svg",
   coin: "/sprites/coin.svg",
   enemy: "/sprites/enemy.svg",
+  patrol: "/sprites/patrol.svg",
+  jumper: "/sprites/jumper.svg",
   goal: "/sprites/goal.svg",
   checkpoint: "/sprites/checkpoint.svg",
   door: "/sprites/door.svg",
@@ -50,6 +52,8 @@ const ENTITY_LABEL_KEY: Record<EntityType, string> = {
   player: "entity.player",
   coin: "entity.coin",
   enemy: "entity.enemy",
+  patrol: "entity.patrol",
+  jumper: "entity.jumper",
   goal: "entity.goal",
   checkpoint: "entity.checkpoint",
   door: "entity.door",

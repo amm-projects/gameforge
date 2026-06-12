@@ -13,6 +13,8 @@ export const SPRITE_PATHS = {
   checkpoint: "/sprites/checkpoint.svg",
   door: "/sprites/door.svg",
   key: "/sprites/key.svg",
+  patrol: "/sprites/patrol.svg",
+  jumper: "/sprites/jumper.svg",
 } as const;
 
 export const CELL_SIZE = 10;

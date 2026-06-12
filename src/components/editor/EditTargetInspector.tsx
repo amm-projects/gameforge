@@ -3,6 +3,7 @@
 import { getTileDefinition } from "@/types/tile-definitions";
 import { useT } from "@/hooks/useTranslate";
 import type { EditTarget } from "@/stores/selectionStore";
+import type { TileProperties } from "@/types/level";
 
 const ENTITY_LABEL_KEY: Record<string, string> = {
   player: "entity.player",
@@ -32,7 +33,7 @@ export function EditTargetInspector({
   setSelectedEditTarget,
 }: {
   editTarget: EditTarget;
-  tiles: { x: number; y: number; type: string; solid?: boolean; properties?: Record<string, unknown> }[];
+  tiles: { x: number; y: number; type: string; solid?: boolean; collision?: boolean; properties?: TileProperties }[];
   updateTileSolid: (x: number, y: number, solid: boolean) => void;
   updateTileProperty: (x: number, y: number, key: string, value: unknown) => void;
   setSelectedEditTarget: (target: EditTarget | null) => void;
@@ -48,7 +49,7 @@ export function EditTargetInspector({
         const tile = tiles.find((t) => t.x === editTarget.x && t.y === editTarget.y);
         const def = getTileDefinition(editTarget.type);
         const defaultSolid = def?.solido ?? true;
-        const currentSolid = tile?.solid ?? defaultSolid;
+        const currentSolid = tile?.collision ?? tile?.solid ?? defaultSolid;
         const tileName = t(TILE_LABEL_KEY[editTarget.type] ?? "tile.ground");
         return (
           <>

@@ -39,6 +39,8 @@ export const translations: TranslationDict = {
   "entity.checkpoint": { en: "Checkpoint", es: "Checkpoint" },
   "entity.door": { en: "Door", es: "Puerta" },
   "entity.key": { en: "Key", es: "Llave" },
+  "entity.patrol": { en: "Patrol", es: "Patrulla" },
+  "entity.jumper": { en: "Jumper", es: "Saltador" },
 
   /* LevelCanvas */
   "levelCanvas.title": { en: "Level Canvas", es: "Canvas del nivel" },
@@ -112,19 +114,13 @@ export const translations: TranslationDict = {
   "sampleLevel.empty.name": { en: "Empty", es: "Vacío" },
   "sampleLevel.empty.description": { en: "Start from scratch", es: "Empezar desde cero" },
   "sampleLevel.coin-run.name": { en: "Coin Run", es: "Carrera de Monedas" },
-  "sampleLevel.coin-run.description": { en: "Collect coins while avoiding enemies", es: "Colecciona monedas mientras evitas enemigos" },
+  "sampleLevel.coin-run.description": { en: "Navigate a coin-filled labyrinth full of twists and turns", es: "Navega un laberinto lleno de monedas con giros y vueltas" },
   "sampleLevel.sky-fortress.name": { en: "Sky Fortress", es: "Fortaleza Celestial" },
-  "sampleLevel.sky-fortress.description": { en: "Ascend through floating platforms to reach the goal", es: "Asciende por plataformas flotantes hasta la meta" },
+  "sampleLevel.sky-fortress.description": { en: "Navigate a labyrinth of floating platforms and sky bridges", es: "Navega un laberinto de plataformas flotantes y puentes celestes" },
   "sampleLevel.underground.name": { en: "Underground", es: "Subterráneo" },
-  "sampleLevel.underground.description": { en: "Navigate a tight cave with low ceilings and enemies", es: "Navega una cueva estrecha con techos bajos y enemigos" },
-  "sampleLevel.speed-run.name": { en: "Speed Run", es: "Carrera de Velocidad" },
-  "sampleLevel.speed-run.description": { en: "A flat sprint with enemies and obstacles in your way", es: "Un sprint plano con enemigos y obstáculos en tu camino" },
+  "sampleLevel.underground.description": { en: "Explore a vast cave maze with chambers, tunnels and hidden paths", es: "Explora un vasto laberinto de cuevas con cámaras, túneles y caminos ocultos" },
   "sampleLevel.treasure-tower.name": { en: "Treasure Tower", es: "Torre del Tesoro" },
-  "sampleLevel.treasure-tower.description": { en: "Find the key, open the door, and claim the treasure", es: "Encuentra la llave, abre la puerta y reclama el tesoro" },
-  "sampleLevel.bridge-of-spikes.name": { en: "Bridge of Spikes", es: "Puente de Pinchos" },
-  "sampleLevel.bridge-of-spikes.description": { en: "Cross the narrow bridge while spikes line the pit below", es: "Cruza el puente estrecho mientras los pinchos bordean el foso" },
-  "sampleLevel.vertical-descent.name": { en: "Vertical Descent", es: "Descenso Vertical" },
-  "sampleLevel.vertical-descent.description": { en: "Drop down a narrow shaft filled with platforms and danger", es: "Desciende por un pozo estrecho lleno de plataformas y peligro" },
+  "sampleLevel.treasure-tower.description": { en: "Climb the tower floors, find the key, and unlock the goal room", es: "Sube los pisos de la torre, encuentra la llave y abre la sala de la meta" },
 
   /* GameRuntime */
   "runtime.title": { en: "Phaser Runtime", es: "Runtime Phaser" },
