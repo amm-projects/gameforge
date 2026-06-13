@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.56.1] - 2026-06-13
+
+### Fixed
+
+- **Inspector showing wrong entity name**: `EditTargetInspector.tsx` was missing `"1up"`, `"patrol"`, and `"jumper"` from its `ENTITY_LABEL_KEY`, causing the 1UP entity to fall back to `"entity.player"` and display "Player" instead of "1up".
+
+### Changed
+
+- **1UP sprite now a mini player**: both the SVG (`public/sprites/1up.svg`) and runtime texture (`runtime-1up`) redesigned as a smaller version of the player character — red hat, skin face with eyes, blue body, and yellow shoes — centered in the 32×32 tile, replacing the previous heart design.
+- **Lives HUD uses player icon**: the heart symbol (♥) in the HUD has been replaced with a scaled-down player character sprite (`runtime-player` frame 0 at 0.5× scale), followed by the life count text. Both icon and text now share `setOrigin(0, 0.5)` for proper vertical centering.
+
 ## [0.56.0] - 2026-06-13
 
 ### Added

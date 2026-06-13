@@ -50,6 +50,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
     declare keyIcon: Phaser.GameObjects.Image;
     declare keyText: Phaser.GameObjects.Text;
     declare lives: number;
+    declare livesIcon: Phaser.GameObjects.Image;
     declare livesText: Phaser.GameObjects.Text;
     declare spawnX: number;
     declare spawnY: number;
@@ -521,21 +522,29 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
 
       this.createTexture("runtime-1up", TILE_SIZE, TILE_SIZE, (g) => {
         g.fillStyle(0xE53935);
-        g.fillRect(10, 0, 4, 4);
-        g.fillRect(18, 0, 4, 4);
-        g.fillRect(8, 4, 16, 4);
-        g.fillRect(4, 8, 24, 4);
-        g.fillRect(2, 12, 28, 4);
-        g.fillRect(0, 16, 32, 4);
-        g.fillRect(4, 20, 24, 4);
-        g.fillRect(10, 24, 12, 4);
-        g.fillRect(14, 28, 4, 4);
+        g.fillRect(10, 8, 4, 4);
+        g.fillRect(18, 8, 4, 4);
+        g.fillRect(6, 12, 20, 4);
+        g.fillStyle(0xFFCC80);
+        g.fillRect(8, 16, 16, 4);
+        g.fillStyle(0xFFFFFF);
+        g.fillRect(10, 16, 4, 2);
+        g.fillRect(18, 16, 4, 2);
+        g.fillStyle(0x000000);
+        g.fillRect(10, 18, 4, 2);
+        g.fillRect(18, 18, 4, 2);
+        g.fillStyle(0x1565C0);
+        g.fillRect(6, 20, 20, 4);
+        g.fillRect(8, 24, 16, 4);
+        g.fillStyle(0xFDD835);
+        g.fillRect(10, 28, 4, 4);
+        g.fillRect(18, 28, 4, 4);
         g.fillStyle(0xEF5350);
-        g.fillRect(10, 0, 4, 2);
-        g.fillRect(18, 0, 4, 2);
-        g.fillRect(8, 4, 4, 2);
-        g.fillRect(4, 8, 2, 4);
-        g.fillRect(2, 12, 2, 4);
+        g.fillRect(10, 8, 4, 1);
+        g.fillRect(18, 8, 4, 1);
+        g.fillRect(6, 12, 4, 1);
+        g.fillStyle(0x1E88E5);
+        g.fillRect(6, 20, 2, 4);
       });
     }
 
@@ -932,14 +941,21 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       this.lives = 3;
       this.gameOver = false;
       this.reachedCheckpoints = new Set();
+      this.livesIcon = this.add
+        .image(16, 16, "runtime-player", 0)
+        .setOrigin(0, 0.5)
+        .setScale(0.5)
+        .setScrollFactor(0)
+        .setDepth(100);
       this.livesText = this.add
-        .text(16, 16, this.t("runtimeScene.lives", { count: 3 }), {
+        .text(36, 16, this.t("runtimeScene.lives", { count: 3 }), {
           fontSize: "16px",
-          color: "#ef4444",
+          color: "#ffffff",
           fontStyle: "bold",
           stroke: "#000000",
           strokeThickness: 3,
         })
+        .setOrigin(0, 0.5)
         .setScrollFactor(0)
         .setDepth(100);
 

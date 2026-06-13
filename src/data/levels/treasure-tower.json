@@ -1701,6 +1701,11 @@
       "x": 11,
       "y": 53,
       "type": "platform"
+    },    
+    {
+      "x": 13,
+      "y": 57,
+      "type": "platform"
     },
     {
       "x": 22,
@@ -3676,15 +3681,6 @@
       "properties": {}
     },
     {
-      "id": "id-1781277877247-h8gpg",
-      "type": "coin",
-      "position": {
-        "x": 14,
-        "y": 57
-      },
-      "properties": {}
-    },
-    {
       "id": "id-1781277877247-6vpga",
       "type": "coin",
       "position": {
@@ -4790,9 +4786,18 @@
         "y": 37
       },
       "properties": {}
+    },
+    {
+      "id": "618f9597-5c7f-4a76-9d47-23563ab3f236",
+      "type": "1up",
+      "position": {
+        "x": 13,
+        "y": 56
+      },
+      "properties": {}
     }
   ],
     "background": "forest",
-    "music": "mystery"
+    "music": "adventure"
   }
 }

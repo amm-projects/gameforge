@@ -148,7 +148,7 @@ export const translations: TranslationDict = {
   /* RuntimeScene (Phaser game) */
   "runtimeScene.placePlayer": { en: "Place a player to start", es: "Coloca un jugador para empezar" },
   "runtimeScene.keys": { en: "x{{count}}", es: "x{{count}}" },
-  "runtimeScene.lives": { en: "♥ x {{count}}", es: "♥ x {{count}}" },
+  "runtimeScene.lives": { en: "x {{count}}", es: "x {{count}}" },
   "runtimeScene.checkpoint": { en: "Checkpoint!", es: "¡Checkpoint!" },
   "runtimeScene.needKey": { en: "Need a key!", es: "¡Necesitas una llave!" },
   "runtimeScene.doorOpened": { en: "Door opened!", es: "¡Puerta abierta!" },

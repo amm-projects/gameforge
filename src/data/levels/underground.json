@@ -3,7 +3,7 @@
   "name": "Underground",
   "description": "Explore a vast cave maze with chambers, tunnels and hidden paths",
   "level": {
-     "width": 64,
+  "width": 64,
   "height": 64,
   "tiles": [
     {
@@ -563,11 +563,6 @@
     },
     {
       "x": 20,
-      "y": 54,
-      "type": "brick"
-    },
-    {
-      "x": 20,
       "y": 55,
       "type": "brick"
     },
@@ -782,11 +777,6 @@
       "type": "platform"
     },
     {
-      "x": 39,
-      "y": 54,
-      "type": "platform"
-    },
-    {
       "x": 27,
       "y": 62,
       "type": "spike-up"
@@ -838,11 +828,6 @@
     },
     {
       "x": 39,
-      "y": 54,
-      "type": "brick"
-    },
-    {
-      "x": 39,
       "y": 55,
       "type": "brick"
     },
@@ -879,11 +864,6 @@
     {
       "x": 44,
       "y": 51,
-      "type": "brick"
-    },
-    {
-      "x": 44,
-      "y": 55,
       "type": "brick"
     },
     {
@@ -1212,151 +1192,6 @@
       "type": "platform"
     },
     {
-      "x": 17,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 18,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 19,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 20,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 21,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 22,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 23,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 24,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 25,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 26,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 27,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 28,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 29,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 30,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 31,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 32,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 33,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 34,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 35,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 36,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 37,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 38,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 39,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 40,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 41,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 42,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 43,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 44,
-      "y": 49,
-      "type": "platform"
-    },
-    {
-      "x": 45,
-      "y": 49,
-      "type": "platform"
-    },
-    {
       "x": 14,
       "y": 50,
       "type": "brick"
@@ -1515,61 +1350,6 @@
       "x": 43,
       "y": 45,
       "type": "brick"
-    },
-    {
-      "x": 60,
-      "y": 53,
-      "type": "brick"
-    },
-    {
-      "x": 60,
-      "y": 54,
-      "type": "brick"
-    },
-    {
-      "x": 60,
-      "y": 55,
-      "type": "brick"
-    },
-    {
-      "x": 60,
-      "y": 56,
-      "type": "brick"
-    },
-    {
-      "x": 60,
-      "y": 57,
-      "type": "brick"
-    },
-    {
-      "x": 60,
-      "y": 58,
-      "type": "brick"
-    },
-    {
-      "x": 60,
-      "y": 59,
-      "type": "brick"
-    },
-    {
-      "x": 60,
-      "y": 60,
-      "type": "brick"
-    },
-    {
-      "x": 60,
-      "y": 61,
-      "type": "brick"
-    },
-    {
-      "x": 60,
-      "y": 62,
-      "type": "brick"
-    },
-    {
-      "x": 59,
-      "y": 59,
-      "type": "platform"
     },
     {
       "x": 14,
@@ -2078,46 +1858,6 @@
       "type": "ground"
     },
     {
-      "x": 60,
-      "y": 12,
-      "type": "ground"
-    },
-    {
-      "x": 60,
-      "y": 13,
-      "type": "ground"
-    },
-    {
-      "x": 60,
-      "y": 14,
-      "type": "ground"
-    },
-    {
-      "x": 60,
-      "y": 15,
-      "type": "ground"
-    },
-    {
-      "x": 60,
-      "y": 16,
-      "type": "ground"
-    },
-    {
-      "x": 60,
-      "y": 17,
-      "type": "ground"
-    },
-    {
-      "x": 60,
-      "y": 18,
-      "type": "ground"
-    },
-    {
-      "x": 60,
-      "y": 19,
-      "type": "ground"
-    },
-    {
       "x": 21,
       "y": 11,
       "type": "spike-up"
@@ -2316,6 +2056,236 @@
       "x": 13,
       "y": 10,
       "type": "spike-left"
+    },
+    {
+      "x": 58,
+      "y": 55,
+      "type": "platform"
+    },
+    {
+      "x": 62,
+      "y": 62,
+      "type": "spike-up"
+    },
+    {
+      "x": 62,
+      "y": 58,
+      "type": "platform"
+    },
+    {
+      "x": 17,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 18,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 19,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 20,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 21,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 22,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 23,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 24,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 25,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 26,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 27,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 28,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 29,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 30,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 31,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 32,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 33,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 34,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 35,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 36,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 37,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 38,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 39,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 40,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 41,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 42,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 43,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 44,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 45,
+      "y": 49,
+      "type": "platform"
+    },
+    {
+      "x": 61,
+      "y": 20,
+      "type": "ground"
+    },
+    {
+      "x": 62,
+      "y": 20,
+      "type": "ground"
+    },
+    {
+      "x": 63,
+      "y": 20,
+      "type": "ground"
+    },
+    {
+      "x": 63,
+      "y": 19,
+      "type": "brick"
+    },
+    {
+      "x": 63,
+      "y": 18,
+      "type": "brick"
+    },
+    {
+      "x": 63,
+      "y": 17,
+      "type": "brick"
+    },
+    {
+      "x": 63,
+      "y": 16,
+      "type": "brick"
+    },
+    {
+      "x": 63,
+      "y": 15,
+      "type": "brick"
+    },
+    {
+      "x": 63,
+      "y": 14,
+      "type": "brick"
+    },
+    {
+      "x": 63,
+      "y": 13,
+      "type": "brick"
+    },
+    {
+      "x": 63,
+      "y": 12,
+      "type": "brick"
+    },
+    {
+      "x": 61,
+      "y": 11,
+      "type": "ground"
+    },
+    {
+      "x": 62,
+      "y": 11,
+      "type": "ground"
+    },
+    {
+      "x": 63,
+      "y": 11,
+      "type": "ground"
     }
   ],
   "entities": [
@@ -2325,15 +2295,6 @@
       "position": {
         "x": 5,
         "y": 62
-      },
-      "properties": {}
-    },
-    {
-      "id": "id-1781277877242-efqn6",
-      "type": "coin",
-      "position": {
-        "x": 7,
-        "y": 59
       },
       "properties": {}
     },
@@ -2356,56 +2317,11 @@
       "properties": {}
     },
     {
-      "id": "id-1781277877242-nbw6s",
-      "type": "coin",
-      "position": {
-        "x": 25,
-        "y": 52
-      },
-      "properties": {}
-    },
-    {
-      "id": "id-1781277877242-bdudg",
-      "type": "coin",
-      "position": {
-        "x": 35,
-        "y": 52
-      },
-      "properties": {}
-    },
-    {
       "id": "id-1781277877242-xw9yb",
       "type": "coin",
       "position": {
         "x": 50,
         "y": 54
-      },
-      "properties": {}
-    },
-    {
-      "id": "id-1781277877242-jlt05",
-      "type": "coin",
-      "position": {
-        "x": 18,
-        "y": 49
-      },
-      "properties": {}
-    },
-    {
-      "id": "id-1781277877242-6yrcn",
-      "type": "coin",
-      "position": {
-        "x": 28,
-        "y": 49
-      },
-      "properties": {}
-    },
-    {
-      "id": "id-1781277877242-2qcfh",
-      "type": "coin",
-      "position": {
-        "x": 38,
-        "y": 49
       },
       "properties": {}
     },
@@ -2442,24 +2358,6 @@
       "position": {
         "x": 24,
         "y": 62
-      },
-      "properties": {}
-    },
-    {
-      "id": "id-1781277877242-znc5e",
-      "type": "patrol",
-      "position": {
-        "x": 20,
-        "y": 49
-      },
-      "properties": {}
-    },
-    {
-      "id": "id-1781277877242-exjre",
-      "type": "patrol",
-      "position": {
-        "x": 32,
-        "y": 49
       },
       "properties": {}
     },
@@ -2883,6 +2781,51 @@
       "position": {
         "x": 14,
         "y": 10
+      },
+      "properties": {}
+    },
+    {
+      "id": "1e3ab8bc-9e87-4b03-85f2-9aaba85dafc2",
+      "type": "coin",
+      "position": {
+        "x": 57,
+        "y": 47
+      },
+      "properties": {}
+    },
+    {
+      "id": "ab10272c-fd69-4f7a-ae41-b87d09a18843",
+      "type": "coin",
+      "position": {
+        "x": 57,
+        "y": 48
+      },
+      "properties": {}
+    },
+    {
+      "id": "9616387d-b68f-4a76-a67a-03187ffa9fef",
+      "type": "coin",
+      "position": {
+        "x": 49,
+        "y": 47
+      },
+      "properties": {}
+    },
+    {
+      "id": "2ae7f366-a458-4944-a930-26c087159be3",
+      "type": "coin",
+      "position": {
+        "x": 49,
+        "y": 48
+      },
+      "properties": {}
+    },
+    {
+      "id": "72ebc5e2-91f8-496f-b774-1604e4cc1091",
+      "type": "1up",
+      "position": {
+        "x": 61,
+        "y": 49
       },
       "properties": {}
     }

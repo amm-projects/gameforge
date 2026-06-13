@@ -9,10 +9,13 @@ const ENTITY_LABEL_KEY: Record<string, string> = {
   player: "entity.player",
   coin: "entity.coin",
   enemy: "entity.enemy",
+  patrol: "entity.patrol",
+  jumper: "entity.jumper",
   goal: "entity.goal",
   checkpoint: "entity.checkpoint",
   door: "entity.door",
   key: "entity.key",
+  "1up": "entity.1up",
 };
 
 const TILE_LABEL_KEY: Record<string, string> = {
