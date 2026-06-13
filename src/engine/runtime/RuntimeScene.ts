@@ -38,11 +38,17 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
     declare soundCoin: Phaser.Sound.BaseSound;
     declare soundHit: Phaser.Sound.BaseSound;
     declare soundGoal: Phaser.Sound.BaseSound;
+    declare soundKey: Phaser.Sound.BaseSound;
+    declare soundDoor: Phaser.Sound.BaseSound;
+    declare soundLocked: Phaser.Sound.BaseSound;
+    declare sound1up: Phaser.Sound.BaseSound;
+    declare soundCheckpoint: Phaser.Sound.BaseSound;
     declare coinCount: number;
     declare coinText: Phaser.GameObjects.Text;
     declare coinIcon: Phaser.GameObjects.Image;
-    declare hasKey: boolean;
+    declare keys: number;
     declare keyIcon: Phaser.GameObjects.Image;
+    declare keyText: Phaser.GameObjects.Text;
     declare lives: number;
     declare livesText: Phaser.GameObjects.Text;
     declare spawnX: number;
@@ -50,6 +56,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
     declare gameOver: boolean;
     declare ridingPlatform: Phaser.Physics.Arcade.Sprite | null;
     declare musicSource: Phaser.Sound.BaseSound | null;
+    declare reachedCheckpoints: Set<string>;
 
     constructor() {
       super({ key: "runtime" });
@@ -76,6 +83,11 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       this.load.audio("sfx-coin", "/sounds/coin.wav");
       this.load.audio("sfx-hit", "/sounds/hit.wav");
       this.load.audio("sfx-goal", "/sounds/goal.wav");
+      this.load.audio("sfx-key", "/sounds/key.wav");
+      this.load.audio("sfx-door", "/sounds/door.wav");
+      this.load.audio("sfx-locked", "/sounds/locked.wav");
+      this.load.audio("sfx-1up", "/sounds/1up.wav");
+      this.load.audio("sfx-checkpoint", "/sounds/checkpoint.wav");
       this.load.audio("music-calm", "/sounds/music/calm.wav");
       this.load.audio("music-adventure", "/sounds/music/adventure.wav");
       this.load.audio("music-retro", "/sounds/music/retro.wav");
@@ -199,23 +211,17 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
 
       this.createTexture("runtime-coin", TILE_SIZE, TILE_SIZE, (g) => {
         g.fillStyle(0xD97706);
-        g.fillRect(12, 0, 8, 4);
-        g.fillRect(8, 4, 16, 4);
-        g.fillRect(4, 8, 24, 4);
-        g.fillRect(0, 12, 32, 8);
-        g.fillRect(4, 20, 24, 4);
-        g.fillRect(8, 24, 16, 4);
-        g.fillRect(12, 28, 8, 4);
-        g.fillStyle(0xFBBF24);
         g.fillRect(12, 4, 8, 4);
         g.fillRect(8, 8, 16, 4);
         g.fillRect(4, 12, 24, 8);
         g.fillRect(8, 20, 16, 4);
         g.fillRect(12, 24, 8, 4);
-        g.fillStyle(0xFEF08A);
+        g.fillStyle(0xFBBF24);
         g.fillRect(12, 8, 8, 4);
         g.fillRect(8, 12, 16, 8);
         g.fillRect(12, 20, 8, 4);
+        g.fillStyle(0xFEF08A);
+        g.fillRect(12, 12, 8, 8);
       });
 
       if (!this.textures.exists("runtime-patrol")) {
@@ -512,6 +518,25 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         g.fillRect(8, 0, 4, 4);
         g.fillRect(12, 16, 4, 4);
       });
+
+      this.createTexture("runtime-1up", TILE_SIZE, TILE_SIZE, (g) => {
+        g.fillStyle(0xE53935);
+        g.fillRect(10, 0, 4, 4);
+        g.fillRect(18, 0, 4, 4);
+        g.fillRect(8, 4, 16, 4);
+        g.fillRect(4, 8, 24, 4);
+        g.fillRect(2, 12, 28, 4);
+        g.fillRect(0, 16, 32, 4);
+        g.fillRect(4, 20, 24, 4);
+        g.fillRect(10, 24, 12, 4);
+        g.fillRect(14, 28, 4, 4);
+        g.fillStyle(0xEF5350);
+        g.fillRect(10, 0, 4, 2);
+        g.fillRect(18, 0, 4, 2);
+        g.fillRect(8, 4, 4, 2);
+        g.fillRect(4, 8, 2, 4);
+        g.fillRect(2, 12, 2, 4);
+      });
     }
 
     private createAnimations() {
@@ -578,6 +603,11 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       this.soundCoin = this.sound.add("sfx-coin", { volume: 0.6 });
       this.soundHit = this.sound.add("sfx-hit", { volume: 0.7 });
       this.soundGoal = this.sound.add("sfx-goal", { volume: 0.6 });
+      this.soundKey = this.sound.add("sfx-key", { volume: 0.6 });
+      this.soundDoor = this.sound.add("sfx-door", { volume: 0.6 });
+      this.soundLocked = this.sound.add("sfx-locked", { volume: 0.6 });
+      this.sound1up = this.sound.add("sfx-1up", { volume: 0.7 });
+      this.soundCheckpoint = this.sound.add("sfx-checkpoint", { volume: 0.6 });
 
       this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
       const bgTheme = (this.level.background ?? "dark") as BackgroundTheme;
@@ -592,6 +622,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       const checkpointLayer = this.physics.add.staticGroup();
       const doorLayer = this.physics.add.staticGroup();
       const keyLayer = this.physics.add.staticGroup();
+      const oneupLayer = this.physics.add.staticGroup();
       this.enemies = [];
 
       const SPIKE_ANGLE: Record<string, number> = {
@@ -675,7 +706,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
           const coin = coinLayer
             .create(x, y, "runtime-coin")
             .setOrigin(0.5) as Phaser.Physics.Arcade.Sprite;
-          (coin.body as Phaser.Physics.Arcade.StaticBody).setSize(18, 18);
+          (coin.body as Phaser.Physics.Arcade.StaticBody).setSize(14, 14);
           coin.refreshBody();
         }
 
@@ -748,6 +779,14 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
             .setOrigin(0.5) as Phaser.Physics.Arcade.Sprite;
           (key.body as Phaser.Physics.Arcade.StaticBody).setSize(18, 18);
           key.refreshBody();
+        }
+
+        if (entity.type === "1up") {
+          const oneup = oneupLayer
+            .create(x, y, "runtime-1up")
+            .setOrigin(0.5) as Phaser.Physics.Arcade.Sprite;
+          (oneup.body as Phaser.Physics.Arcade.StaticBody).setSize(20, 20);
+          oneup.refreshBody();
         }
       });
 
@@ -828,6 +867,15 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
           undefined,
           this
         );
+        this.physics.add.overlap(
+          this.player,
+          oneupLayer,
+          (_player: ArcadePhysicsObject, oneup: ArcadePhysicsObject) => {
+            this.onCollect1up(oneup);
+          },
+          undefined,
+          this
+        );
         this.cameras.main.centerOn(this.player.x, this.player.y);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
         this.input.keyboard?.addCapture(["LEFT", "RIGHT", "UP"]);
@@ -861,18 +909,29 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         .setScrollFactor(0)
         .setDepth(100);
 
-      this.hasKey = false;
+      this.keys = 0;
       const keyIconX = coinX - 55;
       this.keyIcon = this.add
         .image(keyIconX, coinY, "runtime-key")
         .setOrigin(1, 0.5)
         .setScale(0.5)
         .setScrollFactor(0)
-        .setDepth(100)
-        .setVisible(false);
+        .setDepth(100);
+      this.keyText = this.add
+        .text(keyIconX - 20, coinY, "0", {
+          fontSize: "16px",
+          color: "#fbbf24",
+          fontStyle: "bold",
+          stroke: "#000000",
+          strokeThickness: 3,
+        })
+        .setOrigin(1, 0.5)
+        .setScrollFactor(0)
+        .setDepth(100);
 
       this.lives = 3;
       this.gameOver = false;
+      this.reachedCheckpoints = new Set();
       this.livesText = this.add
         .text(16, 16, this.t("runtimeScene.lives", { count: 3 }), {
           fontSize: "16px",
@@ -981,6 +1040,12 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
     private onCollectCoin(coin: ArcadePhysicsObject) {
       this.coinCount++;
       this.coinText.setText(String(this.coinCount));
+      if (this.coinCount % 100 === 0) {
+        this.lives++;
+        this.livesText.setText(this.t("runtimeScene.lives", { count: this.lives }));
+        this.sound1up.play();
+        this.show1upText();
+      }
       this.soundCoin.play();
       if ("gameObject" in coin) {
         coin.gameObject.destroy();
@@ -993,9 +1058,9 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
     }
 
     private onCollectKey(key: ArcadePhysicsObject) {
-      this.hasKey = true;
-      this.keyIcon.setVisible(true);
-      this.soundCoin.play();
+      this.keys++;
+      this.keyText.setText(String(this.keys));
+      this.soundKey.play();
       if ("gameObject" in key) {
         key.gameObject.destroy();
         return;
@@ -1006,24 +1071,92 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
       }
     }
 
+    private onCollect1up(oneup: ArcadePhysicsObject) {
+      this.lives++;
+      this.livesText.setText(this.t("runtimeScene.lives", { count: this.lives }));
+      this.sound1up.play();
+      this.show1upText();
+      if ("gameObject" in oneup) {
+        oneup.gameObject.destroy();
+        return;
+      }
+
+      if ("destroy" in oneup) {
+        oneup.destroy();
+      }
+    }
+
+    private show1upText() {
+      if (!this.player) return;
+      const text = this.add
+        .text(this.player.x, this.player.y - 16, "1UP", {
+          fontSize: "18px",
+          color: "#22c55e",
+          fontStyle: "bold",
+          stroke: "#000000",
+          strokeThickness: 3,
+        })
+        .setOrigin(0.5)
+        .setDepth(50);
+      this.tweens.add({
+        targets: text,
+        y: text.y - 40,
+        alpha: 0,
+        duration: 1000,
+        ease: "Power2",
+        onComplete: () => { text.destroy(); },
+      });
+    }
+
+    private showCheckpointText() {
+      if (!this.player) return;
+      const text = this.add
+        .text(this.player.x, this.player.y - 16, this.t("runtimeScene.checkpoint"), {
+          fontSize: "14px",
+          color: "#38bdf8",
+          fontStyle: "bold",
+          stroke: "#000000",
+          strokeThickness: 3,
+        })
+        .setOrigin(0.5)
+        .setDepth(50);
+      this.tweens.add({
+        targets: text,
+        y: text.y - 40,
+        alpha: 0,
+        duration: 1000,
+        ease: "Power2",
+        onComplete: () => { text.destroy(); },
+      });
+    }
+
     private onReachCheckpoint(cp: ArcadePhysicsObject) {
       if (!this.player) return;
       const cpX = "gameObject" in cp ? (cp.gameObject as unknown as { x: number }).x : (cp as unknown as { x: number }).x;
       const cpY = "gameObject" in cp ? (cp.gameObject as unknown as { y: number }).y : (cp as unknown as { y: number }).y;
+      const key = `${cpX},${cpY}`;
+      if (!this.reachedCheckpoints.has(key)) {
+        this.reachedCheckpoints.add(key);
+        this.soundCheckpoint.play();
+        this.showCheckpointText();
+      }
       this.player.setData("checkpointX", cpX);
       this.player.setData("checkpointY", cpY);
-      if (this.statusText) {
-        this.statusText.setText(this.t("runtimeScene.checkpoint"));
-      }
     }
 
     private onTryDoor(door: ArcadePhysicsObject) {
-      if (!this.hasKey) {
+      if (this.keys <= 0) {
+        if (!this.soundLocked.isPlaying) {
+          this.soundLocked.play();
+        }
         if (this.statusText) {
           this.statusText.setText(this.t("runtimeScene.needKey"));
         }
         return;
       }
+      this.keys--;
+      this.keyText.setText(String(this.keys));
+      this.soundDoor.play();
       if (this.statusText) {
         this.statusText.setText(this.t("runtimeScene.doorOpened"));
       }

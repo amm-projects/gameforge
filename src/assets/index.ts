@@ -15,6 +15,7 @@ export const SPRITE_PATHS = {
   key: "/sprites/key.svg",
   patrol: "/sprites/patrol.svg",
   jumper: "/sprites/jumper.svg",
+  "1up": "/sprites/1up.svg",
 } as const;
 
 export const CELL_SIZE = 10;

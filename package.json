@@ -1,6 +1,6 @@
 {
   "name": "game-creator",
-  "version": "0.52.1",
+  "version": "0.56.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

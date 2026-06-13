@@ -41,6 +41,7 @@ export const translations: TranslationDict = {
   "entity.key": { en: "Key", es: "Llave" },
   "entity.patrol": { en: "Patrol", es: "Patrulla" },
   "entity.jumper": { en: "Jumper", es: "Saltador" },
+  "entity.1up": { en: "1UP", es: "1UP" },
 
   /* LevelCanvas */
   "levelCanvas.title": { en: "Level Canvas", es: "Canvas del nivel" },
@@ -146,6 +147,7 @@ export const translations: TranslationDict = {
 
   /* RuntimeScene (Phaser game) */
   "runtimeScene.placePlayer": { en: "Place a player to start", es: "Coloca un jugador para empezar" },
+  "runtimeScene.keys": { en: "x{{count}}", es: "x{{count}}" },
   "runtimeScene.lives": { en: "♥ x {{count}}", es: "♥ x {{count}}" },
   "runtimeScene.checkpoint": { en: "Checkpoint!", es: "¡Checkpoint!" },
   "runtimeScene.needKey": { en: "Need a key!", es: "¡Necesitas una llave!" },

@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.56.0] - 2026-06-13
+
+### Added
+
+- **Checkpoint sound effect and floating text**: `checkpoint.wav` (bright ascending chime) plays when the player touches a checkpoint for the first time. `showCheckpointText()` creates a sky-blue "Checkpoint!" text above the player that floats up and fades out over 1 second (same pattern as `show1upText()`).
+- **One-shot checkpoint activation**: `onReachCheckpoint` now tracks activated checkpoints via `reachedCheckpoints: Set<string>`, so the sound and floating text only fire once per checkpoint (the spawn position is still updated every frame).
+
+### Changed
+
+- **1UP heart sprite aligned with HUD style**: redesigned both the SVG (`public/sprites/1up.svg`) and runtime texture (`runtime-1up`) to match the classic ♥ Unicode shape used in the lives HUD (`♥ x {{count}}`). Uses 8×4px rows for a clean symmetrical silhouette — two 4px bumps at top, gradually widening to 32px at center, tapering to a 4px point at the bottom.
+
+## [0.55.1] - 2026-06-13
+
+### Fixed
+
+- **Door locked sound loop**: `onTryDoor` now checks `soundLocked.isPlaying` before calling `.play()`, preventing the buzzer from restarting every physics frame while colliding with a locked door.
+
+### Changed
+
+- **Improved 1UP heart sprite**: redesigned both the SVG (`public/sprites/1up.svg`) and runtime texture (`runtime-1up`) with a rounder, more recognizable heart shape using smoother pixel-art proportions.
+
+## [0.55.0] - 2026-06-13
+
+### Added
+
+- **Locked door sound** (`locked.wav`): low buzz/click played when trying to open a door without keys.
+- **Floating 1UP text**: when the player gains an extra life (from 100 coins or collecting a 1UP entity), a green "1UP" text floats upward above the player and fades out over 1 second.
+
+### Changed
+
+- **1UP sprite redesigned as a heart**: both the SVG (`public/sprites/1up.svg`) and runtime texture (`runtime-1up`) now show a red pixel-art heart instead of a green "1UP" block.
+- **RuntimeScene.ts**: added `soundLocked` with loading/init/play. Added `show1upText()` tween animation. Both `onCollectCoin` (100 coins) and `onCollect1up` call `show1upText()`.
+
+## [0.54.0] - 2026-06-13
+
+### Added
+
+- **Key and door sound effects**: new `key.wav` (bright ascending ding) and `door.wav` (deep unlocking sound) played on key collection and door opening respectively.
+- **100 coins = 1 extra life**: collecting 100 coins grants an extra life, playing the 1UP sound.
+- **1UP entity**: new `1up` entity that can be placed in levels. When collected, grants one extra life. Includes SVG sprite (`public/sprites/1up.svg`), runtime texture (`runtime-1up`), editor support (ToolPanel, GridCell, type definitions, schema, i18n).
+- **Extra life sound (`1up.wav`)**: cheerful ascending arpeggio played on 1UP collection and 100-coin milestone.
+
+### Changed
+
+- **RuntimeScene.ts**: added `soundKey`, `soundDoor`, `sound1up` sound objects and loading. Updated `onCollectKey` to play key sound. Updated `onTryDoor` to play door sound and consume a key. Added `onCollect1up` handler. Added 1UP layer, overlap detection, and entity creation. Coins now give 1UP at 100 milestone.
+- **Coin sprite made smaller**: both the SVG (`coin.svg`) and runtime texture (`runtime-coin`) now occupy ~24×24 px instead of 32×32 px. Coin hitbox reduced from 18×18 to 14×14.
+- **Types**: `EntityType` union now includes `"1up"`. Zod schema updated.
+- **SPRITE_PATHS**: added `"1up": "/sprites/1up.svg"`.
+- **ToolPanel**: 1UP appears in the entity grid.
+- **i18n**: added `entity.1up` translation key.
+
+## [0.53.0] - 2026-06-13
+
+### Added
+
+- **Multiple keys and key consumption**: the key system now supports collecting multiple keys. The HUD shows a key counter instead of a simple on/off icon. Each collected key increments the counter. Each door opened consumes one key from the inventory. This allows level designers to create multi-door puzzles where players must find multiple keys.
+
+### Changed
+
+- **RuntimeScene.ts**: replaced `hasKey: boolean` with `keys: number`. Key HUD shows a persistent icon with a numeric counter. `onCollectKey` increments `keys`. `onTryDoor` checks `keys > 0` and decrements on successful open.
+- **i18n.ts**: added `runtimeScene.keys` translation key for the key counter display.
+
 ## [0.52.1] - 2026-06-12
 
 ### Changed

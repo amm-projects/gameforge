@@ -138,5 +138,9 @@ describe("paint-actions", () => {
     it("returns true for key", () => {
       expect(isUniqueEntity("key")).toBe(true);
     });
+
+    it("returns true for 1up", () => {
+      expect(isUniqueEntity("1up")).toBe(true);
+    });
   });
 });

@@ -7,7 +7,7 @@ import { useT } from "@/hooks/useTranslate";
 import type { TileType, EntityType } from "@/types/level";
 
 const TILE_TYPES: TileType[] = ["ground", "brick", "platform", "spike-up", "spike-down", "spike-left", "spike-right"];
-const ENTITY_TYPES: EntityType[] = ["player", "coin", "enemy", "patrol", "jumper", "goal", "checkpoint", "door", "key"];
+const ENTITY_TYPES: EntityType[] = ["player", "coin", "enemy", "patrol", "jumper", "goal", "checkpoint", "door", "key", "1up"];
 
 const TILE_SPRITE: Record<TileType, string> = {
   ground: "/sprites/ground.svg",
@@ -36,6 +36,7 @@ const ENTITY_SPRITE: Record<EntityType, string> = {
   checkpoint: "/sprites/checkpoint.svg",
   door: "/sprites/door.svg",
   key: "/sprites/key.svg",
+  "1up": "/sprites/1up.svg",
 };
 
 const TILE_LABEL_KEY: Record<TileType, string> = {
@@ -58,6 +59,7 @@ const ENTITY_LABEL_KEY: Record<EntityType, string> = {
   checkpoint: "entity.checkpoint",
   door: "entity.door",
   key: "entity.key",
+  "1up": "entity.1up",
 };
 
 export function ToolPanel() {
