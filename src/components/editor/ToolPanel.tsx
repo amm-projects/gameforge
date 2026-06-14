@@ -67,7 +67,7 @@ export function ToolPanel() {
   const { activeTool, setActiveTool, selectedTile, selectedEntity, setSelectedTile, setSelectedEntity } = useSelectionStore();
 
   return (
-    <aside className="rounded-3xl border border-slate-800/80 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10">
+    <aside className="rounded-3xl border border-slate-800/80 bg-slate-950/95 p-3 shadow-xl shadow-slate-950/10 sm:p-4">
       <div className="mb-3 flex gap-2">
         <button
           type="button"
@@ -100,7 +100,7 @@ export function ToolPanel() {
           <h2 className="mb-1.5 text-[0.625rem] font-semibold uppercase tracking-[0.2em] text-slate-400">
             {t("toolPanel.tiles")}
           </h2>
-          <div className="grid grid-cols-4 gap-1">
+          <div className="grid grid-cols-3 gap-1 sm:grid-cols-4">
             {TILE_TYPES.map((tile) => {
               const label = t(TILE_LABEL_KEY[tile]);
               const sprite = TILE_SPRITE[tile];
@@ -135,7 +135,7 @@ export function ToolPanel() {
           <h2 className="mb-1.5 text-[0.625rem] font-semibold uppercase tracking-[0.2em] text-slate-400">
             {t("toolPanel.entities")}
           </h2>
-          <div className="grid grid-cols-4 gap-1">
+          <div className="grid grid-cols-3 gap-1 sm:grid-cols-4">
             {ENTITY_TYPES.map((entity) => {
               const label = t(ENTITY_LABEL_KEY[entity]);
               return (

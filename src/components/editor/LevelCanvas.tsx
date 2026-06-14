@@ -226,11 +226,11 @@ export function LevelCanvas() {
   }, [width, height, tileMap, entityLookup, selectedEntityId, selectedEditTarget]);
 
   return (
-    <section className="rounded-3xl border border-slate-800/90 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10 min-h-[200px]">
-      <div className="mb-4 flex items-center justify-between">
+    <section className="rounded-3xl border border-slate-800/90 bg-slate-950/95 p-3 shadow-xl shadow-slate-950/10 sm:p-4">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-base font-semibold text-white">{t("levelCanvas.title")}</h2>
-          <p className="text-sm text-slate-400">{t("levelCanvas.description")}</p>
+          <h2 className="text-sm font-semibold text-white sm:text-base">{t("levelCanvas.title")}</h2>
+          <p className="text-xs text-slate-400 sm:text-sm">{t("levelCanvas.description")}</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
@@ -238,7 +238,7 @@ export function LevelCanvas() {
           </div>
         </div>
       </div>
-      <div className="overflow-hidden select-none rounded-3xl border border-slate-900/80 bg-slate-950 p-2" ref={setNodeRef}>
+      <div className="overflow-auto select-none rounded-3xl border border-slate-900/80 bg-slate-950 p-2" ref={setNodeRef}>
         <div
           id="grid"
           ref={cameraContainerRef}

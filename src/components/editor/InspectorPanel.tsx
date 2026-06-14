@@ -49,7 +49,7 @@ export function InspectorPanel() {
   };
 
   return (
-    <aside className="space-y-4 rounded-3xl border border-slate-800/80 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10">
+    <aside className="space-y-4 rounded-3xl border border-slate-800/80 bg-slate-950/95 p-3 shadow-xl shadow-slate-950/10 sm:p-4">
       <div>
         <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">{t("inspector.title")}</h2>
         <div className="mt-3 space-y-2 text-sm text-slate-300">
@@ -111,7 +111,7 @@ export function InspectorPanel() {
         value={jsonText}
         onChange={(event) => setJsonText(event.target.value)}
         aria-label={t("inspector.jsonEditorAria")}
-        className="h-72 w-full resize-none rounded-3xl border border-slate-800/80 bg-slate-950 p-3 text-xs text-slate-200 outline-none focus:border-amber-500"
+        className="h-48 w-full resize-none rounded-3xl border border-slate-800/80 bg-slate-950 p-3 text-xs text-slate-200 outline-none focus:border-amber-500 sm:h-72"
         placeholder={t("inspector.jsonPlaceholder")}
       />
     </aside>

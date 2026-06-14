@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.57.0] - 2026-06-14
+
+### Added
+
+- **Immersive mobile runtime**: On touch devices in landscape, the runtime now enters full-screen mode — canvas fills the viewport, all headers are hidden, and a small exit button (✕ Stop) overlays the canvas. Portrait orientation on touch devices shows a rotate device overlay with an animated icon and instructions.
+- **Orientation lock**: Attempts `screen.orientation.lock('landscape')` when the runtime starts, with a graceful fallback if unsupported.
+- **isImmersive state**: Added `isImmersive`/`setImmersive` to `runtimeStore` so `EditorShell` can hide the header during immersive mode; cleanup ensures header reappears when runtime stops.
+- **useDisplayMode hook**: Replaces the old `useOrientation` hook. Returns `{ isPortrait, isImmersive }` by checking for touch capability (`ontouchstart`, `maxTouchPoints`) and comparing viewport dimensions.
+- **i18n keys**: Added `runtime.rotateDevice` and `runtime.rotateDescription` in English and Spanish.
+
+### Changed
+
+- **GameRuntime canvas**: Switched from `Phaser.Scale.NONE` to `Phaser.Scale.FIT` with a fixed 1280×720 base resolution, so the canvas always fits the viewport while maintaining 16:9 aspect ratio. Container uses `aspectRatio: "16 / 9"` with `maxHeight: "calc(100vh - 210px)"` to prevent overflow.
+- **GameRuntime layout**: Restructured into three render paths — `isImmersive` (full-screen fixed), `isPortrait` (rotate overlay), and normal (desktop section with header bar and canvas).
+- **GameRuntime refactoring**: Game instance stored in `gameRef` instead of local variable for proper cleanup and resize handling. Canvas resize forced via `window.dispatchEvent(new Event('resize'))` when orientation changes.
+- **EditorShell header**: Conditionally hidden with `hidden` class when `isImmersive` is true.
+- **EditorShell layout**: Removed `min-h-[calc(100vh-104px)]`, `min-h-[400px]`, and `min-h-[300px]` constraints. Sidebar widths flexible (`lg:w-[280px] xl:w-[320px]` / `lg:w-[300px] xl:w-[360px]`). Padding scales down on mobile (`p-3 sm:p-4`).
+- **ToolPanel grids**: Tile and entity grids use `grid-cols-3 sm:grid-cols-4` to prevent horizontal overflow on narrow screens.
+- **SampleLevels grid**: Changed from `grid-cols-2` to `grid-cols-1 sm:grid-cols-2`.
+- **LevelCanvas**: Container changed from `overflow-hidden` to `overflow-auto`. Header stacks vertically on mobile (`flex-col gap-2 sm:flex-row`). Text sizes scale with `sm:` breakpoints.
+- **InspectorPanel textarea**: Changed from `h-72` to `h-48 sm:h-72`.
+- **Runtime header bar**: Buttons and status text use responsive breakpoints; status text uses `truncate` to prevent overflow on small screens.
+
+### Fixed
+
+- **Canvas overflow on small screens**: Removed forced `min-h` constraints and replaced fixed-height canvas with `aspect-ratio` + `max-height` to keep both headers visible.
+- **Test failure**: `screen.orientation` guard added to prevent `TypeError` in jsdom when accessing `.lock`.
+
+## [0.56.3] - 2026-06-14
+
+### Changed
+
+- **Full responsive layout**: All panels and elements now adapt to any screen size. The editor layout (EditorShell) uses flexible sidebar widths (`lg:w-[280px] xl:w-[320px]` and `lg:w-[300px] xl:w-[360px]`) instead of fixed widths, collapses to single-column on mobile, and removes forced `min-h` constraints that caused overflow. Header sizes and paddings scale down on mobile via `sm:` breakpoints. The LevelCanvas header stacks vertically on small screens. Padding is reduced across all panels on mobile (`p-3` → `sm:p-4`).
+
+### Fixed
+
+- **Runtime canvas now constrained and always visible**: Replaced the aggressive `flex-1` chain with a proportional layout. The canvas container now uses `aspectRatio: "16 / 9"` with `maxHeight: "calc(100vh - 210px)"`, ensuring it never overflows the viewport. Both headers (GameForge bar + runtime header) are always visible regardless of screen size. The section is capped at `max-w-5xl` to prevent excessive width on large screens.
+- **Overflow on small screens**: Removed `min-h-[400px]` and `min-h-[300px]` from flex children and `min-h-[calc(100vh-104px)]` from the main container. Changed LevelCanvas container from `overflow-hidden` to `overflow-auto` so the grid scrolls when the viewport is smaller than the level.
+- **ToolPanel/SampleLevels grids**: ToolPanel tile and entity grids changed from `grid-cols-4` to `grid-cols-3 sm:grid-cols-4`. SampleLevels button grid changed from `grid-cols-2` to `grid-cols-1 sm:grid-cols-2`. Both prevent horizontal overflow on narrow viewports.
+- **Inspector textarea**: Changed from `h-72` to `h-48 sm:h-72` to use less vertical space on mobile.
+
+## [0.56.2] - 2026-06-14
+
+### Fixed
+
+- **Runtime canvas now responsive**: Changed `Phaser.Scale.NONE` to `Phaser.Scale.FIT` in `GameRuntime.tsx` so the canvas adapts to the viewport width while maintaining 16:9 aspect ratio. Replaced the fixed `{ height: canvasHeight }` container style with `aspectRatio: "1280 / 720"`, making the runtime viewable on all screen sizes.
+
 ## [0.56.1] - 2026-06-13
 
 ### Fixed

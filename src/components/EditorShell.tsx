@@ -18,7 +18,7 @@ import type { LevelData, TileType, EntityType } from "@/types/level";
 
 export function EditorShell() {
   const { width, height, tiles, entities, background, music, setTile, addEntity } = useEditorStore();
-  const { isPlaying, setIsPlaying } = useRuntimeStore();
+  const { isPlaying, setIsPlaying, isImmersive } = useRuntimeStore();
   const { locale, setLocale } = useLocaleStore();
   const t = useT();
 
@@ -91,18 +91,18 @@ export function EditorShell() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100" suppressHydrationWarning>
-      <header className="border-b border-slate-800/80 bg-slate-900/95 px-6 py-4 backdrop-blur">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <header className={`border-b border-slate-800/80 bg-slate-900/95 px-4 py-3 backdrop-blur sm:px-6 sm:py-4 ${isImmersive ? "hidden" : ""}`}>
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-amber-400">GameForge</p>
-            <h1 className="mt-2 text-3xl font-semibold text-white">{t("editor.title")}</h1>
+            <p className="text-[0.5rem] uppercase tracking-[0.3em] text-amber-400 sm:text-xs">GameForge</p>
+            <h1 className="mt-1 text-xl font-semibold text-white sm:mt-2 sm:text-2xl lg:text-3xl">{t("editor.title")}</h1>
           </div>
-          <div className="flex flex-wrap items-center gap-3 text-sm">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:gap-3 sm:text-sm">
             <button
               type="button"
               onClick={() => setLocale(locale === "en" ? "es" : "en")}
               aria-label={t("editor.play")}
-              className="rounded-2xl border border-slate-700 px-3 py-2 text-xs font-semibold text-slate-400 transition hover:border-slate-500"
+              className="rounded-2xl border border-slate-700 px-2 py-1.5 text-[0.625rem] font-semibold text-slate-400 transition hover:border-slate-500 sm:px-3 sm:py-2 sm:text-xs"
             >
               {locale === "en" ? "ES" : "EN"}
             </button>
@@ -110,7 +110,7 @@ export function EditorShell() {
               type="button"
               onClick={() => setIsPlaying(true)}
               aria-label={t("editor.playAria")}
-              className="rounded-2xl bg-amber-500 px-4 py-2 font-semibold text-slate-950 transition hover:bg-amber-400"
+              className="rounded-2xl bg-amber-500 px-3 py-1.5 text-xs font-semibold text-slate-950 transition hover:bg-amber-400 sm:px-4 sm:py-2"
             >
               {t("editor.play")}
             </button>
@@ -118,11 +118,11 @@ export function EditorShell() {
               type="button"
               onClick={() => setIsPlaying(false)}
               aria-label={t("editor.stopAria")}
-              className="rounded-2xl border border-slate-700 px-4 py-2 text-slate-100 transition hover:border-slate-500"
+              className="rounded-2xl border border-slate-700 px-3 py-1.5 text-xs text-slate-100 transition hover:border-slate-500 sm:px-4 sm:py-2"
             >
               {t("editor.stop")}
             </button>
-            <span role="status" className="rounded-2xl bg-slate-800 px-3 py-2 text-xs uppercase tracking-[0.22em] text-slate-400">
+            <span role="status" className="rounded-2xl bg-slate-800 px-2 py-1.5 text-[0.5rem] uppercase tracking-[0.22em] text-slate-400 sm:px-3 sm:py-2 sm:text-xs">
               {isPlaying ? t("editor.statusRuntime") : t("editor.statusEditor")}
             </span>
           </div>
@@ -137,15 +137,15 @@ export function EditorShell() {
 
       {!isPlaying && (
         <DndContext onDragEnd={handleDragEnd}>
-          <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-[1440px] flex-col gap-4 p-6 lg:flex-row">
-            <div className="w-full max-w-sm lg:w-[320px] space-y-4 min-h-[300px]">
+          <div className="mx-auto flex max-w-[1440px] flex-col gap-4 p-3 sm:p-4 lg:flex-row lg:p-6">
+            <div className="w-full space-y-4 lg:w-[280px] lg:shrink-0 xl:w-[320px]">
               <ToolPanel />
               <SampleLevels />
             </div>
-            <div className="flex-1 min-h-[400px]">
+            <div className="min-w-0 flex-1">
               <LevelCanvas />
             </div>
-            <div className="w-full max-w-lg lg:w-[420px]">
+            <div className="w-full lg:w-[300px] lg:shrink-0 xl:w-[360px]">
               <InspectorPanel />
             </div>
           </div>

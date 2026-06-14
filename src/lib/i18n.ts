@@ -136,6 +136,8 @@ export const translations: TranslationDict = {
   "runtime.hideHitboxesAria": { en: "Hide hitboxes", es: "Ocultar hitboxes" },
   "runtime.stop": { en: "Stop", es: "Detener" },
   "runtime.stopAria": { en: "Stop runtime", es: "Detener runtime" },
+  "runtime.rotateDevice": { en: "Rotate your device", es: "Gira tu dispositivo" },
+  "runtime.rotateDescription": { en: "This game works best in landscape mode. Please rotate your device.", es: "Este juego funciona mejor en modo horizontal. Gira tu dispositivo." },
 
   /* CameraControls */
   "camera.zoomInAria": { en: "Zoom in", es: "Zoom in" },

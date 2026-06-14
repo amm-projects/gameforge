@@ -9,11 +9,11 @@ export function SampleLevels() {
   const loadLevel = useEditorStore((s) => s.loadLevel);
 
   return (
-    <aside className="rounded-3xl border border-slate-800/80 bg-slate-950/95 p-4 shadow-xl shadow-slate-950/10">
+    <aside className="rounded-3xl border border-slate-800/80 bg-slate-950/95 p-3 shadow-xl shadow-slate-950/10 sm:p-4">
       <h2 className="mb-2 text-[0.625rem] font-semibold uppercase tracking-[0.2em] text-slate-400">
         {t("sampleLevels.title")}
       </h2>
-      <div className="grid grid-cols-2 gap-1.5">
+      <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
         {sampleLevels.map((sl) => {
           const name = t(`sampleLevel.${sl.id}.name`);
           const description = t(`sampleLevel.${sl.id}.description`);
