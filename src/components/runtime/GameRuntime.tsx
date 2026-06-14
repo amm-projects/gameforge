@@ -9,18 +9,21 @@ import { useLocaleStore } from "@/stores/localeStore";
 import { useRuntimeStore } from "@/stores/runtimeStore";
 import { createRuntimeScene } from "@/engine/runtime";
 import { preloadPhaser } from "@/lib/phaser";
+import { TouchControls } from "./TouchControls";
 
-function useDisplayMode(): { isPortrait: boolean; isImmersive: boolean } {
-  const [mode, setMode] = useState<{ isPortrait: boolean; isImmersive: boolean }>({
-    isPortrait: false,
-    isImmersive: false,
+function useDisplayMode(): { isPortrait: boolean; isImmersive: boolean; isTouch: boolean } {
+  const isTouch = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  const [mode, setMode] = useState<{ isPortrait: boolean; isImmersive: boolean }>(() => {
+    if (typeof window === "undefined") return { isPortrait: false, isImmersive: false };
+    if (!isTouch) return { isPortrait: false, isImmersive: true };
+    const portrait = window.innerHeight > window.innerWidth;
+    return { isPortrait: portrait, isImmersive: !portrait };
   });
 
   useEffect(() => {
     const check = () => {
-      const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
       if (!isTouch) {
-        setMode({ isPortrait: false, isImmersive: false });
+        setMode({ isPortrait: false, isImmersive: true });
         return;
       }
       const portrait = window.innerHeight > window.innerWidth;
@@ -29,9 +32,9 @@ function useDisplayMode(): { isPortrait: boolean; isImmersive: boolean } {
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
-  }, []);
+  }, [isTouch]);
 
-  return mode;
+  return { ...mode, isTouch };
 }
 
 export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () => void }) {
@@ -44,7 +47,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
   const [isReady, setIsReady] = useState(false);
   const [showHitboxes, setShowHitboxes] = useState(false);
   const toggleDebugRef = useRef<(() => void) | null>(null);
-  const { isPortrait, isImmersive } = useDisplayMode();
+  const { isPortrait, isImmersive, isTouch } = useDisplayMode();
 
   useEffect(() => {
     setImmersive(isImmersive);
@@ -153,6 +156,7 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
         onClick={() => containerRef.current?.focus()}
       >
         <div ref={containerRef} className="h-full w-full" tabIndex={0} />
+        {isTouch && <TouchControls />}
         <button
           type="button"
           onClick={onStop}

@@ -2,11 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.57.1] - 2026-06-14
+- **Immersive runtime (desktop + tablet + mobile)**
+
+- **Touch controls for mobile/tablet**: New `TouchControls` component with semi-transparent directional buttons (← → on the left side, ↑ jump on the right side) that overlays the canvas when running on touch devices. Buttons dispatch synthetic `keydown`/`keyup` `KeyboardEvent`s matching Phaser's cursor keys (`ArrowLeft`, `ArrowRight`, `ArrowUp`), without interfering with the game canvas below.
+
 ## [0.57.0] - 2026-06-14
 
 ### Added
 
-- **Immersive mobile runtime**: On touch devices in landscape, the runtime now enters full-screen mode — canvas fills the viewport, all headers are hidden, and a small exit button (✕ Stop) overlays the canvas. Portrait orientation on touch devices shows a rotate device overlay with an animated icon and instructions.
+- **Immersive runtime (mobile)**: When playing a level, the runtime now enters full-screen mode — canvas fills the viewport, all headers are hidden, and a small exit button (✕ Stop) overlays the canvas. A rotate device overlay is shown instead.
+
 - **Orientation lock**: Attempts `screen.orientation.lock('landscape')` when the runtime starts, with a graceful fallback if unsupported.
 - **isImmersive state**: Added `isImmersive`/`setImmersive` to `runtimeStore` so `EditorShell` can hide the header during immersive mode; cleanup ensures header reappears when runtime stops.
 - **useDisplayMode hook**: Replaces the old `useOrientation` hook. Returns `{ isPortrait, isImmersive }` by checking for touch capability (`ontouchstart`, `maxTouchPoints`) and comparing viewport dimensions.
