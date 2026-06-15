@@ -8,7 +8,7 @@ export const SPRITE_PATHS = {
   "spike-right": "/sprites/spike.svg",
   player: "/sprites/player.svg",
   coin: "/sprites/coin.svg",
-  enemy: "/sprites/enemy.svg",
+  walker: "/sprites/walker.svg",
   goal: "/sprites/goal.svg",
   checkpoint: "/sprites/checkpoint.svg",
   door: "/sprites/door.svg",

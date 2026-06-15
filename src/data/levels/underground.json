@@ -2327,7 +2327,7 @@
     },
     {
       "id": "id-1781277877242-7bcbj",
-      "type": "enemy",
+      "type": "walker",
       "position": {
         "x": 8,
         "y": 62
@@ -2336,7 +2336,7 @@
     },
     {
       "id": "id-1781277877242-y97xx",
-      "type": "enemy",
+      "type": "walker",
       "position": {
         "x": 35,
         "y": 62
@@ -2345,7 +2345,7 @@
     },
     {
       "id": "id-1781277877242-pukqp",
-      "type": "enemy",
+      "type": "walker",
       "position": {
         "x": 55,
         "y": 54
@@ -2777,7 +2777,7 @@
     },
     {
       "id": "ff4f39a9-7fb7-4a98-8a28-83e0ff721e1c",
-      "type": "enemy",
+      "type": "walker",
       "position": {
         "x": 14,
         "y": 10

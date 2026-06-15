@@ -29,7 +29,7 @@ describe('GridCell', () => {
   });
 
   it('sets data-x and data-y attributes', () => {
-    render(<GridCell x={3} y={7} entityType="enemy" isSelected={false} isEditTarget={false} />);
+    render(<GridCell x={3} y={7} entityType="walker" isSelected={false} isEditTarget={false} />);
     const cell = screen.getByRole('button');
     expect(cell.getAttribute('data-x')).toBe('3');
     expect(cell.getAttribute('data-y')).toBe('7');

@@ -133,15 +133,28 @@ export function GameRuntime({ level, onStop }: { level: LevelData; onStop: () =>
   }, [isReady]);
 
   useEffect(() => {
-    try {
-      const orientation = (screen as unknown as { orientation?: { lock?: (t: string) => Promise<void> } }).orientation;
-      if (typeof orientation?.lock === "function") {
-        orientation.lock("landscape").catch(() => {});
+    if (!isReady) return;
+    const requestLandscape = () => {
+      if (typeof document === "undefined") return;
+      try {
+        const el = document.documentElement;
+        if (!document.fullscreenElement && typeof el.requestFullscreen === "function") {
+          void el.requestFullscreen().catch(() => {});
+        }
+      } catch {
+        /**/
       }
-    } catch {
-      /**/
-    }
-  }, []);
+      try {
+        const o = (screen as unknown as { orientation?: { lock?: (t: string) => Promise<void> } }).orientation;
+        if (typeof o?.lock === "function") {
+          void o.lock("landscape").catch(() => {});
+        }
+      } catch {
+        /**/
+      }
+    };
+    requestLandscape();
+  }, [isReady]);
 
   useEffect(() => {
     if (gameRef.current) {

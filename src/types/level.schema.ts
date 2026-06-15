@@ -21,7 +21,7 @@ export const tileSchema = z.object({
 
 export const entitySchema = z.object({
   id: z.string().min(1),
-  type: z.enum(["player", "coin", "enemy", "goal", "checkpoint", "door", "key", "patrol", "jumper", "1up"]),
+  type: z.enum(["player", "coin", "walker", "goal", "checkpoint", "door", "key", "patrol", "jumper", "1up"]),
   position: z.object({
     x: z.number().int().min(0),
     y: z.number().int().min(0),

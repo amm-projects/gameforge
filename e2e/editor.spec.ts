@@ -29,11 +29,11 @@ test.describe('GameForge Editor', () => {
     await expect(spikeBtn).toHaveClass(/bg-amber-500\/20/);
   });
 
-  test('selects enemy entity on click', async ({ page }) => {
+  test('selects walker entity on click', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Enemigo: seleccionar entidad' }).click();
-    const enemyBtn = page.getByRole('button', { name: 'Enemigo: seleccionar entidad' });
-    await expect(enemyBtn).toHaveClass(/bg-amber-500\/20/);
+    await page.getByRole('button', { name: 'Caminante: seleccionar entidad' }).click();
+    const walkerBtn = page.getByRole('button', { name: 'Caminante: seleccionar entidad' });
+    await expect(walkerBtn).toHaveClass(/bg-amber-500\/20/);
   });
 
   test('switches to erase tool', async ({ page }) => {

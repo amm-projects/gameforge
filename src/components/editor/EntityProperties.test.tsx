@@ -12,7 +12,7 @@ describe("EntityProperties", () => {
   });
 
   it("renders existing properties", () => {
-    const entity: Entity = { id: "e1", type: "enemy", position: { x: 0, y: 0 }, properties: { speed: "80", behavior: "patrol" } };
+    const entity: Entity = { id: "e1", type: "walker", position: { x: 0, y: 0 }, properties: { speed: "80", behavior: "patrol" } };
     render(<EntityProperties entity={entity} updateEntityProperty={vi.fn()} />);
     expect(screen.getByDisplayValue("80")).toBeDefined();
     expect(screen.getByDisplayValue("patrol")).toBeDefined();

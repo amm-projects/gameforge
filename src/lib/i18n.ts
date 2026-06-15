@@ -34,7 +34,7 @@ export const translations: TranslationDict = {
   /* Entity names */
   "entity.player": { en: "Player", es: "Jugador" },
   "entity.coin": { en: "Coin", es: "Moneda" },
-  "entity.enemy": { en: "Enemy", es: "Enemigo" },
+  "entity.walker": { en: "Walker", es: "Caminante" },
   "entity.goal": { en: "Goal", es: "Meta" },
   "entity.checkpoint": { en: "Checkpoint", es: "Checkpoint" },
   "entity.door": { en: "Door", es: "Puerta" },

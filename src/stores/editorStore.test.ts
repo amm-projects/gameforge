@@ -102,17 +102,17 @@ describe('editorStore', () => {
     it('replaces existing entity at same position', () => {
       useEditorStore.getState().addEntity('coin', 2, 3);
       const firstId = useEditorStore.getState().entities[0].id;
-      useEditorStore.getState().addEntity('enemy', 2, 3);
+      useEditorStore.getState().addEntity('walker', 2, 3);
       const { entities } = useEditorStore.getState();
       expect(entities).toHaveLength(1);
-      expect(entities[0].type).toBe('enemy');
+      expect(entities[0].type).toBe('walker');
       expect(entities[0].id).not.toBe(firstId);
     });
 
     it('generates unique ids for each entity', () => {
       useEditorStore.getState().addEntity('player', 0, 0);
       useEditorStore.getState().addEntity('coin', 1, 0);
-      useEditorStore.getState().addEntity('enemy', 2, 0);
+      useEditorStore.getState().addEntity('walker', 2, 0);
       const ids = useEditorStore.getState().entities.map((e) => e.id);
       expect(new Set(ids).size).toBe(3);
     });
@@ -184,13 +184,13 @@ describe('editorStore', () => {
       useEditorStore.getState().batchPaint([
         { kind: 'tile', x: 0, y: 0, tileType: 'spike-up' },
         { kind: 'erase', x: 1, y: 0 },
-        { kind: 'entity', x: 2, y: 0, entityType: 'enemy', entityId: 'e1' },
+        { kind: 'entity', x: 2, y: 0, entityType: 'walker', entityId: 'w1' },
       ]);
       const { tiles, entities } = useEditorStore.getState();
       expect(tiles).toHaveLength(1);
       expect(tiles[0].type).toBe('spike-up');
       expect(entities).toHaveLength(1);
-      expect(entities[0].type).toBe('enemy');
+      expect(entities[0].type).toBe('walker');
     });
   });
 

@@ -1801,7 +1801,7 @@
       },
       {
         "id": "id-1781277877242-7bcbj",
-        "type": "enemy",
+        "type": "walker",
         "position": {
           "x": 8,
           "y": 62
@@ -1810,7 +1810,7 @@
       },
       {
         "id": "id-1781277877242-y97xx",
-        "type": "enemy",
+        "type": "walker",
         "position": {
           "x": 35,
           "y": 62
@@ -1819,7 +1819,7 @@
       },
       {
         "id": "id-1781277877242-pukqp",
-        "type": "enemy",
+        "type": "walker",
         "position": {
           "x": 55,
           "y": 54

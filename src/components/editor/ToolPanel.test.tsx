@@ -37,7 +37,7 @@ describe('ToolPanel', () => {
     renderPanel();
     expect(screen.getByText('Player')).toBeInTheDocument();
     expect(screen.getByText('Coin')).toBeInTheDocument();
-    expect(screen.getByText('Enemy')).toBeInTheDocument();
+    expect(screen.getByText('Walker')).toBeInTheDocument();
     expect(screen.getByText('Goal')).toBeInTheDocument();
   });
 
@@ -54,12 +54,12 @@ describe('ToolPanel', () => {
     expect(useSelectionStore.getState().selectedTile).toBe('spike-up');
   });
 
-  it('selects enemy entity on click', async () => {
+  it('selects walker entity on click', async () => {
     const user = userEvent.setup();
     renderPanel();
-    await user.click(screen.getByText('Enemy'));
+    await user.click(screen.getByText('Walker'));
     const state = useSelectionStore.getState();
-    expect(state.selectedEntity).toBe('enemy');
+    expect(state.selectedEntity).toBe('walker');
     expect(state.activeTool).toBe('entity');
   });
 

@@ -1529,11 +1529,6 @@
     },
     {
       "x": 22,
-      "y": 52,
-      "type": "brick"
-    },
-    {
-      "x": 22,
       "y": 53,
       "type": "brick"
     },
@@ -3799,7 +3794,7 @@
     },
     {
       "id": "id-1781277877247-eh1ho",
-      "type": "enemy",
+      "type": "walker",
       "position": {
         "x": 18,
         "y": 62
@@ -3808,7 +3803,7 @@
     },
     {
       "id": "id-1781277877248-dfrws",
-      "type": "enemy",
+      "type": "walker",
       "position": {
         "x": 34,
         "y": 62
@@ -4303,7 +4298,7 @@
     },
     {
       "id": "e1b29e62-b096-461a-a098-f4af265a0f1b",
-      "type": "enemy",
+      "type": "walker",
       "position": {
         "x": 30,
         "y": 46
@@ -4312,7 +4307,7 @@
     },
     {
       "id": "0cb5a5a5-97c5-47b5-97d7-7b2404733ed7",
-      "type": "enemy",
+      "type": "walker",
       "position": {
         "x": 35,
         "y": 46
@@ -4762,7 +4757,7 @@
     },
     {
       "id": "9b55dc6e-ebb0-4b2d-8747-850791684ab1",
-      "type": "enemy",
+      "type": "walker",
       "position": {
         "x": 35,
         "y": 37
@@ -4771,7 +4766,7 @@
     },
     {
       "id": "f595eec7-39ab-41f4-a8b2-66376cbf7960",
-      "type": "enemy",
+      "type": "walker",
       "position": {
         "x": 54,
         "y": 62

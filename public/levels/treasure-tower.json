@@ -4120,7 +4120,7 @@
       },
       {
         "id": "id-1781277877247-eh1ho",
-        "type": "enemy",
+        "type": "walker",
         "position": {
           "x": 18,
           "y": 62
@@ -4129,7 +4129,7 @@
       },
       {
         "id": "id-1781277877248-dfrws",
-        "type": "enemy",
+        "type": "walker",
         "position": {
           "x": 34,
           "y": 62

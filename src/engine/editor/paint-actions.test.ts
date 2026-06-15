@@ -84,7 +84,7 @@ describe("paint-actions", () => {
         { kind: "tile", x: 0, y: 0, tileType: "ground" },
         { kind: "tile", x: 1, y: 0, tileType: "ground" },
         { kind: "entity", x: 0, y: 0, entityType: "coin", entityId: "c1" },
-        { kind: "entity", x: 2, y: 0, entityType: "enemy", entityId: "en1" },
+        { kind: "entity", x: 2, y: 0, entityType: "walker", entityId: "w1" },
       ];
       const result = applyPaintActions([], [], actions);
       expect(result.tiles).toHaveLength(1);
@@ -123,8 +123,8 @@ describe("paint-actions", () => {
       expect(isUniqueEntity("coin")).toBe(true);
     });
 
-    it("returns true for enemy", () => {
-      expect(isUniqueEntity("enemy")).toBe(true);
+    it("returns true for walker", () => {
+      expect(isUniqueEntity("walker")).toBe(true);
     });
 
     it("returns true for checkpoint", () => {

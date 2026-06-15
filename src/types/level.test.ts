@@ -22,7 +22,7 @@ describe('TileType', () => {
 
 describe('EntityType', () => {
   it('accepts all entity types', () => {
-    const types: EntityType[] = ['player', 'coin', 'enemy', 'goal', 'checkpoint', 'door', 'key', 'patrol', 'jumper', '1up'];
+    const types: EntityType[] = ['player', 'coin', 'walker', 'goal', 'checkpoint', 'door', 'key', 'patrol', 'jumper', '1up'];
     expect(types).toHaveLength(10);
   });
 });
@@ -88,7 +88,7 @@ describe('LevelData structure', () => {
     const entities: Entity[] = [
       { id: '1', type: 'player', position: { x: 0, y: 0 }, properties: {} },
       { id: '2', type: 'coin', position: { x: 1, y: 0 }, properties: {} },
-      { id: '3', type: 'enemy', position: { x: 2, y: 0 }, properties: {} },
+      { id: '3', type: 'walker', position: { x: 2, y: 0 }, properties: {} },
       { id: '4', type: 'goal', position: { x: 3, y: 0 }, properties: {} },
       { id: '5', type: 'checkpoint', position: { x: 4, y: 0 }, properties: {} },
       { id: '6', type: 'door', position: { x: 5, y: 0 }, properties: {} },

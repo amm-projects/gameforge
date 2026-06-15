@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.58.0] - 2026-06-15
+
+### Added
+
+- **Auto landscape on mobile/tablet**: When pressing Play on a touch device, `EditorShell` immediately requests fullscreen (`document.documentElement.requestFullscreen()`) and locks the screen orientation to landscape (`screen.orientation.lock("landscape")`) from the click handler while the user gesture is active. `GameRuntime` also retries both calls once Phaser initializes (`isReady`) as a fallback. On Stop, `document.exitFullscreen()` is called to exit fullscreen mode. The existing rotate-device overlay remains as a fallback if orientation lock is unsupported (e.g., iOS).
+
+### Changed
+
+- **Entity `"enemy"` renamed to `"walker"`**: The basic enemy type is now called `"walker"` to be more descriptive and distinguish it from `"patrol"` (turns at edges) and `"jumper"` (jumps). A walker walks in one direction, reverses at walls, and falls off platform edges. Updated: type definitions, Zod schema, runtime textures/animation keys, editor components, i18n keys (`entity.walker`), sprite file (`walker.svg`), all sample level JSON files, and tests.
+
 ## [0.57.1] - 2026-06-14
 - **Immersive runtime (desktop + tablet + mobile)**
 

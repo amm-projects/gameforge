@@ -1,5 +1,5 @@
 export type TileType = "ground" | "brick" | "platform" | "spike-up" | "spike-down" | "spike-left" | "spike-right";
-export type EntityType = "player" | "coin" | "enemy" | "goal" | "checkpoint" | "door" | "key" | "patrol" | "jumper" | "1up";
+export type EntityType = "player" | "coin" | "walker" | "goal" | "checkpoint" | "door" | "key" | "patrol" | "jumper" | "1up";
 export type MoveAxis = "none" | "horizontal" | "vertical";
 
 export interface TileProperties {

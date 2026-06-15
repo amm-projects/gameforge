@@ -8,7 +8,7 @@ import type { TileProperties } from "@/types/level";
 const ENTITY_LABEL_KEY: Record<string, string> = {
   player: "entity.player",
   coin: "entity.coin",
-  enemy: "entity.enemy",
+  walker: "entity.walker",
   patrol: "entity.patrol",
   jumper: "entity.jumper",
   goal: "entity.goal",

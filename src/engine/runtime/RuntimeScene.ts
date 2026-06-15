@@ -339,7 +339,7 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         tex.add("1", 0, 32, 0, 32, 32);
       }
 
-      if (!this.textures.exists("runtime-enemy")) {
+      if (!this.textures.exists("runtime-walker")) {
         const g = this.add.graphics();
         g.fillStyle(0xEA580C);
         g.fillRect(8, 0, 16, 4);
@@ -383,9 +383,9 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         g.fillStyle(0x9A3412);
         g.fillRect(fx + 0, dy + 28, 8, 4);
         g.fillRect(fx + 24, dy + 28, 8, 4);
-        g.generateTexture("runtime-enemy", 64, 32);
+        g.generateTexture("runtime-walker", 64, 32);
         g.destroy();
-        const tex = this.textures.get("runtime-enemy");
+        const tex = this.textures.get("runtime-walker");
         tex.add("0", 0, 0, 0, 32, 32);
         tex.add("1", 0, 32, 0, 32, 32);
       }
@@ -556,10 +556,10 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
         repeat: -1,
       });
       this.anims.create({
-        key: "enemy-walk",
+        key: "walker-walk",
         frames: [
-          { key: "runtime-enemy", frame: "0" },
-          { key: "runtime-enemy", frame: "1" },
+          { key: "runtime-walker", frame: "0" },
+          { key: "runtime-walker", frame: "1" },
         ],
         frameRate: 3,
         repeat: -1,
@@ -727,16 +727,16 @@ export function createRuntimeScene(PhaserLib: typeof Phaser, ctx: RuntimeSceneCo
           goal.refreshBody();
         }
 
-        if (entity.type === "enemy") {
-          const enemy = this.physics.add.sprite(x, y, "runtime-enemy", "0").setOrigin(0.5);
-          enemy.play("enemy-walk");
-          enemy.setVelocityX(80);
-          const enemyBody = enemy.body as Phaser.Physics.Arcade.Body;
-          enemyBody.setSize(22, 26, true);
-          enemyBody.setAllowGravity(true);
-          enemyBody.setCollideWorldBounds(true);
-          enemyLayer.add(enemy);
-          this.enemies.push(enemy);
+        if (entity.type === "walker") {
+          const walker = this.physics.add.sprite(x, y, "runtime-walker", "0").setOrigin(0.5);
+          walker.play("walker-walk");
+          walker.setVelocityX(80);
+          const walkerBody = walker.body as Phaser.Physics.Arcade.Body;
+          walkerBody.setSize(22, 26, true);
+          walkerBody.setAllowGravity(true);
+          walkerBody.setCollideWorldBounds(true);
+          enemyLayer.add(walker);
+          this.enemies.push(walker);
         }
 
         if (entity.type === "patrol") {

@@ -52,7 +52,29 @@ export function EditorShell() {
     };
   }, [isPlaying]);
 
+  const handlePlay = useCallback(() => {
+    if (typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
+      try {
+        void document.documentElement.requestFullscreen();
+      } catch {
+        /**/
+      }
+      try {
+        const o = (screen as unknown as { orientation?: { lock?: (t: string) => Promise<void> } }).orientation;
+        if (typeof o?.lock === "function") {
+          void o.lock("landscape").catch(() => {});
+        }
+      } catch {
+        /**/
+      }
+    }
+    setIsPlaying(true);
+  }, [setIsPlaying]);
+
   const handleStop = useCallback(() => {
+    if (document.fullscreenElement) {
+      void document.exitFullscreen().catch(() => {});
+    }
     setIsPlaying(false);
   }, [setIsPlaying]);
 
@@ -108,7 +130,7 @@ export function EditorShell() {
             </button>
             <button
               type="button"
-              onClick={() => setIsPlaying(true)}
+              onClick={handlePlay}
               aria-label={t("editor.playAria")}
               className="rounded-2xl bg-amber-500 px-3 py-1.5 text-xs font-semibold text-slate-950 transition hover:bg-amber-400 sm:px-4 sm:py-2"
             >
@@ -116,7 +138,7 @@ export function EditorShell() {
             </button>
             <button
               type="button"
-              onClick={() => setIsPlaying(false)}
+              onClick={handleStop}
               aria-label={t("editor.stopAria")}
               className="rounded-2xl border border-slate-700 px-3 py-1.5 text-xs text-slate-100 transition hover:border-slate-500 sm:px-4 sm:py-2"
             >
