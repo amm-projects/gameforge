@@ -1,69 +1,3 @@
-# GameForge
-
-2D platformer visual editor. Build levels by dragging blocks, enemies, coins and interactive objects. Preview and play the level directly in the browser.
-
-## Stack
-
-- **Next.js** 16 (App Router)
-- **React** 19
-- **TypeScript** (strict)
-- **Tailwind CSS** 4
-- **Zustand** (state management)
-- **Phaser** 3 (game engine)
-- **dnd-kit** (drag & drop)
-- **Zod** (validation)
-
-## Requirements
-
-- Node.js 20+
-
-## Development
-
-```bash
-npm install
-npm run dev        # development server (http://localhost:3000)
-npm run build      # production build
-npm run test       # unit tests (Vitest, watch mode)
-npm run test:run   # unit tests (CI)
-npm run test:e2e   # E2E tests (Playwright)
-npm run lint       # ESLint
-```
-
-## Testing
-
-| Type | Tool | Command |
-|---|---|---|
-| Unit | Vitest | `npm run test:run` |
-| Integration | Testing Library | `npm run test:run` |
-| E2E | Playwright | `npm run test:e2e` |
-
-## Architecture
-
-```
-src/
-├── app/            # App Router
-├── components/     # React components
-│   ├── editor/     #   Editor UI
-│   └── runtime/    #   Runtime wrapper
-├── engine/         # Game engine
-│   ├── editor/     #   Editor logic
-│   └── runtime/    #   Execution logic (Phaser)
-├── stores/         # Global state (Zustand)
-├── hooks/          # Custom hooks
-├── types/          # Shared types
-├── lib/            # Utilities
-├── assets/         # Constants and assets
-└── features/       # Feature modules
-```
-
-The editor and runtime are completely separated. The editor does not contain game logic, and the runtime does not contain editing tools.
-
-## License
-
-Free to use.
-
----
-
 # GameForge — Editor de niveles 2D
 
 ## ¿Qué es?
@@ -85,6 +19,57 @@ Un **creador de plataformas 2D** inspirado en Mario Maker, completamente web. Lo
 | Validación | Zod |
 | Testing | Vitest + Testing Library + Playwright |
 | i18n | Español / Inglés |
+
+---
+
+## Requirements
+
+- Node.js 20+
+
+---
+
+## Development
+
+```bash
+npm install
+npm run dev        # development server (http://localhost:3000)
+npm run build      # production build
+npm run test       # unit tests (Vitest, watch mode)
+npm run test:run   # unit tests (CI)
+npm run test:e2e   # E2E tests (Playwright)
+npm run lint       # ESLint
+```
+
+---
+
+## Testing
+
+| Tipo | Herramienta | Cantidad |
+|---|---|---|
+| Unit + Integración | Vitest | 206 tests |
+| E2E | Playwright | 12 tests |
+| Linting | ESLint | — |
+
+---
+
+## Lighthouse
+
+| Categoría | Puntaje |
+|---|---|
+| Performance | 100 |
+| Accessibility | 100 |
+| Best Practices | 100 |
+| SEO | 100 |
+
+---
+
+## Estado del proyecto
+
+- **Versión**: 0.58.1
+- **Líneas de código**: ~10,000+
+- **Documentación**: 30+ documentos de decisión en `/docs`
+- **Sprites**: 11 SVGs en pixel art
+- **Audio**: 5 temas musicales + 9 efectos de sonido
 
 ---
 
@@ -121,6 +106,8 @@ src/
 - Colisión configurable por tile
 - Plataformas móviles (horizontal/vertical, velocidad y rango configurables)
 
+---
+
 ## Entidades
 
 | Entidad | Comportamiento |
@@ -134,6 +121,8 @@ src/
 | Checkpoint | Guarda posición de reaparición |
 | Door + Key | Puzzle de llave y puerta |
 | 1UP | Otorga una vida extra |
+
+---
 
 ## Funcionalidades del runtime
 
@@ -181,37 +170,6 @@ JSON portátil, independiente de Phaser:
 
 ---
 
-## Testing
-
-| Tipo | Herramienta | Cantidad |
-|---|---|---|
-| Unit + Integración | Vitest | 206 tests |
-| E2E | Playwright | 12 tests |
-| Linting | ESLint | — |
-
----
-
-## Lighthouse
-
-| Categoría | Puntaje |
-|---|---|
-| Performance | 100 |
-| Accessibility | 100 |
-| Best Practices | 100 |
-| SEO | 100 |
-
----
-
-## Estado del proyecto
-
-- **Versión**: 0.58.1
-- **Líneas de código**: ~10,000+
-- **Documentación**: 30+ documentos de decisión en `/docs`
-- **Sprites**: 11 SVGs en pixel art
-- **Audio**: 5 temas musicales + 9 efectos de sonido
-
----
-
 ## Flujo de demostración
 
 1. Abrir el editor → se ve el grid, el panel de herramientas y el inspector
@@ -224,3 +182,9 @@ JSON portátil, independiente de Phaser:
 8. Llegar a la meta → pantalla de victoria con reintentar
 9. Presionar Stop → volver al editor
 10. Exportar/importar JSON del nivel
+
+---
+
+## License
+
+Free to use.
