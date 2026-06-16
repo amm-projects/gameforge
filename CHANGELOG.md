@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.58.1] - 2026-06-16
+
+### Changed
+
+- **Package-lock.json has been updated to the latest version of the project**: It was in the version 0.48.4 but it has been updated to the latest version (0.58.1). Both files, package.json and package-lock.json must have the same version of the project.
+
+- **The name of the project has been renamed from Game Creator to Gameforge**: The old name was very generic, so in order to make the project more special and unique, it has been renamed to game-forge.
+
 ## [0.58.0] - 2026-06-15
 
 ### Added
