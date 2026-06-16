@@ -1,168 +1,306 @@
-# GameForge — Editor de niveles 2D
+# 🎮 GameForge — Web-Based 2D Level Editor
 
-## ¿Qué es?
+Build, play, and share platformer levels directly in your browser.
 
-Un **creador de plataformas 2D** inspirado en Mario Maker, completamente web. Los usuarios construyen niveles arrastrando tiles y entidades sobre un grid, y los juegan al instante en el navegador — sin programar.
-
----
-
-## Stack tecnológico
-
-| Capa | Tecnología |
-|---|---|
-| Framework | Next.js 16 (App Router) |
-| UI | React 19 + TypeScript (strict) |
-| Estilos | Tailwind CSS 4 |
-| Estado | Zustand |
-| Motor de juego | Phaser 3 |
-| Drag & drop | dnd-kit |
-| Validación | Zod |
-| Testing | Vitest + Testing Library + Playwright |
-| i18n | Español / Inglés |
+GameForge is a **Mario Maker-inspired 2D level editor** that allows users to create complete platformer levels using a visual drag-and-drop interface—no coding required. Levels can be tested instantly using the integrated game engine.
 
 ---
 
-## Requirements
+## ✨ Features
 
-- Node.js 20+
+### 🛠️ Visual Level Editor
+
+* Drag & drop entities onto the canvas
+* Paint tiles with click or brush tools
+* Erase and edit existing objects
+* Zoom and pan controls
+* JSON import/export
+* Responsive design (desktop, tablet, mobile)
+
+### 🎮 Instant Playtesting
+
+* Launch any level with a single click
+* Real-time gameplay powered by Phaser 3
+* No compilation or page reload required
+
+### 🌍 Localization
+
+* English 🇺🇸
+* Spanish 🇪🇸
 
 ---
 
-## Development
+# 🚀 Technology Stack
+
+| Category             | Technology                          |
+| -------------------- | ----------------------------------- |
+| Framework            | Next.js 16 (App Router)             |
+| Frontend             | React 19 + TypeScript (Strict Mode) |
+| Styling              | Tailwind CSS 4                      |
+| State Management     | Zustand                             |
+| Game Engine          | Phaser 3                            |
+| Drag & Drop          | dnd-kit                             |
+| Validation           | Zod                                 |
+| Testing              | Vitest, Testing Library, Playwright |
+| Internationalization | English / Spanish                   |
+
+---
+
+# 📋 Requirements
+
+* Node.js 20+
+
+---
+
+# ⚡ Getting Started
 
 ```bash
 npm install
-npm run dev        # development server (http://localhost:3000)
-npm run build      # production build
-npm run test       # unit tests (Vitest, watch mode)
-npm run test:run   # unit tests (CI)
-npm run test:e2e   # E2E tests (Playwright)
-npm run lint       # ESLint
+
+# Start development server
+npm run dev
+
+# Production build
+npm run build
+
+# Unit tests
+npm run test
+
+# CI test run
+npm run test:run
+
+# End-to-end tests
+npm run test:e2e
+
+# Linting
+npm run lint
+```
+
+Application runs at:
+
+```text
+http://localhost:3000
 ```
 
 ---
 
-## Testing
+# 📊 Quality Metrics
 
-| Tipo | Herramienta | Cantidad |
-|---|---|---|
-| Unit + Integración | Vitest | 206 tests |
-| E2E | Playwright | 12 tests |
-| Linting | ESLint | — |
+## Testing Coverage
 
----
-
-## Lighthouse
-
-| Categoría | Puntaje |
-|---|---|
-| Performance | 100 |
-| Accessibility | 100 |
-| Best Practices | 100 |
-| SEO | 100 |
+| Type               | Tool       | Count     |
+| ------------------ | ---------- | --------- |
+| Unit & Integration | Vitest     | 206 Tests |
+| End-to-End         | Playwright | 12 Tests  |
+| Static Analysis    | ESLint     | ✔         |
 
 ---
 
-## Estado del proyecto
+## Lighthouse Scores
 
-- **Versión**: 0.58.1
-- **Líneas de código**: ~10,000+
-- **Documentación**: 30+ documentos de decisión en `/docs`
-- **Sprites**: 11 SVGs en pixel art
-- **Audio**: 5 temas musicales + 9 efectos de sonido
+| Category         | Score |
+| ---------------- | ----- |
+| ⚡ Performance    | 100   |
+| ♿ Accessibility  | 100   |
+| ✅ Best Practices | 100   |
+| 🔍 SEO           | 100   |
 
 ---
 
-## Arquitectura
+# 📈 Project Statistics
 
-Dos mundos completamente separados:
+| Metric                 | Value         |
+| ---------------------- | ------------- |
+| Version                | 0.58.1        |
+| Codebase Size          | 10,000+ LOC   |
+| Architecture Documents | 30+ ADRs      |
+| Pixel-Art Sprites      | 11 SVG Assets |
+| Music Tracks           | 5             |
+| Sound Effects          | 9             |
 
-**Editor** — UI en React para colocar tiles, entidades, configurar propiedades, guardar/cargar niveles. Sin lógica de juego.
+---
 
-**Runtime** — Escena de Phaser 3 que lee el JSON del nivel y ejecuta el juego: físicas, colisiones, enemigos, monedas, puertas, vidas, música. Sin herramientas de edición.
+# 🏗️ Architecture
+
+GameForge is built around two completely independent systems:
+
+## Editor Layer
+
+Responsible for level creation:
+
+* Tile painting
+* Entity placement
+* Property editing
+* Level configuration
+* Save/load operations
+
+**No gameplay logic lives here.**
+
+## Runtime Layer
+
+Responsible for gameplay execution:
+
+* Physics
+* Collision detection
+* Enemy AI
+* Collectibles
+* Doors & keys
+* Lives system
+* Audio playback
+
+**No editing tools exist here.**
+
+---
+
+## Project Structure
 
 ```text
 src/
-├── app/             # Páginas de Next.js
-├── components/      # Componentes React
-│   ├── editor/      #   ToolPanel, LevelCanvas, InspectorPanel
-│   └── runtime/     #   GameRuntime, TouchControls
+├── app/                 # Next.js pages
+├── components/
+│   ├── editor/          # ToolPanel, LevelCanvas, InspectorPanel
+│   └── runtime/         # GameRuntime, TouchControls
 ├── engine/
-│   ├── editor/      #   Acciones de pintado, transformaciones
-│   └── runtime/     #   RuntimeScene de Phaser (1300+ líneas)
-├── stores/          # Stores de Zustand por dominio
-├── types/           # LevelData, Tile, Entity, esquemas
-├── lib/             # i18n, precarga de Phaser, utils
-├── assets/          # Rutas de sprites, constantes
-└── data/            # JSON de niveles de ejemplo
+│   ├── editor/          # Painting actions, transformations
+│   └── runtime/         # Phaser RuntimeScene
+├── stores/              # Zustand stores
+├── types/               # Schemas and shared types
+├── lib/                 # Utilities, i18n, Phaser preload
+├── assets/              # Sprites and constants
+└── data/                # Example levels
 ```
 
 ---
 
-## Grid y tiles
+# 🧱 Grid & Tile System
 
-- **Grid de 64×64**, celdas de 32×32 px
-- 6 tipos de tile: suelo, ladrillo, plataforma, pinchos (4 direcciones)
-- Colisión configurable por tile
-- Plataformas móviles (horizontal/vertical, velocidad y rango configurables)
+### World Size
 
----
+* 64 × 64 tile grid
+* 32 × 32 pixel cells
 
-## Entidades
+### Available Tiles
 
-| Entidad | Comportamiento |
-|---|---|
-| Player | Flechas / WASD para moverse y saltar |
-| Coin | Coleccionable, 100 monedas = 1 vida extra |
-| Walker | Camina hacia adelante, rebota en paredes, cae de bordes |
-| Patrol | Patrulla de lado a lado, gira en bordes de plataforma |
-| Jumper | Camina y salta periódicamente |
-| Goal | Activa fin de nivel |
-| Checkpoint | Guarda posición de reaparición |
-| Door + Key | Puzzle de llave y puerta |
-| 1UP | Otorga una vida extra |
+* Ground
+* Brick
+* Platform
+* Spikes (4 directions)
+
+### Advanced Features
+
+* Configurable tile collision
+* Horizontal moving platforms
+* Vertical moving platforms
+* Adjustable speed and travel range
 
 ---
 
-## Funcionalidades del runtime
+# 👾 Entities
 
-- Físicas arcade (gravedad, colisiones, plataformas móviles)
-- Sistema de 3 vidas con reaparición en checkpoint
-- Puzzle de llave/ puerta con contador de llaves en HUD
-- 5 temas musicales (archivos WAV generados proceduralmente)
-- Efectos de sonido (salto, moneda, puerta, checkpoint, 1UP)
-- Pantallas de victoria y game over con reintento
-- Modo inmersivo a pantalla completa en móvil/tablet
-- Controles táctiles superpuestos para móvil
-- Orientación horizontal automática en móvil
-
----
-
-## Funcionalidades del editor
-
-- Pintar tiles haciendo clic o arrastrando
-- Arrastrar entidades desde el panel al canvas (dnd-kit)
-- Herramientas de borrar y editar
-- Panel inspector con importación/exportación JSON
-- Selector de fondo (6 temas)
-- Selector de música (5 temas)
-- Niveles de ejemplo (6 niveles predefinidos)
-- Zoom y paneo de cámara
-- Internacionalización (español / inglés)
-- Diseño responsive (escritorio, tablet, móvil)
+| Entity     | Behavior                                           |
+| ---------- | -------------------------------------------------- |
+| Player     | Move and jump using Arrow Keys or WASD             |
+| Coin       | Collectible, 100 coins = extra life                |
+| Walker     | Moves forward, bounces off walls, falls from edges |
+| Patrol     | Patrols platforms and turns at edges               |
+| Jumper     | Walks and jumps periodically                       |
+| Goal       | Completes the level                                |
+| Checkpoint | Saves respawn position                             |
+| Door       | Requires a matching key                            |
+| Key        | Unlocks doors                                      |
+| 1UP        | Grants an extra life                               |
 
 ---
 
-## Formato de nivel
+# 🎮 Runtime Features
 
-JSON portátil, independiente de Phaser:
+### Physics & Gameplay
+
+* Arcade physics
+* Gravity system
+* Collision handling
+* Moving platforms
+
+### Progression Systems
+
+* 3-life system
+* Checkpoint respawning
+* Key & door puzzles
+* HUD key counter
+
+### Audio
+
+* 5 procedural WAV music tracks
+* Jump effects
+* Coin pickup sounds
+* Door interactions
+* Checkpoint activation
+* Extra-life sound effects
+
+### Mobile Support
+
+* Fullscreen immersive mode
+* Touch controls overlay
+* Automatic landscape orientation
+
+### End States
+
+* Victory screen
+* Game Over screen
+* Instant retry
+
+---
+
+# 🛠️ Editor Features
+
+### Building Tools
+
+* Tile painting
+* Brush painting
+* Entity placement
+* Eraser tool
+* Property editing
+
+### Customization
+
+* 6 background themes
+* 5 music themes
+
+### Workflow
+
+* JSON import/export
+* Example levels included
+* Camera zoom & pan
+* Responsive layout
+
+---
+
+# 📦 Level Format
+
+Levels are stored as portable JSON and remain completely independent from Phaser.
 
 ```json
 {
   "width": 64,
   "height": 64,
-  "tiles": [{ "x": 0, "y": 62, "type": "ground" }],
-  "entities": [{ "id": "abc", "type": "player", "position": { "x": 3, "y": 55 }, "properties": {} }],
+  "tiles": [
+    {
+      "x": 0,
+      "y": 62,
+      "type": "ground"
+    }
+  ],
+  "entities": [
+    {
+      "id": "abc",
+      "type": "player",
+      "position": {
+        "x": 3,
+        "y": 55
+      },
+      "properties": {}
+    }
+  ],
   "background": "sky",
   "music": "adventure"
 }
@@ -170,21 +308,21 @@ JSON portátil, independiente de Phaser:
 
 ---
 
-## Flujo de demostración
+# 🎬 Demo Flow
 
-1. Abrir el editor → se ve el grid, el panel de herramientas y el inspector
-2. Seleccionar un tile (ej. suelo) y pintar en el canvas
-3. Seleccionar una entidad (ej. enemigo, moneda) y colocarla
-4. Editar una puerta → configurar puzzle de llave/puerta
-5. Elegir fondo y tema musical
-6. Presionar **Play** → Phaser carga el nivel al instante
-7. Controlar al jugador por el nivel, recolectar monedas, evitar enemigos
-8. Llegar a la meta → pantalla de victoria con reintentar
-9. Presionar Stop → volver al editor
-10. Exportar/importar JSON del nivel
+1. Open the editor
+2. Select a tile and paint the level
+3. Drag entities onto the canvas
+4. Configure doors and key puzzles
+5. Choose a background and soundtrack
+6. Press **Play**
+7. Test the level instantly
+8. Collect coins and avoid enemies
+9. Reach the goal
+10. Export or import the level JSON
 
 ---
 
-## License
+# 📄 License
 
 Free to use.
